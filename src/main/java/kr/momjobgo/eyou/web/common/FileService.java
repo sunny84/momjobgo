@@ -1,6 +1,9 @@
-package kr.momjobgo.eyou.utils;
+package kr.momjobgo.eyou.web.common;
 
 import kr.momjobgo.eyou.web.dto.FileDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -16,11 +19,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FileUtils {
+@Slf4j
+@Repository
+public class FileService {
 
-    private final static String FIX_PATH = SessionUtils.getRealPath()+"/resources/static/repository/";
+    public FileService(@Value("${save-file-path}") String environmentFilePath){
+        this.FIX_PATH = environmentFilePath + File.separator + "repository";
+        log.info("****** File Save Repository = {}", FIX_PATH);
+    }
 
-    public static List<FileDTO> upload(HttpServletRequest req, String folderName) {
+    private final String FIX_PATH;
+
+    public List<FileDTO> upload(HttpServletRequest req) {
 
         List<FileDTO> returnFileList = new ArrayList<>();
 
@@ -40,7 +50,7 @@ public class FileUtils {
 
                 String originFileName = mf.getOriginalFilename();
                 String contentType = mf.getContentType();
-                String filePath = folderName + "/" + day;
+                String filePath = File.separator + day;
                 String saveFileName = System.currentTimeMillis() + "_" + originFileName;
 
                 returnfile.setFileRealName(originFileName);
@@ -50,7 +60,9 @@ public class FileUtils {
 
                 returnFileList.add(returnfile);
 
-                File file = new File(FIX_PATH+filePath+"/"+saveFileName);
+                log.info("===> FILE SAVE TO {}", FIX_PATH + filePath+ File.separator +saveFileName);
+
+                File file = new File(FIX_PATH + filePath + File.separator + saveFileName);
 
                 try {
                     if(!file.getParentFile().exists()) {
@@ -71,16 +83,16 @@ public class FileUtils {
         return returnFileList;
     }
 
-    public static void download(HttpServletRequest request, HttpServletResponse response, FileDTO data) {
+    public void download(HttpServletRequest request, HttpServletResponse response, FileDTO fileInfo) {
 
         try {
 
-            File file = new File(FIX_PATH + data.getPath() + "/" + data.getFileSaveName());
+            File file = new File(FIX_PATH + fileInfo.getPath() + File.separator + fileInfo.getFileSaveName());
 
             String user_agent = request.getHeader("User-Agent");
             String fileName = encodingFileNameForBrowser(user_agent, file.getName());
 
-            response.setContentType(data.getContentType()+"; UTF-8");
+            response.setContentType(fileInfo.getContentType()+"; UTF-8");
             response.setContentLength((int)file.length());
             response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
             response.setHeader("Content-Transfer-Encoding", "binary");
@@ -109,7 +121,7 @@ public class FileUtils {
 
 
     //브라우저 정보에 따라 utf-8변경
-    private static String encodingFileNameForBrowser(String userAgent, String fileName) {
+    private String encodingFileNameForBrowser(String userAgent, String fileName) {
         String encodingFileName = null;
 
         try {

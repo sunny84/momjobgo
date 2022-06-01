@@ -1,3 +1,5 @@
+save-file-path: D:\1_FILE_PATH
+
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver

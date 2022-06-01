@@ -1,10 +1,7 @@
 package kr.momjobgo.eyou.web.jpa.entity;
 
 import kr.momjobgo.eyou.web.jpa.entity.base.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,6 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
