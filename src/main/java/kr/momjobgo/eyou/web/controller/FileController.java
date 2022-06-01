@@ -13,23 +13,23 @@ import java.io.PrintWriter;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/file")
+public class FileController {
 
     private final FileService fileService;
     private final FileRepository fileRepository;
 
-    public TestController(FileService fileService, FileRepository fileRepository) {
+    public FileController(FileService fileService, FileRepository fileRepository) {
         this.fileService = fileService;
         this.fileRepository = fileRepository;
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(HttpServletRequest req) {
+    public ResponseEntity<?> upload(HttpServletRequest req, @RequestParam Long contentsId) {
 
         fileService.upload(req).forEach( file -> {
             System.out.println(file);
-            file.setContentsId(1L);
+            file.setContentsId(contentsId);
             fileRepository.save(file);
         });
 
