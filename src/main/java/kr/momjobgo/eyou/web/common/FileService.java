@@ -1,6 +1,6 @@
 package kr.momjobgo.eyou.web.common;
 
-import kr.momjobgo.eyou.web.dto.FileDTO;
+import kr.momjobgo.eyou.web.jpa.entity.FileEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -30,9 +30,9 @@ public class FileService {
 
     private final String FIX_PATH;
 
-    public List<FileDTO> upload(HttpServletRequest req) {
+    public List<FileEntity> upload(HttpServletRequest req) {
 
-        List<FileDTO> returnFileList = new ArrayList<>();
+        List<FileEntity> returnFileList = new ArrayList<>();
 
         MultipartHttpServletRequest mpReq = (MultipartHttpServletRequest) req;
 
@@ -42,7 +42,7 @@ public class FileService {
 
             if(mf.getSize() > 0) {
 
-                FileDTO returnfile = new FileDTO();
+                FileEntity returnfile = new FileEntity();
 
                 Date now = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
@@ -83,7 +83,7 @@ public class FileService {
         return returnFileList;
     }
 
-    public void download(HttpServletRequest request, HttpServletResponse response, FileDTO fileInfo) {
+    public void download(HttpServletRequest request, HttpServletResponse response, FileEntity fileInfo) {
 
         try {
 
