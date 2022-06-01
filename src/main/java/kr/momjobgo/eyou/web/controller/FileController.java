@@ -33,7 +33,7 @@ public class FileController {
             fileRepository.save(file);
         });
 
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("FILE UPLOAD SUCCESS");
     }
 
 
