@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://devcury.kr:23306/eyou?characterEncoding=UTF-8&serverTimezone=UTC
     username: eyou
-    password: eyou
+    password: eyou#1234
     hikari:
       auto-commit: false
       connection-test-query: SELECT 1
