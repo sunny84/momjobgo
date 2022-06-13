@@ -1,4 +1,4 @@
-import axis from 'axios'
+import axios from 'axios'
 
 // axios의 기본 베이스 url 정의
 //axios.defaults.baseURL = 'https://api.devcury.kr';
