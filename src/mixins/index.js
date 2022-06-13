@@ -1,11 +1,13 @@
 import axios from '@/plugins/axios'
 import store from '@/store'
 import Code from '@/static/Code'
+import str_resource from '@/static/str_resource.js'
 
 export default {
 
     data: () => ({
-        ...Code
+        ...Code, 
+        ...str_resource
     }),
 
     methods: {
@@ -44,17 +46,6 @@ export default {
                 return e.response;
             });
             
-        },
-
-        $loadKakaoMap(callback) {
-            if (typeof kakao === 'undefined') {
-                const script = document.createElement('script');
-                script.onload = () => kakao.maps.load(callback);
-                script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.VUE_APP_KAKAO_MAP_KEY}&autoload=false&libraries=services`;
-                document.head.appendChild(script);
-            } else {
-                callback();
-            }
         },
 
     },
