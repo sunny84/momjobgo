@@ -2,18 +2,18 @@ export default {
     /*
      * Title 
     */
-    kTitleWriteReceipt : "레시피 작성하기",
+    kTitleWriteRecipe : "레시피 작성하기",
 
 
     /*
     * Description
     */
-    kDescWriteReceipt : "레시피 작성을 시작해 볼까요?",
+    kDescWriteRecipe : "레시피 작성을 시작해 볼까요?",
     kDescIngredient : "어떤 식재료를 넣을까요?",
     kDescAlmostDone : "거의 다 왔어요! 힘내요!",
     kDescFinishAndSave   : "완성! 레시피를 저장할까요?",
-    kDescPublishReceipt : "레시피를 공개할까요?",
-    kDescMoveToMyReceipt    : "미는 즉시 MY 레시피 화면으로 이동합니다",
+    kDescPublishRecipe : "레시피를 공개할까요?",
+    kDescMoveToMyRecipe    : "미는 즉시 MY 레시피 화면으로 이동합니다",
 
 
     /* 
