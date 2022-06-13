@@ -1,26 +1,21 @@
 package kr.momjobgo.eyou.web.jpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
-@Entity(name = "TEST")
-public class TestEntity {
-
+@Entity(name = "TEST_JOIN")
+public class TestJoinEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "text")
+    private String text;
 
     // 양방향 조회시 시작
     /*
@@ -28,19 +23,21 @@ public class TestEntity {
         java내에서는 사용가능 하지만 애초에 양방향은 사용하지 않는것이 좋음.
         단방향으로 조회하는것이 이상적.
      */
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "testEntity", fetch = FetchType.LAZY)
+//    @JsonBackReference
+//    @ManyToOne
+//    @JoinColumn(name ="test_id")
 //    @ToString.Exclude
-//    private List<TestJoinEntity> testJoinEntities = new ArrayList<>();
+//    private TestEntity testEntity;
     // 양방향 조회시 끝
 
     // 단방향 조회1 시작
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_id")
-    private List<TestJoinEntity> testJoinEntities = new ArrayList<>();
+    @Column(name = "test_id")
+    private Long testId;
     // 단방향 조회1 끝
 
     // 단방향 조회2 시작
-
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name ="test_id")
+//    private TestEntity testEntity;
     // 단방향 조회2 끝
 }
