@@ -1,6 +1,5 @@
 package kr.momjobgo.eyou.web.jpa.entity;
 
-import kr.momjobgo.eyou.web.jpa.entity.base.BaseTimeEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,6 +13,6 @@ public class RecipeEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "recipe")
-    private List<SubscribeRecipeEntity> subscribes = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe_id")
+    private List<RecipeRecipeBoxEntity> recipeBoxs = new ArrayList<>();
 }

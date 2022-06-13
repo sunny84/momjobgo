@@ -4,9 +4,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Entity(name = "SUBSCRIBE_RECIPE")
+@Entity(name = "RECIPE_RECIPE_BOX")
 @Data
-public class SubscribeRecipeEntity {
+public class RecipeRecipeBoxEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -17,7 +17,11 @@ public class SubscribeRecipeEntity {
     private RecipeEntity recipe;
 
     @ManyToOne
-    @JoinColumn(name = "subscribe_id")
-    private SubscribeEntity subscribe;
+    @JoinColumn(name = "recipe_box_id")
+    private RecipeBoxEntity recipeBox;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
 }

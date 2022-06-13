@@ -7,6 +7,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -37,4 +39,6 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "enable")
     private String enable;
 
+    @OneToMany(mappedBy = "user_id")
+    private List<RecipeRecipeBoxEntity> recipeBox = new ArrayList<>();
 }

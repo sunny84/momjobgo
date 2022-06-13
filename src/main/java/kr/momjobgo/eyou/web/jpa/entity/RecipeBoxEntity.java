@@ -2,15 +2,14 @@ package kr.momjobgo.eyou.web.jpa.entity;
 
 import kr.momjobgo.eyou.web.jpa.entity.base.BaseTimeEntity;
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "SUBSCRIBE")
+@Entity(name = "RECIPE_BOX")
 @Data
-public class SubscribeEntity extends BaseTimeEntity {
+public class RecipeBoxEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,6 +22,6 @@ public class SubscribeEntity extends BaseTimeEntity {
 //    @JoinColumn(name = "user_id")
 //    private UserEntity user;
 
-    @OneToMany(mappedBy = "subscribe")
-    private List<SubscribeRecipeEntity> subscribeRecipes = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe_box_id")
+    private List<RecipeRecipeBoxEntity> recipeBoxRecipes = new ArrayList<>();
 }
