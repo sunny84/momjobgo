@@ -22,10 +22,14 @@ public class TestController {
      * Double
      * @return
      */
-    @GetMapping("/test")
-    public String test(@RequestParam String param) {
+    @GetMapping("/join/test")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok(testService.testJoin());
+    }
 
-        return param;
+    @GetMapping("/join/test2")
+    public ResponseEntity<?> test2() {
+        return ResponseEntity.ok(testService.testJoin2());
     }
 
     @GetMapping("/test/all")
