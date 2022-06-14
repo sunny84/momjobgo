@@ -1,6 +1,8 @@
 package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.web.jpa.entity.TestEntity;
+import kr.momjobgo.eyou.web.jpa.entity.TestJoinEntity;
+import kr.momjobgo.eyou.web.jpa.repository.TestJoinRepository;
 import kr.momjobgo.eyou.web.jpa.repository.TestRepository;
 import kr.momjobgo.eyou.web.service.TestService;
 import org.springframework.stereotype.Service;
@@ -13,8 +15,21 @@ public class TestServiceImpl implements TestService {
 
     private final TestRepository testRepository;
 
-    public TestServiceImpl(TestRepository testRepository) {
+    private final TestJoinRepository testJoinRepository;
+
+    public TestServiceImpl(TestRepository testRepository, TestJoinRepository testJoinRepository) {
         this.testRepository = testRepository;
+        this.testJoinRepository = testJoinRepository;
+    }
+
+    @Override
+    public List<TestEntity> testJoin() {
+        return testRepository.findAll();
+    }
+
+    @Override
+    public List<TestJoinEntity> testJoin2() {
+        return testJoinRepository.findAll();
     }
 
     // 모두 가져오기.
