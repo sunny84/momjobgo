@@ -1,0 +1,27 @@
+{
+    "app" : {
+        "name": "EYOU"
+    },
+
+    "title" : {
+        "writeRecipe" : "Write Recipe",
+        "viewRecipe" : "View Recipe"
+    },
+
+    "description" : {
+        "writeRecipe" : "Start to write recipe?",
+        "ingredient" : "Which indigredient do you choose?"
+    },
+
+    "content" : {
+        "step" : "Step",
+        "quantity" : "Qunatity",
+        "times" : "meals",
+        "timeTaken" : "Required time"
+    }, 
+
+    "button" : {
+        "next" : "Next",
+        "back" : "Previous"
+    }
+}

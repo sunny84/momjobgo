@@ -1,0 +1,27 @@
+{
+    "app" : {
+        "name": "이유"
+    },
+
+    "title" : {
+        "writeRecipe" : "레시피 작성하기",
+        "viewRecipe" : "레시피 상세보기"
+    },
+
+    "description" : {
+        "writeRecipe" : "레시피 작성을 시작해 볼까요?",
+        "ingredient" : "어떤 식재료를 넣을까요?"
+    },
+
+    "content" : {
+        "step" : "단계",
+        "quantity" : "분량",
+        "times" : "회분",
+        "timeTaken" : "소요시간"
+    }, 
+
+    "button" : {
+        "next" : "다음",
+        "back" : "이전"
+    }
+}

@@ -1,13 +1,11 @@
 import axios from '@/plugins/axios'
 import store from '@/store'
 import Code from '@/static/Code'
-import str_resource from '@/static/str_resource.js'
 
 export default {
 
     data: () => ({
         ...Code, 
-        ...str_resource
     }),
 
     methods: {
