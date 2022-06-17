@@ -10,18 +10,82 @@
 
     "description" : {
         "writeRecipe" : "레시피 작성을 시작해 볼까요?",
-        "ingredient" : "어떤 식재료를 넣을까요?"
+        "ingredient" : "어떤 식재료를 넣을까요?",
+        "almostDone" : "거의 다 왔어요! 힘내요!",
+        "finishAndSave" : "완성! 레시피를 저장할까요?",
+        "publishRecipe" : "레시피를 공개할까요?",
+        "moveToMyRecipe" : "미는 즉시 MY 레시피 화면으로 이동합니다",
+        "autoSave" : "다음으로 넘어가면 자동으로 저장됩니다."
     },
 
     "content" : {
         "step" : "단계",
         "quantity" : "분량",
         "times" : "회분",
-        "timeTaken" : "소요시간"
-    }, 
+        "timeTaken" : "소요시간",
+        "choiceOfIngredient" : "식재료 선택",
+        "title" : "제목 - 들어가는 식재료",
+        "subTitle" : "특별한 레시피를 설명하는 한마디! ex) 맛있는 이유!",
+        "mainPicture" : "대표사진",
+        "listOfIngredient" : "재료소개",
+        "measuringUnit" : "계량단위",
+        "cookingOrder" : "조리순서",
+        "tip" : "Tip",
+        "movieClipUrl" : "클립 영상 링크",
+        "movieClipView" : "클립 영상 확인하기",
+        "youtubeUrl" : "유투브 Full영상 링크",
+        "youtubeView" : "Youtube Full 영상 보기"
+    },
+
+    "option" : {
+        "period" : ["초기(미음)", "중기(죽)", "후기(진밥)"],
+        "timeTaken" : ["15분이내", "15분", "30분", "60분", "60분 이상"]
+    },
+
+    "ing_category" : {
+        "none" : "없음",
+        "rootAndTuberCrops" : "서류",
+        "blockIronAbsorption" : "철분흡수 방해(중기6개월~부터 권장)",
+        "fruits" : "과일류",
+        "animalProtein" : "동물성 단백질", 
+        "essential" : "필수"
+    },
+
+    "ingredient" : {
+        "WATER" : "물",
+        "GLUTINOUS_RICE" : "찹쌀",
+        "PEA" : "완두콩",
+        "CORN" : "옥수수",
+        "BROCCOLI" : "브로콜리",
+        "CHINESE_CABBAGE" : "배추",
+        "WHITE_RADISH" : "무",
+        "PAPRIKA" : "파프리카",
+        "GREEN_PUMPKIN" : "애호박",
+        "LEAF_BEET" : "근대",
+        "CURLED_MALLOW" : "아욱",
+        "MUSHROOM" : "버섯",
+        "EGGPLANT" : "가지",
+        "CUCUMBER" : "오이",
+        "PAK_CHOI" : "청경채",
+        "SWEET_PUMPKIN" : "단호박",
+        "POTATO" : "감자",
+        "SWEET_POTATO" : "고구마",
+        "SPINACH" : "시금치",
+        "CARROT" : "당근",
+        "APPLE" : "사과",
+        "PEAR" : "배",
+        "BANANA" : "바나나",
+        "BEEF" : "쇠고기",
+        "CHICKEN" : "닭살",
+        "WHITE_FISH" : "흰살생선",
+        "YOLK" : "달걀노른자",
+        "TOFU" : "두부"
+    },
 
     "button" : {
         "next" : "다음",
-        "back" : "이전"
+        "back" : "이전",
+        "saveAndPreview" : "저장 및 미리보기",
+        "slideAndPublish" : "밀어서 공개하기"
     }
 }
