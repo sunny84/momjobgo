@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import RecipeWriteView from '@/views/RecipeWriteView.vue'
+import LoginView from '@/views/LoginView.vue'
 
 Vue.use(VueRouter)
 
@@ -10,6 +12,17 @@ const routes = [
     name: 'home',
     component: HomeView
   },
+  {
+    path : '/write',
+    name: 'write',
+    component: RecipeWriteView
+  },
+  {
+    path : '/login',
+    name: 'login',
+    component: LoginView
+  },
+
   {
     path: '/about',
     name: 'about',
