@@ -21,14 +21,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public List<IngredientEntity> joinCategory() {
-        return ingredientRepository.findAll();
+    public List<IngredientCategoryEntity> joinCategory() {
+        return ingredientCategoryRepository.findAll();
     }
 
     // 모두 가져오기.
-    @Override
-    public List<IngredientEntity> getAll() {
-        return ingredientRepository.findAll();
-    }
+//    @Override
+//    public List<IngredientEntity> getAll() {
+//        return ingredientRepository.findAll();
+//    }
 
 }
