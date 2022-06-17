@@ -3,6 +3,8 @@ package kr.momjobgo.eyou.web.jpa.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "INGREDIENT_CATEGORY")
 @Data
@@ -15,5 +17,9 @@ public class IngredientCategoryEntity {
 
     @Column(name = "title")
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_key")
+    private List<IngredientEntity> ingredientEntities = new ArrayList<>();
 
 }
