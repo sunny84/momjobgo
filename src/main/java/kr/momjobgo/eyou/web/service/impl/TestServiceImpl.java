@@ -73,7 +73,7 @@ public class TestServiceImpl implements TestService {
         Optional<TestEntity> testEntity = testRepository.findById(entity.getId());
 
         if(testEntity.isPresent()){
-            if(testEntity.get().getName().equals("오준혁")){
+            if(testEntity.get().getName().equals("수정해봅시다")){
                 result = testRepository.save(entity);
             }
         }
@@ -82,8 +82,13 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public String deleteTest(Long id) {
-        testRepository.deleteById(id);
-        return "삭제성공";
+        if(testRepository.findById(id).isPresent()) {
+            testRepository.deleteById(id);
+            return "삭제성공";
+        }
+        else {
+            return "아이디가 존재하지 않음";
+        }
     }
 
     @Override
