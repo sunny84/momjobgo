@@ -16,7 +16,7 @@ public class RecipeController {
     }
 
     @GetMapping("/join/ingredient")
-    public ResponseEntity<?> test() {
+    public ResponseEntity<?> joinIngredient() {
         return ResponseEntity.ok(recipeService.joinIngredient());
     }
 }

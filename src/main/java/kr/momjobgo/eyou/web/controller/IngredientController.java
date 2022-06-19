@@ -16,7 +16,7 @@ public class IngredientController {
     }
 
     @GetMapping("/join/category")
-    public ResponseEntity<?> test() {
+    public ResponseEntity<?> joinCategory() {
         return ResponseEntity.ok(ingredientService.joinCategory());
     }
 
