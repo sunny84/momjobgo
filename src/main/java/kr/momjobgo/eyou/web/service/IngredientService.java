@@ -8,6 +8,4 @@ import java.util.List;
 public interface IngredientService {
     List<IngredientCategoryEntity> joinCategory();
 
-//    List<IngredientEntity> getAll();
-
 }

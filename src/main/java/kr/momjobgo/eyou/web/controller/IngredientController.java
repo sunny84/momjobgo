@@ -20,8 +20,4 @@ public class IngredientController {
         return ResponseEntity.ok(ingredientService.joinCategory());
     }
 
-//    @GetMapping("/all")
-//    public ResponseEntity<?> getAll() {
-//        return ResponseEntity.ok().body( ingredientService.getAll() );
-//    }
 }
