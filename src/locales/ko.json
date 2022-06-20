@@ -5,7 +5,8 @@
 
     "title" : {
         "writeRecipe" : "레시피 작성하기",
-        "viewRecipe" : "레시피 상세보기"
+        "viewRecipe" : "레시피 상세보기",
+        "recipeBox" : "레시피 박스"
     },
 
     "description" : {
@@ -16,6 +17,12 @@
         "publishRecipe" : "레시피를 공개할까요?",
         "moveToMyRecipe" : "미는 즉시 MY 레시피 화면으로 이동합니다",
         "autoSave" : "다음으로 넘어가면 자동으로 저장됩니다."
+    },
+    
+    "menu" : {
+        "myRecipe": "My 레시피",
+        "savedRecipe" : "담은 레시피",
+        "historyRecipe" : "오늘 본 레시피"
     },
 
     "content" : {
@@ -34,7 +41,9 @@
         "movieClipUrl" : "클립 영상 링크",
         "movieClipView" : "클립 영상 확인하기",
         "youtubeUrl" : "유투브 Full영상 링크",
-        "youtubeView" : "Youtube Full 영상 보기"
+        "youtubeView" : "Youtube Full 영상 보기",
+        "all" : "전체",
+        "moveBox" : "박스 이동"
     },
 
     "option" : {
@@ -86,6 +95,12 @@
         "next" : "다음",
         "back" : "이전",
         "saveAndPreview" : "저장 및 미리보기",
-        "slideAndPublish" : "밀어서 공개하기"
+        "slideAndPublish" : "밀어서 공개하기",
+        "edit" : "편집",
+        "move" : "이동",
+        "delete" : "삭제",
+        "cancel" : "취소",
+        "done" : "완료",
+        "addNewBox" : "새 박스 추가"
     }
 }
