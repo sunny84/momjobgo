@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RecipeWriteView from '@/views/RecipeWriteView.vue'
 import LoginView from '@/views/LoginView.vue'
+import RecipeBoxView from '@/views/RecipeBoxView.vue'
 
 Vue.use(VueRouter)
 
