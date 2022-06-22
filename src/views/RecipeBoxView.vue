@@ -1,12 +1,13 @@
 <template>
     <div>
         <div>
+        <!--HEADER-->
             <h4>{{ $t("title.recipeBox") }}</h4>
             <div class="menu">
                 <ul>
-                    <li>{{ $t("menu.myRecipe") }}</li>
-                    <li>{{ $t("menu.savedRecipe") }}</li>
-                    <li>{{ $t("menu.historyRecipe") }}</li>
+                    <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
+                    <li><a href="/recipebox">{{ $t("menu.savedRecipe") }}</a></li>
+                    <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
                 </ul>
             </div>
             <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
@@ -18,6 +19,7 @@
                     <li><button>{{$t("button.addNewBox")}}</button></li>
                 </ul>
             </div>
+        <!--CONTENTS-->
             <div class="contents" v-if="step===0">
                 <button>{{$t("button.edit")}}</button>
                 <!-- DB로 부터 가져와야 레시피 박스 목록
@@ -76,6 +78,7 @@
                 </div>
                 -->
             </div>
+        <!--FOOTER-->
         </div>
     </div>
 </template>

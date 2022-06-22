@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import RecipeWriteView from '@/views/RecipeWriteView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RecipeBoxView from '@/views/RecipeBoxView.vue'
+import MyRecipeView from '@/views/MyRecipeView.vue'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,11 @@ const routes = [
     path : '/recipebox',
     name: 'recipebox',
     component: RecipeBoxView
+  },
+  {
+    path : '/myrecipe',
+    name: 'myrecipe',
+    component: MyRecipeView
   },
   {
     path : '/write',
