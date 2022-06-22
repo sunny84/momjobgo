@@ -43,4 +43,7 @@ public class RecipeEntity {
     )
     private List<IngredientEntity> ingredientEntities = new ArrayList<>();
 
+    @ManyToOne
+    private RecipeBoxEntity recipeBox;
+
 }
