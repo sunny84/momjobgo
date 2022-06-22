@@ -35,7 +35,6 @@
         "subTitle" : "특별한 레시피를 설명하는 한마디! ex) 맛있는 이유!",
         "mainPicture" : "대표사진",
         "listOfIngredient" : "재료소개",
-        "measuringUnit" : "계량단위",
         "cookingOrder" : "조리순서",
         "tip" : "Tip",
         "movieClipUrl" : "클립 영상 링크",
@@ -45,6 +44,14 @@
         "all" : "전체",
         "moveBox" : "박스 이동",
         "myRecipe" : "나의 레시피"
+    },
+
+    "content_description" : {
+        "measuringUnit" : "계량단위",
+        "option" : "선택사항",
+        "tip" : "Tip을 입력하세요.",
+        "movieClipUrl" : "url을 입력하세요.",
+        "youtubeUrl" : "url을 입력하세요."
     },
 
     "option" : {
