@@ -34,4 +34,6 @@ public class RecipeEntity {
     @Column(name = "youtube_link")
     private String youtubeLink;
 
+    public void setRecipeBox(RecipeBoxEntity recipeBox) {
+    }
 }

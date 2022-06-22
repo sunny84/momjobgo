@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+@Repository
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
     //    @Query("select r from RECIPE r where r.open = true and r.period = :period and r.timeTakenId = :timeTakenId")
