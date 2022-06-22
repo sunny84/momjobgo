@@ -36,14 +36,6 @@ public class RecipeEntity {
     @Column(name = "youtube_link")
     private String youtubeLink;
 
-    @OneToMany
-    @JoinTable(name = "RECIPE_INGREDIENT_MAP",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-    )
-    private List<IngredientEntity> ingredientEntities = new ArrayList<>();
-
-    @ManyToOne
-    private RecipeBoxEntity recipeBox;
-
+    public void setRecipeBox(RecipeBoxEntity recipeBox) {
+    }
 }

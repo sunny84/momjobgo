@@ -17,7 +17,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeEntity> joinIngredient() {
+    public List<RecipeEntity> findAll() {
         return recipeRepository.findAll();
     }
 }

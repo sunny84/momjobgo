@@ -49,6 +49,7 @@ class EyouApplicationTests {
     void init() {
     }
 
+    @Disabled
     @Test
     void contextLoads() {
         Teacher teacher = new Teacher();
@@ -77,10 +78,9 @@ class EyouApplicationTests {
 
     }
 
-    @Disabled
     @Test
     void recipeBoxContextLoads() {
-        UserEntity user = new UserEntity();
+//        UserEntity user = new UserEntity();
         RecipeBoxEntity recipeBox = new RecipeBoxEntity();
         RecipeEntity recipe = new RecipeEntity();
 
@@ -95,7 +95,7 @@ class EyouApplicationTests {
         recipe.setPeriod("중기");
         recipe.setOpen("Y");
         recipe.setQuantity("1회분");
-        recipeBox.add(recipe);
+        recipeBox.addRecipe(recipe);
         recipeRepository.save(recipe);
 
         // GET
