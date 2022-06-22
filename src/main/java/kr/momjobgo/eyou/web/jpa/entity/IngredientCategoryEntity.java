@@ -18,6 +18,9 @@ public class IngredientCategoryEntity {
     @Column(name = "title")
     private String name;
 
+    @Column(name = "key")
+    private String key;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_key")
     private List<IngredientEntity> ingredientEntities = new ArrayList<>();
