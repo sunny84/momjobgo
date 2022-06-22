@@ -2,9 +2,7 @@ package kr.momjobgo.eyou.web.controller;
 
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/Recipe")
@@ -15,8 +13,13 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping("/join/ingredient")
+    @GetMapping("/ingredient")
     public ResponseEntity<?> joinIngredient() {
         return ResponseEntity.ok(recipeService.joinIngredient());
+    }
+
+    @GetMapping("/ingredient/args")
+    public ResponseEntity<?> getPeriod(@RequestParam(value = "period") Long period, @RequestParam(value = "timeTakenId") Long timeTabkenId) {
+        return ResponseEntity.ok().body( recipeService.findByPeriod(period) );
     }
 }
