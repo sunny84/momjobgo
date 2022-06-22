@@ -20,4 +20,10 @@ public class RecipeServiceImpl implements RecipeService {
     public List<RecipeEntity> joinIngredient() {
         return recipeRepository.findAll();
     }
+
+
+    @Override
+    public List<RecipeEntity> findByPeriod(Long period) {
+        return recipeRepository.findByPeriod(period);
+    }
 }
