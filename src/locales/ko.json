@@ -43,7 +43,8 @@
         "youtubeUrl" : "유투브 Full영상 링크",
         "youtubeView" : "Youtube Full 영상 보기",
         "all" : "전체",
-        "moveBox" : "박스 이동"
+        "moveBox" : "박스 이동",
+        "myRecipe" : "나의 레시피"
     },
 
     "option" : {
@@ -101,6 +102,7 @@
         "delete" : "삭제",
         "cancel" : "취소",
         "done" : "완료",
-        "addNewBox" : "새 박스 추가"
+        "addNewBox" : "새 박스 추가",
+        "write" : "작성하기"
     }
 }

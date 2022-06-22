@@ -43,7 +43,8 @@
         "youtubeUrl" : "Youtube Full link",
         "youtubeView" : "View Youtube",
         "all" : "All",
-        "moveBox" : "Go to Box"
+        "moveBox" : "Go to Box",
+        "myRecipe" : "My Recipe"
     },
 
     "option" : {
@@ -101,6 +102,7 @@
         "delete" : "Delete",
         "cancel" : "Cancel",
         "done" : "Done",
-        "addNewBox" : "Add New Box"
+        "addNewBox" : "Add New Box",
+        "write" : "Write"
     }
 }
