@@ -1,17 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// import recipe from './modules/recipe'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
+    // recipe
   }
 })
