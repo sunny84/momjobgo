@@ -5,23 +5,111 @@
 
     "title" : {
         "writeRecipe" : "Write Recipe",
-        "viewRecipe" : "View Recipe"
+        "viewRecipe" : "View Recipe",
+        "recipeBox" : "Recipe Box"
     },
 
     "description" : {
         "writeRecipe" : "Start to write recipe?",
-        "ingredient" : "Which indigredient do you choose?"
+        "ingredient" : "Which indigredient do you choose?",
+        "almostDone" : "You are almost done! Hang in there!",
+        "finishAndSave" : "Completion! Save this recipe?",
+        "publishRecipe" : "Publish the recipe?",
+        "moveToMyRecipe" : "Move to MY recipe immediately if slide",
+        "autoSave" : "It'll be saved automatically if you move on next."
+    },
+
+    "menu" : {
+        "myRecipe": "My Recipe",
+        "savedRecipe" : "Saved Recipe",
+        "historyRecipe" : "History Recipe"
     },
 
     "content" : {
         "step" : "Step",
         "quantity" : "Qunatity",
         "times" : "meals",
-        "timeTaken" : "Required time"
-    }, 
+        "timeTaken" : "Required time",
+        "choiceOfIngredient" : "Ingredient Choice",
+        "title" : "Title - Chosen ingredient",
+        "subTitle" : "A word for this special recipe! ex) The delicious reason!",
+        "mainPicture" : "Presentative Picture",
+        "listOfIngredient" : "Ingredients",
+        "cookingOrder" : "Cooking order",
+        "tip" : "Tip",
+        "movieClipUrl" : "Movie clip link",
+        "movieClipView" : "View movie cilp",
+        "youtubeUrl" : "Youtube Full link",
+        "youtubeView" : "View Youtube",
+        "all" : "All",
+        "moveBox" : "Go to Box",
+        "myRecipe" : "My Recipe"
+    },
+
+    "content_description" : {
+        "measuringUnit" : "measure unit",
+        "option" : "Optional",
+        "tip" : "Add Tips",
+        "movieClipUrl" : "Enter url",
+        "youtubeUrl" : "Enter url"
+    },
+
+    "option" : {
+        "period" : ["begining(thin rice gruel)", "middle(Porridge)", "latter(soft boiled rice)"],
+        "timeTaken" : ["within 15 min", "15 min", "30 min", "60 min", "over 60 min"]
+    },
+
+    "ing_category" : {
+        "none" : "none",
+        "rootAndTuberCrops" : "root and tuber crops",
+        "blockIronAbsorption" : "block iron absorption(recommend after 6 months)",
+        "fruits" : "fruits",
+        "animalProtein" : "animal protein",
+        "essential" : "essential"
+    },
+
+    "ingredient" : {
+        "WATER" : "Water",
+        "GLUTINOUS_RICE" : "Glutinous rice",
+        "PEA" : "Pea",
+        "CORN" : "Corn",
+        "BROCCOLI" : "Broccoli",
+        "CHINESE_CABBAGE" : "Chinese cabbage",
+        "WHITE_RADISH" : "White radish",
+        "PAPRIKA" : "Paprika",
+        "GREEN_PUMPKIN" : "Green pumpkin",
+        "LEAF_BEET" : "Leaf beet",
+        "CURLED_MALLOW" : "Curled mallow",
+        "MUSHROOM" : "Mushroom",
+        "EGGPLANT" : "Eggplant",
+        "CUCUMBER" : "Cucumber",
+        "PAK_CHOI" : "Pak choi",
+        "SWEET_PUMPKIN" : "Sweet pumpkin",
+        "POTATO" : "Potato",
+        "SWEET_POTATO" : "Sweet potato",
+        "SPINACH" : "Spinach",
+        "CARROT" : "Carrot",
+        "APPLE" : "Apple",
+        "PEAR" : "Pear",
+        "BANANA" : "Banana",
+        "BEEF" : "Beef",
+        "CHICKEN" : "Chicken",
+        "WHITE_FISH" : "White fish",
+        "YOLK" : "Yolk",
+        "TOFU" : "Tofu"
+    },
 
     "button" : {
         "next" : "Next",
-        "back" : "Previous"
+        "back" : "Previous",
+        "saveAndPreview" : "Save and preview",
+        "slideAndPublish" : "Publish to slide",
+        "edit" : "Edit",
+        "move" : "Move",
+        "delete" : "Delete",
+        "cancel" : "Cancel",
+        "done" : "Done",
+        "addNewBox" : "Add New Box",
+        "write" : "Write"
     }
 }
