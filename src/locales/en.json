@@ -5,7 +5,8 @@
 
     "title" : {
         "writeRecipe" : "Write Recipe",
-        "viewRecipe" : "View Recipe"
+        "viewRecipe" : "View Recipe",
+        "RecipeFilter" : "Filter"
     },
 
     "description" : {
