@@ -35,6 +35,7 @@
         "subTitle" : "A word for this special recipe! ex) The delicious reason!",
         "mainPicture" : "Presentative Picture",
         "listOfIngredient" : "Ingredients",
+        "measuringUnit" : "measure unit",
         "cookingOrder" : "Cooking order",
         "tip" : "Tip",
         "movieClipUrl" : "Movie clip link",
@@ -44,14 +45,6 @@
         "all" : "All",
         "moveBox" : "Go to Box",
         "myRecipe" : "My Recipe"
-    },
-
-    "content_description" : {
-        "measuringUnit" : "measure unit",
-        "option" : "Optional",
-        "tip" : "Add Tips",
-        "movieClipUrl" : "Enter url",
-        "youtubeUrl" : "Enter url"
     },
 
     "option" : {
