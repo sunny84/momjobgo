@@ -13,51 +13,52 @@ public class RecipeBoxController {
 
     public RecipeBoxController(RecipeBoxService recipeBoxService) { this.recipeBoxService = recipeBoxService; }
 
-    @GetMapping("/get/all")
+    @GetMapping("/all")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok().body( recipeBoxService.getAll() );
     }
 
-    @GetMapping("/get?id={id}")
+    @GetMapping("/id={id}")
     public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( recipeBoxService.getById(id) ); }
 
-    @PostMapping("/insert?name={name}")
+    @PostMapping("/name={name}")
     public ResponseEntity<?> insertRecipeBoxName(@RequestParam String name){
         return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBoxName(name));
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<?> insertRecipeBox(@RequestBody RecipeBoxEntity recipeBoxEntity){
+    @PostMapping("/default")
+    public ResponseEntity<?> insertRecipeBoxDefault(@RequestBody RecipeBoxEntity recipeBoxEntity){
         return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBox(recipeBoxEntity));
     }
 
-    @PatchMapping("/update/{id}?name={name}")
+    @PatchMapping("/{id}?name={name}")
     public ResponseEntity<?> updateRecipeBoxNameById(@PathVariable Long id, @PathVariable String name){
         return ResponseEntity.ok().body(recipeBoxService.updateRecipeBoxNameById(id, name));
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("/")
     public ResponseEntity<?> updateRecipeBox(@RequestBody RecipeBoxEntity recipeBoxEntity){
         return ResponseEntity.ok().body(recipeBoxService.updateRecipeBox(recipeBoxEntity));
     }
 
-    @DeleteMapping("/delete?id={id}")    // id에 해당되는 데이터 삭제. 없는 id일 경유 500 에러 발생
+    @DeleteMapping("/id={id}")    // id에 해당되는 데이터 삭제. 없는 id일 경유 500 에러 발생
     public ResponseEntity<?> deleteRecipeBoxById(@PathVariable Long id) {
         return ResponseEntity.ok().body(recipeBoxService.deleteRecipeBoxById(id));
     }
 
-    @DeleteMapping("/delete/all")
+    @DeleteMapping("/all")
     public ResponseEntity<?> deleteRecipeBoxAll() {
         return ResponseEntity.ok().body(recipeBoxService.deleteRecipeBoxAll());
     }
 
-    @GetMapping("/find?name={name}")
+    @GetMapping("/name={name}")
     public ResponseEntity<?> getRecipeBoxByName(@RequestParam String name){
         return ResponseEntity.ok().body(recipeBoxService.findByName(name));
     }
 
-    @GetMapping("/box/find/contains?name={name}")
+    @GetMapping("/contains?name={name}")
     public ResponseEntity<?> getRecipeBoxByNameContains(@RequestParam String name){
         return ResponseEntity.ok().body(recipeBoxService.findByNameContains(name));
     }
+
 }

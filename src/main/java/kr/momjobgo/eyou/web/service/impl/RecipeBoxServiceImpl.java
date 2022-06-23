@@ -24,11 +24,13 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
     public RecipeBoxEntity insertRecipeBoxName(String name) {
         RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
         recipeBoxEntity.setName(name);
+        recipeBoxEntity.setIsDefault(false);
         return recipeBoxRepository.save(recipeBoxEntity);
     }
 
     @Override
     public RecipeBoxEntity insertRecipeBox(RecipeBoxEntity entity) {
+        entity.setIsDefault(true);
         return recipeBoxRepository.save(entity);
     }
 
