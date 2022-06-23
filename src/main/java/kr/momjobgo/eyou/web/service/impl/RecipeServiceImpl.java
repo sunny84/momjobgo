@@ -17,13 +17,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeEntity> joinIngredient() {
-        return recipeRepository.findAll();
-    }
-
-
-    @Override
-    public List<RecipeEntity> findByPeriod(Long period) {
-        return recipeRepository.findByPeriod(period);
+    public List<RecipeEntity> findByFilter(Long period, Long timeTakenId, List<Long> Ids) {
+        return recipeRepository.findByFilter(period, timeTakenId, Ids, Long.valueOf(Ids.size()), Long.valueOf(0));
     }
 }
