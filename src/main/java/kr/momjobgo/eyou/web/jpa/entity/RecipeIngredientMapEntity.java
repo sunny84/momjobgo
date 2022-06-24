@@ -1,17 +1,11 @@
 package kr.momjobgo.eyou.web.jpa.entity;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity(name = "RECIPE_INGREDIENT_MAP")
 @Data
-//@NamedQuery(
-//        name = "RecipeIngredientMapEntity.findByIngredientIds",
-//        query = "select m.id from RECIPE_INGREDIENT_MAP m where m.ingredientId in ( :Ids )"
-//)
 public class RecipeIngredientMapEntity {
 
     @Id

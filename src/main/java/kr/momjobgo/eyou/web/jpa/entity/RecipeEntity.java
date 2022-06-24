@@ -10,7 +10,7 @@ public class RecipeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "contents_id")
@@ -34,6 +34,4 @@ public class RecipeEntity {
     @Column(name = "youtube_link")
     private String youtubeLink;
 
-    public void setRecipeBox(RecipeBoxEntity recipeBox) {
-    }
 }
