@@ -6,22 +6,22 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "INGREDIENT_CATEGORY")
+@Entity(name = "INGREDIENT")
 @Data
-public class IngredientCategoryEntity {
+public class IngredientEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "name")
     private String name;
 
     @Column(name = "key")
     private String key;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_key")
-    private List<IngredientEntity> ingredientEntities = new ArrayList<>();
+    @Column(name = "category_key")
+    private Long categoryKey;
 
 }

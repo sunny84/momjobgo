@@ -22,9 +22,14 @@ public class TestController {
      * Double
      * @return
      */
-    @GetMapping("/join/test")
+    @GetMapping("/join/test")   // table join을 위한 예제
     public ResponseEntity<?> test() {
         return ResponseEntity.ok(testService.testJoin());
+    }
+
+    @GetMapping("/test")    // url로 넘겨받은 param을 그대로 return해줌
+    public String test(@RequestParam String param) {
+        return param;
     }
 
     @GetMapping("/join/test2")
@@ -37,27 +42,27 @@ public class TestController {
        return ResponseEntity.ok().body( testService.getAll() );
     }
 
-    @GetMapping("/test/{id}")
+    @GetMapping("/test/{id}")   // id에 해당되는 name 받아오기
     public ResponseEntity<?> getTest(@PathVariable Long id) {
         return ResponseEntity.ok().body( testService.getTest(id) );
     }
 
-    @PostMapping("/test")
+    @PostMapping("/test")   // name을 가진 새 데이터 생성
     public ResponseEntity<?> postTest(@RequestParam String name){
         return ResponseEntity.status(HttpStatus.CREATED).body(testService.insertTest(name));
     }
 
-    @PostMapping("/test2")
+    @PostMapping("/test2")  // id가 존재하면 update, id가 없으면 auto_increment한 id로 생성
     public ResponseEntity<?> postTest(@RequestBody TestEntity testEntity){
         return ResponseEntity.status(HttpStatus.CREATED).body(testService.insertTest2(testEntity));
     }
 
-    @PatchMapping("/test/{id}")
+    @PatchMapping("/test/{id}") // 하드코딩으로 수정할 id의 name이 "수정해봅시다"이면 아이디 변경
     public ResponseEntity<?> updateTest(@RequestBody TestEntity testEntity){
         return ResponseEntity.ok().body(testService.updateTest(testEntity));
     }
 
-    @DeleteMapping("/test/{id}")
+    @DeleteMapping("/test/{id}")    // id에 해당되는 데이터 삭제. 없는 id일 경유 500 에러 발생
     public ResponseEntity<?> deleteTest(@PathVariable Long id) {
         return ResponseEntity.ok().body(testService.deleteTest(id));
     }

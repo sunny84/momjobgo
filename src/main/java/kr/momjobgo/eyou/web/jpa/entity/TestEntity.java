@@ -1,10 +1,6 @@
 package kr.momjobgo.eyou.web.jpa.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
