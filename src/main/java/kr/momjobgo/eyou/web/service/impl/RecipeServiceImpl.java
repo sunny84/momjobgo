@@ -23,6 +23,11 @@ public class RecipeServiceImpl implements RecipeService {
 
 
     @Override
+    public List<RecipeEntity> joinIngredient() {
+        return null;
+    }
+
+    @Override
     public List<RecipeEntity> findByPeriod(Long period) {
         return recipeRepository.findByPeriod(period);
     }

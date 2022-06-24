@@ -6,6 +6,8 @@ import kr.momjobgo.eyou.web.jpa.entity.TestEntity;
 import java.util.List;
 
 public interface RecipeService {
+    List<RecipeEntity> findAll();
+
     List<RecipeEntity> joinIngredient();
     List<RecipeEntity> findByPeriod(Long period);
 }

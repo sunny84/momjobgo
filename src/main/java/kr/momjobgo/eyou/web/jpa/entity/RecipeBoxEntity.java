@@ -12,7 +12,7 @@ import java.util.List;
 public class RecipeBoxEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "recipebox_id", nullable = false)
     private Long id;
 
     @Column(name = "name")
@@ -21,9 +21,16 @@ public class RecipeBoxEntity extends BaseTimeEntity {
     @Column(name = "is_default")
     private Boolean isDefault;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "RECIPE_RECIPEBOX_MAP", //조인테이블명
+            joinColumns = @JoinColumn(name="recipebox_id"),  //외래키
+            inverseJoinColumns = @JoinColumn(name="user_id") //반대 엔티티의 외래키
+    )
+    private UserEntity userEntity;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "RECIPE_RECIPEBOX_MAP",                       // 조인 테이블 명
-            joinColumns = @JoinColumn(name = "recipe_box_id"),      // 현재 엔티티를 참조하는 외래키
+            joinColumns = @JoinColumn(name = "recipebox_id"),      // 현재 엔티티를 참조하는 외래키
             inverseJoinColumns = @JoinColumn(name = "recipe_id")    // 반대방향 엔티티를 참조하는 외래키
     )
     private List<RecipeEntity> recipes = new ArrayList<>();
