@@ -5,6 +5,7 @@ import RecipeWriteView from '@/views/RecipeWriteView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RecipeBoxView from '@/views/RecipeBoxView.vue'
 import MyRecipeView from '@/views/MyRecipeView.vue'
+import RecipeFilterView from '@/views/RecipeFilterView.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path : '/login',
     name: 'login',
     component: LoginView
+  },
+  {
+    path : '/filter',
+    name: 'filter',
+    component: RecipeFilterView
   },
 
   {

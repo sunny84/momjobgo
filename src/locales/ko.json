@@ -6,7 +6,8 @@
     "title" : {
         "writeRecipe" : "레시피 작성하기",
         "viewRecipe" : "레시피 상세보기",
-        "recipeBox" : "레시피 박스"
+        "recipeBox" : "레시피 박스",
+        "RecipeFilter" : "필터"
     },
 
     "description" : {
