@@ -12,8 +12,6 @@ public interface RecipeBoxService {
     RecipeBoxEntity getById(Long id);
     RecipeBoxEntity insertRecipeBoxName(String name);
     RecipeBoxEntity insertRecipeBox(RecipeBoxEntity entity);
-    RecipeBoxEntity updateRecipeBoxById(Long id, RecipeBoxEntity entity);
-    RecipeBoxEntity updateRecipeBoxNameById(Long id, String name);
     RecipeBoxEntity updateRecipeBox(RecipeBoxEntity entity);
     String deleteRecipeBoxById(Long id);
     String deleteRecipeBoxAll();

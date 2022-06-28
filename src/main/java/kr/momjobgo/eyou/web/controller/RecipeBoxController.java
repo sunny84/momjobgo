@@ -31,11 +31,6 @@ public class RecipeBoxController {
             return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBox(recipeBoxEntity));
         }
 
-        @PatchMapping("/{id}?name={name}")
-        public ResponseEntity<?> updateRecipeBoxNameById(@PathVariable Long id, @PathVariable String name){
-            return ResponseEntity.ok().body(recipeBoxService.updateRecipeBoxNameById(id, name));
-        }
-
         @PatchMapping("/")
         public ResponseEntity<?> updateRecipeBox(@RequestBody RecipeBoxEntity recipeBoxEntity){
             return ResponseEntity.ok().body(recipeBoxService.updateRecipeBox(recipeBoxEntity));

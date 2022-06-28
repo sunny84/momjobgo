@@ -25,4 +25,10 @@ public class RecipeBoxEntity extends BaseTimeEntity {
             inverseJoinColumns = @JoinColumn(name = "recipe_id")    // 반대방향 엔티티를 참조하는 외래키
     )
     private List<RecipeEntity> recipeEntities = new ArrayList<>();
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "is_default")
+    private Boolean isDefault;
 }

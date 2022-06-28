@@ -1,11 +1,13 @@
 package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
+import kr.momjobgo.eyou.web.jpa.entity.TestEntity;
 import kr.momjobgo.eyou.web.jpa.repository.RecipeBoxRepository;
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecipeBoxServiceImpl implements RecipeBoxService {
@@ -17,43 +19,44 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
     public List<RecipeBoxEntity> joinRecipe() { return recipeBoxRepository.findAll(); }
 
     @Override
-    public List<RecipeBoxEntity> getAll() {
-        return null;
-    }
+    public List<RecipeBoxEntity> getAll() { return recipeBoxRepository.findAll(); }
 
     @Override
-    public RecipeBoxEntity getById(Long id) {
-        return null;
+    public RecipeBoxEntity getById(Long id){
+
+        Optional<RecipeBoxEntity> recipeBoxEntity = recipeBoxRepository.findById(id);
+
+        if(recipeBoxEntity.isPresent()){
+            return recipeBoxEntity.get();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public RecipeBoxEntity insertRecipeBoxName(String name) {
-        return null;
+        RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
+        recipeBoxEntity.setName(name);
+        return recipeBoxRepository.save(recipeBoxEntity);
     }
 
     @Override
-    public RecipeBoxEntity insertRecipeBox(RecipeBoxEntity entity) {
-        return null;
-    }
-
-    @Override
-    public RecipeBoxEntity updateRecipeBoxById(Long id, RecipeBoxEntity entity) {
-        return null;
-    }
-
-    @Override
-    public RecipeBoxEntity updateRecipeBoxNameById(Long id, String name) {
-        return null;
-    }
+    public RecipeBoxEntity insertRecipeBox(RecipeBoxEntity entity) { return recipeBoxRepository.save(entity); }
 
     @Override
     public RecipeBoxEntity updateRecipeBox(RecipeBoxEntity entity) {
-        return null;
+        return recipeBoxRepository.save(entity);
     }
 
     @Override
     public String deleteRecipeBoxById(Long id) {
-        return null;
+        if(recipeBoxRepository.findById(id).isPresent()) {
+            recipeBoxRepository.deleteById(id);
+            return "삭제성공";
+        }
+        else {
+            return "아이디가 존재하지 않음";
+        }
     }
 
     @Override
@@ -63,16 +66,16 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
 
     @Override
     public List<RecipeBoxEntity> findByName(String name) {
-        return null;
+        return recipeBoxRepository.findByName(name);
     }
 
     @Override
     public List<RecipeBoxEntity> findByNameContains(String name) {
-        return null;
+        return recipeBoxRepository.findByNameContains(name);
     }
 
     @Override
     public RecipeBoxEntity findByIsDefault(Boolean isDefault) {
-        return null;
+        return recipeBoxRepository.findByIsDefault(isDefault);
     }
 }
