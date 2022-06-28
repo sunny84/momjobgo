@@ -9,7 +9,6 @@ import java.util.List;
 @Entity(name = "INGREDIENT_CATEGORY")
 @Data
 public class IngredientCategoryEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
