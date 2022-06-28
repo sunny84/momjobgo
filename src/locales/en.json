@@ -7,6 +7,7 @@
         "writeRecipe" : "Write Recipe",
         "viewRecipe" : "View Recipe",
         "RecipeFilter" : "Filter"
+        "recipeBox" : "Recipe Box"
     },
 
     "description" : {
@@ -17,6 +18,12 @@
         "publishRecipe" : "Publish the recipe?",
         "moveToMyRecipe" : "Move to MY recipe immediately if slide",
         "autoSave" : "It'll be saved automatically if you move on next."
+    },
+
+    "menu" : {
+        "myRecipe": "My Recipe",
+        "savedRecipe" : "Saved Recipe",
+        "historyRecipe" : "History Recipe"
     },
 
     "content" : {
@@ -34,7 +41,10 @@
         "movieClipUrl" : "Movie clip link",
         "movieClipView" : "View movie cilp",
         "youtubeUrl" : "Youtube Full link",
-        "youtubeView" : "View Youtube"
+        "youtubeView" : "View Youtube",
+        "all" : "All",
+        "moveBox" : "Go to Box",
+        "myRecipe" : "My Recipe"
     },
 
     "content_description" : {
@@ -94,6 +104,13 @@
         "next" : "Next",
         "back" : "Previous",
         "saveAndPreview" : "Save and preview",
-        "slideAndPublish" : "Publish to slide"
+        "slideAndPublish" : "Publish to slide",
+        "edit" : "Edit",
+        "move" : "Move",
+        "delete" : "Delete",
+        "cancel" : "Cancel",
+        "done" : "Done",
+        "addNewBox" : "Add New Box",
+        "write" : "Write"
     }
 }
