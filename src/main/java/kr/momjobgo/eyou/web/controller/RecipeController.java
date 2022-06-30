@@ -30,4 +30,13 @@ public class RecipeController {
                 }
                 return ResponseEntity.ok().body( recipeService.findByFilter(period, timeTakenId, Ids) );
             }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok().body( recipeService.getAll() );
+    }
+
+    @GetMapping("/id={id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( recipeService.getById(id) ); }
+
 }
