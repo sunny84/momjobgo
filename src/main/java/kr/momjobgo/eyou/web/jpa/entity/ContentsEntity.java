@@ -2,16 +2,14 @@ package kr.momjobgo.eyou.web.jpa.entity;
 
 import kr.momjobgo.eyou.web.jpa.entity.base.BaseTimeEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 @Entity(name = "CONTENTS")
-public class ContentsEntity  extends BaseTimeEntity {
+public class ContentsEntity extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // auto increment속성지정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -19,17 +17,17 @@ public class ContentsEntity  extends BaseTimeEntity {
     private Long category;
 
     @Column(name = "writer")
-    private String writer;
+    private Long writer;
 
     @Column(name = "title")
     private String title;
 
     @Column(name = "sub_title")
-    private String sub_title;
+    private String subTitle;
 
     @Column(name = "contents")
     private String contents;
 
     @Column(name = "use")
-    private char use;
+    private String use;
 }

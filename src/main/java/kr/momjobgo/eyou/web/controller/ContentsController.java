@@ -1,24 +1,26 @@
 package kr.momjobgo.eyou.web.controller;
 
-import kr.momjobgo.eyou.web.jpa.entity.ContentsEntity;
-import kr.momjobgo.eyou.web.jpa.entity.TestEntity;
+
 import kr.momjobgo.eyou.web.service.ContentsService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/contents")
 public class ContentsController {
+    private final ContentsService contentsService;
 
-    private ContentsService contentsService;
+    public ContentsController(ContentsService contentsService) { this.contentsService = contentsService; }
 
-    public ContentsController(ContentsService contentsService) {
-        this.contentsService = contentsService;
+    @GetMapping("")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok().body( contentsService.getAll() );
     }
 
-    @PostMapping("/contents")   // insert contents
-    public ResponseEntity<?> insertContent(@RequestBody ContentsEntity contentsEntity){
-        return ResponseEntity.status(HttpStatus.CREATED).body(contentsService.insertContent(contentsEntity));
-    }
+    @GetMapping("/id={id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( contentsService.getById(id) ); }
+
 }
