@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RecipeWriteView from '@/views/RecipeWriteView.vue'
 import LoginView from '@/views/LoginView.vue'
+import LoginViewkko from '@/views/LoginViewkko.vue'
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,11 @@ const routes = [
     name: 'login',
     component: LoginView
   },
-
+  {
+    path : '/loginkko',
+    name: 'loginkko',
+    component: LoginViewkko
+  },
   {
     path: '/about',
     name: 'about',

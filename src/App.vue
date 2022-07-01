@@ -4,7 +4,8 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/write">{{ $t("title.writeRecipe")}}</router-link> |
       <router-link to="/login">login</router-link>  |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link>  |
+      <router-link to="/loginkko">loginkko</router-link>  
     </nav>
     <div>
       <p>
@@ -20,6 +21,7 @@
 import i18n from '@/i18n'
 
 export default {
+
   methods: {
     changeLocale(locale) {
       if(locale === 'ko'){
