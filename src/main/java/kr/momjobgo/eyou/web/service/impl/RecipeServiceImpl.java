@@ -18,6 +18,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public RecipeEntity findById(Long id) {
+        return recipeRepository.findById(id);
+    }
+
+    @Override
     public List<RecipeEntity> findByFilter(Long period, Long timeTakenId, List<Long> Ids) {
         return recipeRepository.findByFilter(period, timeTakenId, Ids, Long.valueOf(Ids.size()), Long.valueOf(0));
     }
