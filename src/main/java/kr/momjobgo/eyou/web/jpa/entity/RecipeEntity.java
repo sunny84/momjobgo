@@ -13,7 +13,8 @@ public class RecipeEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "contents_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contents_id")
     private Long contentsId;
 
     @Column(name = "period")
