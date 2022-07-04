@@ -5,6 +5,7 @@
       <router-link to="/write">{{ $t("title.writeRecipe")}}</router-link> |
       <router-link to="/recipebox">{{ $t("title.recipeBox")}}</router-link> |
       <router-link to="/login">login</router-link>  |
+      <router-link to="/filter">{{ $t("title.RecipeFilter")}}</router-link>  |
       <router-link to="/about">About</router-link>
     </nav>
     <div>
