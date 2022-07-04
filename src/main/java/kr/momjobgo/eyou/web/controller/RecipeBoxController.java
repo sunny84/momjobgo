@@ -55,6 +55,5 @@ public class RecipeBoxController {
         public ResponseEntity<?> getRecipeBoxByNameContains(@RequestParam String name){
             return ResponseEntity.ok().body(recipeBoxService.findByNameContains(name));
         }
-
-    }
+}
 

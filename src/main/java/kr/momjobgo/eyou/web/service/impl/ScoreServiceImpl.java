@@ -28,4 +28,15 @@ public class ScoreServiceImpl implements ScoreService {
             return null;
         }
     }
+    @Override
+    public ScoreEntity getByRecipeId(Long recipeId){
+
+        Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipeId);
+
+        if(scoreEntity.isPresent()){
+            return scoreEntity.get();
+        } else {
+            return null;
+        }
+    }
 }

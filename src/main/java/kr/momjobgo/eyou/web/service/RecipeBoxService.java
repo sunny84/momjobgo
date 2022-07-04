@@ -18,5 +18,6 @@ public interface RecipeBoxService {
     List<RecipeBoxEntity> findByName(String name);
     List<RecipeBoxEntity> findByNameContains(String name);
     RecipeBoxEntity findByIsDefault(Boolean isDefault);
+
 }
 

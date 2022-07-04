@@ -23,4 +23,7 @@ public class ContentsController {
     @GetMapping("/id={id}")
     public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( contentsService.getById(id) ); }
 
+    @GetMapping("/writer={writer}")
+    public ResponseEntity<?> getByWriter(@PathVariable Long writer) { return ResponseEntity.ok().body( contentsService.getByWriter(writer) ); }
+
 }
