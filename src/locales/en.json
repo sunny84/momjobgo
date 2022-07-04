@@ -6,8 +6,8 @@
     "title" : {
         "writeRecipe" : "Write Recipe",
         "viewRecipe" : "View Recipe",
+        "recipeBox" : "Recipe Box",
         "RecipeFilter" : "Filter"
-        "recipeBox" : "Recipe Box"
     },
 
     "description" : {
