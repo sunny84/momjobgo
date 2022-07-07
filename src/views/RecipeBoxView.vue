@@ -10,14 +10,15 @@
                     <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
                 </ul>
             </div>
+            <button @click="callData">초기화</button>
             <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
             <div class="submenu" v-if="step===1">
                 <ul>
                     <!-- DB 에서 가져온 레시피 박스 목록으로 생성
                     <li>{{ 레시피 박스 이름 }}</li>
                      -->
-                    <li><button>{{$t("button.addNewBox")}}</button></li>
                 </ul>
+                <li><button>{{$t("button.addNewBox")}}</button></li>
             </div>
         <!--CONTENTS-->
             <div class="contents" v-if="step===0">
@@ -36,6 +37,18 @@
                 <!-- DB에 레시피 박스 추가
                 {{ 레시피 박스 추가 }}
                 -->
+                
+                <tr v-for="(recipeBox, id) in recipeBoxes" :key="id">
+                    <td>
+                        <img :src="recipeBox.recipeEntities.clipLink"/>
+                    </td>
+                    <td>
+                        <a :href="recipeBox.name" target="_blank">
+                        {{recipeBox.name}}{{recipeBox.recipeEntities.length}}
+                        </a>
+                    </td>
+                </tr>
+                <button>{{$t("button.addNewBox")}}</button>
             </div>
             <div class="contents" v-if="step===1">
                 <button>{{$t("button.edit")}}</button>
@@ -83,6 +96,7 @@
     </div>
 </template>
 <script>
+import axios from "axios"
 
 export default {
     name : "RecipeBoxView",
@@ -100,10 +114,24 @@ export default {
             moveStep=0 레시피 박스 편집 화면
             moveStep=1 레시시 박스 편집 > 이동 화면
         */
-        moveStep : 0
+        moveStep : 0,
+        recipeBoxes : [],
     }),
 
     methods : {
+      callData() {
+        console.log("callData");
+        this.callRecipeBox();
+      },
+      async callRecipeBox() {
+          axios.get(`http://localhost:8090/recipebox/all`, {
+          }).then(response=>{
+            this.recipeBoxes = response.data;
+            console.log(response.data);
+          }).catch(error=>{
+            console.error(error);
+          })
+      }
 
     },
 }
