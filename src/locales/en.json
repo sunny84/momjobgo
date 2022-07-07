@@ -47,6 +47,14 @@
         "moveBox" : "Go to Box",
         "myRecipe" : "My Recipe"
     },
+    
+    "content_description" : {
+        "measuringUnit" : "measure unit",
+        "option" : "Optional",
+        "tip" : "Add Tips",
+        "movieClipUrl" : "Enter url",
+        "youtubeUrl" : "Enter url"
+    },
 
     "option" : {
         "period" : ["begining(thin rice gruel)", "middle(Porridge)", "latter(soft boiled rice)"],

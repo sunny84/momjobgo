@@ -48,6 +48,14 @@
         "myRecipe" : "나의 레시피"
     },
 
+    "content_description" : {
+        "measuringUnit" : "계량단위",
+        "option" : "선택사항",
+        "tip" : "Tip을 입력하세요.",
+        "movieClipUrl" : "url을 입력하세요.",
+        "youtubeUrl" : "url을 입력하세요."
+    },
+
     "option" : {
         "period" : ["초기(미음)", "중기(죽)", "후기(진밥)"],
         "timeTaken" : ["15분이내", "15분", "30분", "60분", "60분 이상"]

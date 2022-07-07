@@ -1,8 +1,8 @@
 <template>
     <div>
+        <h4>{{ $t("title.writeRecipe") }}</h4>
+        <p>단계 : {{ step +1}}</p>
         <div v-if="step===0">
-            <h4>{{ $t("title.writeRecipe") }}</h4>
-            <p>{{ step +1}}</p>
             <p>{{ $t("description.writeRecipe")}}</p>
             <p>{{ $t("content.step")}}
                 <select v-model="period">
@@ -15,90 +15,69 @@
                 </select></p>
         </div>
         <div v-else-if="step===1">
-            <h4>{{ $t("title.writeRecipe") }}</h4>
-            <p>{{ step +1}}</p>
             <p>{{ $t("description.ingredient")}}</p>
-            <!-- DB에서 받아온 것을 어떻게 translate 시킬 것인지 결정 후 구현
-                1. value=INGREDIENT의 id
-                2. key를  translate 시켜서 label로
-            -->
-            <!-- start of test -->
-            <div v-for="(category, idx) in ing_data" :key="idx">
-                <p v-show="category.id!==1">{{category.name}}</p>
-                <p>
-                    <!-- <span v-for="(ing_single, ing_idx) in category.ingredientEntities" :key="ing_idx">
-                        {{ing_single.id}}==={{ing_single.key}}<br>
+            <p>{{ $t("content.choiceOfIngredient")}}</p>
 
-                    </span> -->
-                    <input v-for="(ing_single, ing_idx) in category.ingredientEntities" :key="ing_idx" type="checkbox" v-model="selectedIngredients" :value="ing_single.id">{{ing_single.key}}</input>
+            <div v-for="(category, idx) in ing_data" :key="idx" v-show="category.id!==6">
+                <!-- HELP!!!!! -->
+                <p v-show="category.id!==1">{{category.name}} - {{$t(("ing_category["+category.id+"]"))}}</p>
+                <p>
+                    <span v-for="(item, idx) in category.ingredientEntities" :key="item.id">
+                        <input  id="ing_name"  type="checkbox" v-model="selectedIngredients" :value="item.id">
+                        <!-- match i18n item & key value : OK-->
+                        <label for="ing_name">{{$t("ingredient."+[item.key])}}</label>
+                        <br v-if="category.id===1&&idx%3===1">
+                        <br v-else-if="category.id!==1&&idx%3===2">
+                    </span>
                 </p>
             </div>
-            <!-- end of test -->
-            <p>{{ $t("content.choiceOfIngredient")}}
-                <div>
-                    <p>
-                        <input type="checkbox" v-model="selectedIngredients" value="2">{{$t("ingredient.GLUTINOUS_RICE")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="3">{{$t("ingredient.PEA")}}</input><br>
-                        <input type="checkbox" v-model="selectedIngredients" value="4">{{$t("ingredient.CORN")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="5">{{$t("ingredient.BROCCOLI")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="6">{{$t("ingredient.CHINESE_CABBAGE")}}</input><br>
-                        <input type="checkbox" v-model="selectedIngredients" value="7">{{$t("ingredient.WHITE_RADISH")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="8">{{$t("ingredient.PAPRIKA")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="9">{{$t("ingredient.GREEN_PUMPKIN")}}</input><br>
-                        <input type="checkbox" v-model="selectedIngredients" value="10">{{$t("ingredient.LEAF_BEET")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="11">{{$t("ingredient.CURLED_MALLOW")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="12">{{$t("ingredient.MUSHROOM")}}</input><br>
-                        <input type="checkbox" v-model="selectedIngredients" value="13">{{$t("ingredient.EGGPLANT")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="14">{{$t("ingredient.CUCUMBER")}}</input>
-                        <input type="checkbox" v-model="selectedIngredients" value="15">{{$t("ingredient.PAK_CHOI")}}</input>
-                    </p>
-                    <p>{{$t("ing_category.rootAndTuberCrops")}}</p>
-                    <input type="checkbox" v-model="selectedIngredients" value="16">{{$t("ingredient.SWEET_PUMPKIN")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="17">{{$t("ingredient.POTATO")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="18">{{$t("ingredient.SWEET_POTATO")}}</input>
 
-                    <p>{{$t("ing_category.blockIronAbsorption")}}</p>
-                    <input type="checkbox" v-model="selectedIngredients" value="19">{{$t("ingredient.SPINACH")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="20">{{$t("ingredient.CARROT")}}</input>
-
-                    <p>{{$t("ing_category.fruits")}}</p>
-                    <input type="checkbox" v-model="selectedIngredients" value="21">{{$t("ingredient.APPLE")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="22">{{$t("ingredient.PEAR")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="23">{{$t("ingredient.BANANA")}}</input>
-
-                    <p>{{$t("ing_category.animalProtein")}}</p>
-                    <input type="checkbox" v-model="selectedIngredients" value="24">{{$t("ingredient.BEEF")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="25">{{$t("ingredient.CHICKEN")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="26">{{$t("ingredient.WHITE_FISH")}}</input><br>
-                    <input type="checkbox" v-model="selectedIngredients" value="27">{{$t("ingredient.YOLK")}}</input>
-                    <input type="checkbox" v-model="selectedIngredients" value="28">{{$t("ingredient.TOFU")}}</input>
-
-                    <input v-show="true" type="checkbox" v-model="selectedIngredients" value="1">물</input>
-                </div>
-            </p>
         </div>
         <div v-else-if="step===2">
-            <h4>{{ $t("title.writeRecipe") }}</h4>
-            <p>{{ step +1}}</p>
             <p>{{ $t("description.almostDone")}}</p>
-            <p><input type="text" :placeholder="$t('content.title')" v-model="title"></input></p>
-            <p><input type="text" :placeholder="$t('content.subTitle')" v-model="subTitle"></input></p>
+            <!-- title & subtitle -->
+            <p><input type="text" :placeholder="$t('content.title')" v-model="title"></p>
+            <p><input type="text" :placeholder="$t('content.subTitle')" v-model="subTitle"></p>
+            <!-- main picture -->
             <p>{{$t("content.mainPicture")}}</p>
-            <p><input type="file" id="mainpicture">+</input></p>
+            <p><img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg"></p>
+            <p>
+                <input type="file" id="mainPicture" class="pickpicture" accept="image/png, image/jpeg" @change="uploadImg"><label for="mainPicture">+</label></p>
+            <!-- list and volume of ingredient -->
             <p>{{ $t("content.listOfIngredient") }}</p>
-            <p><div v-for="(item, idx) of ingredients" :key="item">
-                <span v-if="item!=='1'">{{item}}</span>
-                <input type="number"></input>g
-                </div>
-                <div><span>{{$t("ingredient.WATER")}}</span>
-                <input type="number"></input></div>
+            <p v-for="item, idx in selectedIngredients" :key="item">
+                <label for="ing_volume">{{item}}-{{$t("ingredient["+item+"]")}}  </label>
+                <input type="number" id="ing_volume" v-model="ingredientVolume[idx]" />
+                <span v-if="item!==1"> g</span>
+                <span v-else> ml</span>
             </p>
-
+            <!-- cooking order-->
+            <p>{{$t("content.cookingOrder")}} <span @click="addOrder(this.cookingOrder.length+1)">+</span></p>
+            <p><textarea id="cookingContents" width="140px" height="50px"></textarea>
+                <input id="cookingPicture" type="file" accept="image/png, image/jpeg" @change="uploadImg" class="pickpicture"/><label for="cookingPicture" class="cookingOrderLabel">+</label></p>
+            <!-- Tip -->
+            <p>{{$t("content.tip")}} {{$t("content_description.option")}}</p>
+            <p><input type="text" :placeholder="$t('content_description.tip')" @change="updateTip"/></p>
+            <!-- Clip moive link -->
+            <p>{{$t("content.movieClipUrl")}} {{$t("content_description.option")}}</p>
+            <p><input type="url" :placeholder="$t('content_description.movieClipUrl')" pattern="https://.*"/></p>
+            <!-- Youtube Full link -->
+            <p>{{$t("content.youtubeUrl")}}  {{$t("content_description.option")}}</p>
+            <p><input type="url" :placeholder="$t('content_description.youtubeUrl')" pattern="https://.*" /></p>
         </div>
+
+        <div v-else-if="step===3">
+            <p>{{ $t("description.finishAndSave")}}</p>
+            <p><img :src="this.mainPictire" /></p>
+            <p>{{this.title}}</p>
+            <p>{{this.subtitle}}</p>
+            <p>{{$t("option.timeTaken["+timeTaken+"]")}}</p>
+        </div>
+
         <div>
             <p>
-                <button v-show="this.step!==0" @click="changeStep(-1)">{{$t("button.back")}}</button> &nbsp;
-                <button v-show="this.step!==3" @click="changeStep(+1)">{{$t("button.next")}}</button> &nbsp;
+                <button v-show="this.step!==0" @click="validateByStep(-1)">{{$t("button.back")}}</button> &nbsp;
+                <button v-show="this.step!==3" @click="validateByStep(+1)">{{$t("button.next")}}</button> &nbsp;
                 <button v-show="this.step===3" @click="publish">{{$t("button.saveAndPreview")}}</button>
             </p>
             <p>{{$t("description.autoSave")}}</p>
@@ -109,25 +88,76 @@
 
 <script>
 import ing_data from '@/assets/ingredients.json'
+import emptyImg from '@/assets/emptyImg.png'
 
 export default {
     name : "RecipeWriteView",
     data: ()=>({
         ing_data,
-        step : 1,
+        step : 0,
         period : 0,
         timeTaken : 0,
         selectedIngredients : [],
+        ingredientVolume : [],
+        ingredientsMap : [],
+        cookingOrder : [],
         title : "",
         subTitle : "",
+        mainPicture : "",
     }),
 
     methods : {
+        createIngredientsMap() {
+            for(var i=0; i<this.selectedIngredients.length; i++) {
+                this.ingredientsMap.push({id: this.selectedIngredients[i], volume:this.ingredientVolume[i]});
+            }
+        },
+        destroyIngredientsMap() {
+            this.ingredientsMap = [];
+        },
+        validateByStep(arrow){
+            // validate data by step then go next/back
+            // push "WATER" for essential ingredient on step 1before go to step 2
+            console.log(this.step);
+            if(arrow>0 && this.step===1) {
+                this.selectedIngredients.push(1);
+            } else if(arrow<0 && this.step===2) {
+                this.selectedIngredients.pop();
+                this.ingredientVolume.pop();
+            } else if(arrow>0 && this.step===2) {
+                //make ingregientsMap
+                this.createIngredientsMap();
+            } else if(arrow<0 && this.step===3) {
+                this.destroyIngredientsMap();
+            }
+
+            // then go
+            this.changeStep(arrow);
+        },
         changeStep(arrow){
             this.step=this.step+arrow;
+            console.log("[changeStep]"+ this.step);
             //this.step=+arrow;
         },
-
+        setEmptyImg(e) {
+            e.target.src=emptyImg;
+        },
+        uploadImg(e){
+            let files= e.target.files;
+            if(e.target.id==="mainPicture") {
+                this.mainPicture = URL.createObjectURL(files[0]);
+            } else if(e.target.id==="cookingPicture") {
+                //{contents_n0: 0, filename : '', contentType:'', contents:''}
+                this.cookingOrder.push({contents_no:0, filnename:files[0].name, contentType:file[0].type, contents:""});
+            }
+            console.log(e);
+        },
+        addOrder(contents_no) {
+            this.cookingOrder.push({contents_no:contents_no, filename:'', contentType:'', contents:''});
+        },
+        updateTip() {
+            //
+        },
         publish() {
             // save recipe into db
         }
@@ -136,5 +166,40 @@ export default {
 </script>
 
 <style>
+.mainpicture {
+  width: 160px;
+  height: 120px;
+  border : solid 1px;
+  text-align:center;
+  cursor: pointer;
+}
 
+.pickpicture {
+    display : none;
+    z-index:5;
+}
+
+.crossed {
+     background: 
+         linear-gradient(to top left,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%),
+         linear-gradient(to top right,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%);
+}
+
+.cookingOrderLabel {
+  width: 100%;
+  height: 100px;
+  border : solid 1px;
+  text-align:center;
+  cursor: pointer;
+}
 </style>
