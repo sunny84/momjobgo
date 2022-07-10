@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RecipeWriteView from '@/views/RecipeWriteView.vue'
 import LoginView from '@/views/LoginView.vue'
+import LoginViewkko from '@/views/LoginViewkko.vue'
 import RecipeBoxView from '@/views/RecipeBoxView.vue'
 import MyRecipeView from '@/views/MyRecipeView.vue'
 import RecipeFilterView from '@/views/RecipeFilterView.vue'
@@ -35,6 +36,11 @@ const routes = [
     path : '/login',
     name: 'login',
     component: LoginView
+  },
+  {
+    path : '/loginkko',
+    name: 'loginkko',
+    component: LoginViewkko
   },
   {
     path : '/filter',
