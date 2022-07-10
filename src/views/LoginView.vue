@@ -1,126 +1,104 @@
 <template>
-<div>
+  <div class="hello">
     <a id="custom-login-btn" @click="loginWithKakao">
       <img
         src="//k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg"
         width="222"
         alt="카카오 로그인 버튼"
-      />
+      />      
     </a>
-
-    <div>
-      <p>파일업로드</p>
-      <input type="file" name="file" id="file" />
-      <button @click="upload">업로드</button>
-    </div>
-</div>
+  </div>
 </template>
 
 <script>
+import Vue from "vue";
 import axios from "axios";
 
+import { mapActions, mapGetters } from "vuex"
+
+
 export default {
-  methods: {
-  
-    loginWithKakao() {//1
-      console.log("loginWithKakao start");
-      Kakao.Auth.login({//2
-        success: function (authObj) {//3
-          console.log(authObj);
-          //console.log("authObj:"+authObj);
-          console.log("-----------1----------");
+  name: 'HelloWorld',
+  props: {
+    msg: String
+  },
 
-          Kakao.API.request({//4
-            url: "/v2/user/me",
-             success: function (response) {//4
+  computed : {  
+    ...mapGetters('user', ['snsId', 'token'])
+  },
 
-            //  const kakao_account = response.kakao_account;
-            //             const userInfo = {
-            //                 email : kakao_account.email,
-            //                 password : '',
-            //                 account_type : 2,
-            //             }
+  methods : {
+    ...mapActions('user', ['setToken', 'setsnsId']),
 
-              console.log("-----------3----------");
-              console.log(response);
-              console.log("response id:"+response.id);
-              console.log("response access_token:"+response.access_token);
-              console.log("response id_token:"+response.id_token);
-            
+    loginWithKakao() {
+      //로그인
+      const _this = this;
 
-              axios.post(`http://localhost:8090/user/login`,{
-                             access_token: response.access_token
-                         })
-                         .then(res => {
-                            console.log(res);
-                            console.log("데이터베이스에 회원 정보가 있음!");
-                         })
-                         .catch(err => {
-                             console.log(err);
-                            console.log("데이터베이스에 회원 정보가 없음!");
-                         })
-                        //console.log(res);
-                        alert("로그인 성공!");
+      console.log("this", this);
 
-              Kakao.Auth.logout(function() {//5
-                console.log(
-                  Kakao.Auth.getAccessToken(),
-                  "카카오 토큰 만료시킴."
-                );
-              });//5
+      Kakao.Auth.login({
+        success: function(authObj) {
+          console.log(authObj)
+          //사용자정보 가져오기
+          Kakao.API.request({
+              url: '/v2/user/me', //계정 정보를 가져오는 request url             
+              success: function(response) {
+                console.log(response)
+                console.log("response.id:"+response.id);
+                let KsnsId = 'K'+response.id; 
+                console.log("KsnsId:"+KsnsId);                 
+                  // let kid=response.id //카카오 계정 정보
+                  // console.log("kid:"+kid);
+                this.data = { //backend로 전송될 POST 데이터
+				          snsId:KsnsId
+                }
+                  axios.post('http://localhost:8090/user/login', this.data)
+                  .then((response) => {
+                    console.log("response", response);
+                  console.log(response.data)
 
-            },//4
-            fail: function (error) {
-              console.log(error);
-            },
-          });//4
-        },//3
-        fail: function (err) {
-          console.log(JSON.stringify(err));
+                if(response?.status === _this.HTTP_OK){
+                    const token = response.data.token;
+                    console.log("this (in)", this);
+                    console.log("token: "+token)
+                    _this.setToken(token);
+                    // location.href=this.basePath;
+                }   
+                  
+                  }).catch(err => {
+                    console.log(err)
+                  })
+              },
+              fail: function(error) {
+                  console.log(error);
+              }
+          });
         },
-      });//2
-    },//1
-
-    upload() {
-      const formData = new FormData();
-      const file = document.getElementById("file");
-
-      formData.append("file", file.files[0]);
-      axios
-        // 파일업로드를 위해서는 API 서버를 켜야합니다.
-        .post("http://localhost:8090/file/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          params: {
-            contentsId: 1,
-          },
-        })
-        .then(function (res) {});
+        fail: function(err) {
+          console.log(JSON.stringify(err))
+        },
+      })
     },
   },
 
+
+
+
   mounted() {
-    console.log("mounted start")
-    if (typeof Kakao === "undefined") {
-      console.log("001")
-      const script = document.createElement("script");
+    if (typeof Kakao === 'undefined') {
+      const script = document.createElement('script');
       script.onload = () => {
-        console.log("002")
-        Kakao.init("1259143e223d59d6de3d44e96cbca60e");
+        ////로그인할때 sdk 초기화함/사용할 앱의 javascript key로 설정
+        Kakao.init('c45a020ee3dc6a62a6971ee87e00d20b');
+        // Kakao.init('1259143e223d59d6de3d44e96cbca60e');
         // SDK 초기화 여부를 판단합니다.
         console.log(Kakao.isInitialized()); //true
         console.log("003")
       };
-      script.src = `https://developers.kakao.com/sdk/js/kakao.js`;
-      console.log("004")
+      script.src = `https://developers.kakao.com/sdk/js/kakao.js`; //사용자 인증, 로그인, 로그아웃 등의 기능을 사용가능하도록함
       document.head.appendChild(script);
       console.log("mounted end")
     }
-  },
+  }
 }
 </script>
-
-<style>
-
-</style>

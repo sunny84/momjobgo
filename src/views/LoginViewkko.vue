@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
 <div class="hello">
   <h1>{{msg}}</h1>
   <button v-on:click="getData1">getData1 </button> 
@@ -6,7 +6,7 @@
   <button v-on:click="getData3">getData3 </button> 
   <button v-on:click="postData1">postData1 </button> 
   <button v-on:click="deleteData1">deleteData1 </button> 
-  <button v-on:click="KakaoLogin">KakaoLogin </button> 
+  <!-- <button v-on:click="KakaoLogin">KakaoLogin </button>  -->
 </div>
 </template>
 
@@ -48,7 +48,8 @@ export default{
 
     getData3: function(){
       var id=1;
-      this.$http.get("http://localhost:8090/test/test/"+id)
+      // this.$http.get("http://localhost:8090/test/test/"+id)
+      this.$http.get("http://localhost:8090/user/loginkko/"+id)
           .then((response) => {
             console.log(response.data)
             //this.msg = response.data
@@ -58,16 +59,12 @@ export default{
     }, 
 
     postData1: function(){ //post('api주소',넘길값)로 작성하여 호출:ok
-      //const fd = new FormData()
-      //fd.append('demo',this.b1)
-      // this.$http.post('http://localhost:8090/test/postData1',fd) 
-
        this.data = { //backend로 전송될 POST 데이터
 				id:20
-        ,name:"20etst"
+        ,name:"testData"
         }
-
-        this.$http.post('http://localhost:8090/test/test2',this.data)
+         axios.post('http://localhost:8090/test/test2',this.data)
+        // this.$http.post('http://localhost:8090/user/test',this.data)
           .then((result) => {
             console.log(result.data)
             this.msg = result.data
@@ -76,11 +73,8 @@ export default{
           })
     },
 
-    deleteData1: function(){ //post('api주소',넘길값)로 작성하여 호출:ok
-       
-				var id=12;
-        
-
+    deleteData1: function(){ //post('api주소',넘길값)로 작성하여 호출:ok       
+				var id=20;
         this.$http.delete('http://localhost:8090/test/test/'+id)
           .then((result) => {
             console.log(result.data)
@@ -146,38 +140,7 @@ export default{
   },
 }
 
-</script> -->
-
-<template>
-<div class="hello">
-  <h1>{{msg}}</h1>
-  <button v-on:click="getData1">getData1 </button> 
-  <button v-on:click="getData2">getData2 </button> 
-  <button v-on:click="getData3">getData3 </button> 
-  <button v-on:click="postData1">postData1 </button> 
-  <button v-on:click="deleteData1">deleteData1 </button> 
-  <button v-on:click="KakaoLogin">KakaoLogin </button> 
-</div>
-</template>
-
-<script>
-import Vue from "vue";
-import axios from "axios";
-
-script.src = `https://developers.kakao.com/sdk/js/kakao.js`;
-
-Kakao.init("1259143e223d59d6de3d44e96cbca60e");
-
-methods: {
-    kakaoLogin() {
-      const params = {
-        redirectUri:'http://localhost:8090/test/test2'
-      }
-      window.Kakao.Auth.authorize(params)
-      
-    }
-  }
-
 </script>
+
 <style>
 </style>
