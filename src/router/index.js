@@ -4,6 +4,10 @@ import HomeView from '../views/HomeView.vue'
 import RecipeWriteView from '@/views/RecipeWriteView.vue'
 import LoginView from '@/views/LoginView.vue'
 import LoginViewkko from '@/views/LoginViewkko.vue'
+import RecipeBoxView from '@/views/RecipeBoxView.vue'
+import MyRecipeView from '@/views/MyRecipeView.vue'
+import RecipeFilterView from '@/views/RecipeFilterView.vue'
+import RecipeBoxListView from '@/views/RecipeBoxListView.vue'
 
 Vue.use(VueRouter)
 
@@ -12,6 +16,16 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path : '/recipebox',
+    name: 'recipebox',
+    component: RecipeBoxListView
+  },
+  {
+    path : '/myrecipe',
+    name: 'myrecipe',
+    component: MyRecipeView
   },
   {
     path : '/write',
@@ -28,6 +42,12 @@ const routes = [
     name: 'loginkko',
     component: LoginViewkko
   },
+  {
+    path : '/filter',
+    name: 'filter',
+    component: RecipeFilterView
+  },
+
   {
     path: '/about',
     name: 'about',
