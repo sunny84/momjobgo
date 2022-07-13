@@ -7,4 +7,5 @@ import java.util.List;
 public interface ContentsService {
     List<ContentsEntity> getAll();
     ContentsEntity getById(Long id);
+    List<ContentsEntity> getByWriter(Long writer);
 }

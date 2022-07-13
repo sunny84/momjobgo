@@ -28,4 +28,16 @@ public class ContentsServiceImpl implements ContentsService {
             return null;
         }
     }
+
+    @Override
+    public List<ContentsEntity> getByWriter(Long writer){
+        System.out.println(writer);
+        List<ContentsEntity> contentsEntity = contentsRepository.findByWriter(writer);
+        return contentsEntity;
+//        if(contentsEntity.isPresent()){
+//            return contentsEntity.get();
+//        } else {
+//            return null;
+//        }
+    }
 }

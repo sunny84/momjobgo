@@ -22,4 +22,7 @@ public class ScoreController {
     @GetMapping("/id={id}")
     public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( scoreService.getById(id) ); }
 
+    @GetMapping("/recipe={recipeId}")
+    public ResponseEntity<?> getByRecipeId(@PathVariable Long recipeId) { return ResponseEntity.ok().body( scoreService.getByRecipeId(recipeId) ); }
+
 }

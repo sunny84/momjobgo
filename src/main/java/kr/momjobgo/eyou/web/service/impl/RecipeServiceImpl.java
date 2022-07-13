@@ -36,4 +36,10 @@ public class RecipeServiceImpl implements RecipeService {
             return null;
         }
     }
+
+    @Override
+    public List<RecipeEntity> getByContentsId(Long contentsId){
+        System.out.println(contentsId);
+        return recipeRepository.findByContentsId(contentsId);
+    }
 }
