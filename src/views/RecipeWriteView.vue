@@ -87,12 +87,6 @@
         <button @click="goDown(ord_idx)">↓</button>
         <span>{{ order.contents_no }}</span>
         <textarea width="140px" height="50" v-model="order.contents"></textarea>
-        <!-- <img
-          :src="cookingOrderPic[ord_idx]"
-          width="50px"
-          height="50px"
-          @error="setEmptyImg"
-        /> -->
         <img :src="order.imgUrl" width="50px" height="50px" @error="setEmptyImg" />
         <input
           :id="`cookingPicture${ord_idx}`"
@@ -163,13 +157,15 @@
 </template>
 
 <script>
-import ing_data from "@/assets/ingredients.json";
+import ing_data from "@/assets/ingredients.json"; // for test
 import emptyImg from "@/assets/emptyImg.png";
+import axios from "axios";
 
 export default {
   name: "RecipeWriteView",
   data: () => ({
-    ing_data,
+    //ing_data : [],  // for real code
+    ing_data, // for test
     step: 0, // 레시피 작성 과정 단계
     period: 0, // 이유 시기
     quantity: "", // 몇 회분
@@ -178,16 +174,29 @@ export default {
     title: "", // 레시피 제목
     subTitle: "", // 레시피 부제목
     mainPicture: "",
-    mainPicFilename: "", // 대표사진
-    cookingOrder: [{ contents_no: 1, filename: "", contents: "", imgUrl: "" }], // 조리 순서
+    mainImg: "", // 대표사진
+    cookingOrder: [
+      { contents_no: 1, filename: "", contents: "", imgUrl: "", fileData: "" },
+    ], // 조리 순서
     Tips: [""], // Tip
     youtubeUrl: "",
     clipUrl: "",
   }),
 
+  beforeMoount() {
+    // this.callIngredientCategory();
+  },
   methods: {
-    // 단계가 넘어갈 때마다 data check
-    // publish할 때 data calibrate
+    async callIngredientCategory() {
+      const response = await this.$api(
+        "http://localhost:8090/Ingredient/join/category",
+        "get"
+      );
+
+      if (response.status === this.HTTP_OK) {
+        this.ing_data = response.data;
+      }
+    },
 
     validateByStep(arrow) {
       // validate data by step then go next/back
@@ -223,7 +232,8 @@ export default {
       let files = e.target.files;
       if (this.checkFileType(files[0].type, "image/")) {
         this.mainPicture = URL.createObjectURL(files[0]);
-        this.mainPicFilename = files[0].name;
+        this.mainImg = files[0];
+        console.log(this.mainImg);
       } else {
         alert("이미지 파일을 선택하셔야 합니다");
         this.setEmptyImg(e);
@@ -238,6 +248,8 @@ export default {
         // this.cookingOrderPic.splice(ord_idx, 1, URL.createObjectURL(files[0]));
         targetOrder.imgUrl = URL.createObjectURL(files[0]);
         targetOrder.filename = files[0].name;
+        targetOrder.fileData = files[0];
+        console.log(targetOrder.fileData);
       } else {
         alert("이미지 파일을 선택하셔야 합니다");
         this.setEmptyImg(e);
@@ -249,6 +261,7 @@ export default {
         filename: "",
         contents: "",
         imgUrl: "",
+        fileData: "",
       });
     },
     sortByContentId() {
@@ -305,8 +318,8 @@ export default {
       }
     },
     checkMainImage() {
-      // console.log(this.mainPicFilename);
-      if (this.mainPicFilename.trim().length !== 0) {
+      // console.log(this.mainImg);
+      if (this.mainImg.name.length !== 0) {
         return true;
       } else {
         alert("대표사진을 입력하세요");
@@ -350,6 +363,9 @@ export default {
         return true;
       }
     },
+    calibMainImg() {
+      URL.revokeObjectURL(this.mainPicture);
+    },
     calibIngredientsVolume() {
       for (let i = 0; i < this.selectedIngredients.length; i++) {
         this.selectedIngredients[i].volume = Number(this.selectedIngredients[i].volume);
@@ -359,6 +375,7 @@ export default {
     calibCookingOrder() {
       //delete this.cookingOrder.imgUrl;
       for (let i = 0; i < this.cookingOrder.length; i++) {
+        URL.revokeObjectURL(this.cookingOrder[i].imgUrl);
         delete this.cookingOrder[i].imgUrl;
         if (
           !this.cookingOrder[i].filename.length &&
@@ -393,6 +410,10 @@ export default {
       // for selected ingredients
       // 입력된 재료양은 숫자로 바꿔주고 재료양이 없으면 기본값을 0으로 입력해주기
       this.calibIngredientsVolume();
+
+      // for main image
+      // revoke blob image for preview
+      this.calibMainImg();
 
       // for cooking order
       // 조리순서 이미지url항목지우기
@@ -439,35 +460,35 @@ export default {
       return params;
     },
     publish() {
-      // valibarate all data
+      // calibarate all data
       this.calibrateAllData();
 
       // make form data for server
       const formData = new FormData();
-      // const file = document.getElementById("mainPicture");
-      // console.log(file.files[0]);
-      // formData.append("mainPicture", file.files[0]);
-      // for (let i = 0; i < this.CookingOrder.length; i++) {
-      //   console.log();
-      //   file = document.getElementById("cookingOrder" + i);
-      //   console.log(file.files[0]);
-      // }
-      //file = document.getElementById("cookingOrder");
+      formData.append("mainPicture", this.mainImg);
+      for (let i = 0; i < this.cookingOrder.length; i++) {
+        formData.append("cookingOrder", this.cookingOrder[i].fileData);
+      }
 
       // param data
       const allParams = this.makeParams();
+      console.log(allParams);
 
       // save into db
-      this.$api("http://localhost:8090/recipe/write", "post", formData, {
-        headers: {},
-        params: allParams,
-      }).then(function (res) {});
+      axios
+        .post("http://localhost:8090/Recipe/write", "post", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          params: allParams,
+        })
+        .then(function (res) {});
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .mainpicture {
   width: 160px;
   height: 120px;
