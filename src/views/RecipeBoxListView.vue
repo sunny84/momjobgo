@@ -5,7 +5,7 @@
     <div class="menu">
         <ul>
             <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
-            <li><a href="/recipebox">{{ $t("menu.savedRecipe") }}</a></li>
+            <li><a href="/recipeboxlist">{{ $t("menu.savedRecipe") }}</a></li>
             <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
         </ul>
     </div>
@@ -14,7 +14,7 @@
         <button @click="callEdit">{{$t("button.edit")}}</button>
         <tr v-for="(item, index) in recipeBoxes" :key="index">
           <td v-if="item.isDefault == true">
-            <a :href="item.name" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
+            <a :href="`/recipebox`" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
               <p>
                 <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
               </p>
@@ -22,9 +22,9 @@
             </a>
           </td>
         </tr>
-        <tr v-for="(item, index) in recipeBoxes" :key="index">
+        <tr v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
           <td v-if="item.isDefault == false">
-            <a :href="item.name" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
+            <a :href="`/recipebox`" target="_blank" @click="link"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
               <p>
                 <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
               </p>
@@ -34,7 +34,7 @@
         </tr>
         <tr>          
           <td>
-            <a href="#" target="_blank"> <!-- TODO: add new box -->
+            <a href="#" target="_blank" @click="addNewBox"> <!-- TODO: add new box -->
               <p>
                 <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
               </p>
@@ -90,4 +90,14 @@ export default {
 </script>
 
 <style>
+button
+{
+    background: inherit ; 
+    border:none; 
+    box-shadow:none; 
+    border-radius:0; 
+    padding:0; 
+    overflow:visible; 
+    cursor:pointer
+}
 </style>

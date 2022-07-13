@@ -17,9 +17,14 @@ const routes = [
     component: HomeView
   },
   {
+    path : '/recipeboxlist',
+    name: 'recipeboxlist',
+    component: RecipeBoxListView
+  },
+  {
     path : '/recipebox',
     name: 'recipebox',
-    component: RecipeBoxListView
+    component: RecipeBoxView
   },
   {
     path : '/myrecipe',
