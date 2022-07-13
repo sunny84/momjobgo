@@ -18,9 +18,19 @@
                 </ul>
                 <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
                     <li v-if="item.isDefault == false" @click="select(item.id)">{{item.name}}{{item.id}}</li>
+                    <!-- <li v-else-if="item.isDefault == null" @click="select(item.id)">
+                        {{item.name}}{{item.id}}
+                    </li> -->
                 </ul>
                 <ul>
-                    <li><button @click="addNewBox">+ {{$t("button.addNewBox")}}</button></li>
+                    <li>
+                        <confirm-input 
+                            :text="'+ '+$t('button.addNewBox')"
+                            :title="$t('button.addNewBox')"
+                            :value="boxName"
+                            :callback="text => addNewBox(text)"
+                        />
+                    </li>
                 </ul>
                 <br/>
             </div>
@@ -102,27 +112,57 @@
                     <button @click="deleteRecipe">{{$t("button.delete")}}</button>
                 </div>
                 <div class="moveBox" v-if="moveStep===1">
-                    {{$t("content.moveBox")}}
-                    <ul>
-                        <li><button @click="addNewBox">+ {{$t("button.addNewBox")}}</button></li>
-                    </ul>
-                    <ul v-for="(item, index) in recipeBoxes" :key="index">
-                        <li v-if="item.isDefault == true" @click="select(item.id)">
-                            <p>
-                                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-                            </p>
-                            {{item.name}}
-                        </li>
-                    </ul>
-                    <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                        <li v-if="item.isDefault == false" @click="select(item.id)">
-                            <p>
-                                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-                            </p>
-                            {{item.name}}
-                        </li>
-                    </ul>
-                    <button @click="cancelMove">{{$t("button.cancel")}}</button>
+                    <div class="moveBoxHeader">
+                        <ul>
+                            <li>{{$t("content.moveBox")}}</li>
+                            <!-- <li>
+                                <confirm-input 
+                                :text="'- '+'박스 삭제'"
+                                :title="'박스 삭제'"
+                                :value="boxName"
+                                :callback="text => deleteBox(text)"
+                                />
+                            </li> -->
+                            <li>
+                                <confirm-input 
+                                :text="'+ '+$t('button.addNewBox')"
+                                :title="$t('button.addNewBox')"
+                                :value="boxName"
+                                :callback="text => addNewBox(text)"
+                                />
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="moveBoxBody">
+                        <ul v-for="(item, index) in recipeBoxes" :key="index">
+                            <li v-if="item.isDefault == true" @click="select(item.id)">
+                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                                <p>
+                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                </p>
+                                {{item.name}}
+                            </li>
+                        </ul>
+                        <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
+                            <li v-if="item.isDefault == false" @click="select(item.id)">
+                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                                <p>
+                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                </p>
+                                {{item.name}}
+                            </li>
+                            <li v-else-if="item.isDefault == null" @click="select(item.id)">
+                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                                <p>
+                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                </p>
+                                {{item.name}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="moveBoxFooter">
+                        <button @click="cancelMove">{{$t("button.cancel")}}</button>
+                    </div>
                 </div>
             </div>
         <!--FOOTER-->
@@ -132,6 +172,7 @@
 <script>
 import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
+import ConfirmInput from 'vue-confirm-input'
 
 export default {
     name : "RecipeBoxView",
@@ -159,14 +200,18 @@ export default {
         writer : 1,
         mainPicture : '',
         boxList : [],
-        checkedRecipeIds : []
+        checkedRecipeIds : [],
+        boxName: '기본박스'
     }),
+
+    components: {
+        ConfirmInput
+    },
 
     created() {
         this.initialize();
     },
 
-    props: ['value'],
     methods : {
         initialize() {
             this.callRecipeBox(this.boxName);
@@ -177,7 +222,7 @@ export default {
             }).then(response=>{
                 this.recipeBoxes = response.data;
                 this.selectedRecipeBox = this.recipeBoxes;
-                console.log("contents:", response.data);
+                // console.log("contents:", response.data);
             }).catch(error=>{
                 console.error(error);
             })
@@ -210,7 +255,7 @@ export default {
             // });
             // this.contents = response.data;
             // console.log(response.data);
-            console.log(`writer: ${this.writer}`);
+            // console.log(`writer: ${this.writer}`);
             await axios.get(`http://localhost:8090/contents/writer=${this.writer}`, {
             }).then(response=>{
                 this.contents = response.data;
@@ -219,17 +264,18 @@ export default {
                 console.error(error);
             })
 
-            console.log(`contents length : ${this.contents.length}`);
+            // console.log(`contents length : ${this.contents.length}`);
             if(this.contents.length > 0)
             {
                 var i = 0;
                 this.list = [];
                 while(i < this.contents.length ){
                     // console.log(i,"회");
+
                     await axios.get(`http://localhost:8090/Recipe/contents=${this.contents[i].id}`, {
                     }).then(response=>{
                         this.recipe = response.data
-                        console.log("Recipe:", response.data);
+                        // console.log("Recipe:", response.data);
                     }).catch(error=>{
                         console.error(error);
                     })
@@ -262,7 +308,7 @@ export default {
 
                     i = i + 1;          
                 }
-                console.log(this.list);
+                // console.log(this.list);
             } 
         },
         setEmptyImg(e) {
@@ -273,16 +319,39 @@ export default {
             this.callRecipeBoxById(id)
             this.callContents();
         },
-        addNewBox() {
+        async addNewBox(name) {
             console.log("addNewBox");
-            // await axios.post(`http://localhost:8090/recipebox/name=${name}`, {
-            // }).then(response=>{
-            //     this.selectedRecipeBox = response.data;
-            //     this.writer = this.selectedRecipeBox.userId;
-            //     // console.log("contents:", response.data);
-            // }).catch(error=>{
-            //     console.error(error);
-            // })
+            this.boxName = name;
+            await axios.post(`http://localhost:8090/recipebox/name=${name}&user=${this.writer}`, {
+            }).then(response=>{
+                this.selectedRecipeBox = response.data;
+                this.writer = this.selectedRecipeBox.userId;
+                // console.log("contents:", response.data);
+            }).catch(error=>{
+                console.error(error);
+            })
+            this.initialize();
+        },
+        async deleteBox(name) {
+            console.log("deleteBox: "+name);
+            this.value = name
+            await axios.delete(`http://localhost:8090/recipebox/name=${name}`, {
+            }).then(response=>{
+                // console.log("contents:", response.data);
+            }).catch(error=>{
+                console.error(error);
+            })
+            // this.initialize();
+        },
+        async deleteBoxId(id) {
+            console.log("deleteBoxId: "+id);
+            await axios.delete(`http://localhost:8090/recipebox/id=${id}`, {
+            }).then(response=>{
+                // console.log("contents:", response.data);
+            }).catch(error=>{
+                console.error(error);
+            })
+            this.initialize();
         },
         callEdit() {
             console.log("Edit");
