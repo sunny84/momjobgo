@@ -1,7 +1,6 @@
 import axios from '@/plugins/axios'
 import store from '@/store'
 import Code from '@/static/Code'
-/** Mixins는 Vue 컴포넌트 재사용 가능한 기능배포하는 유연한 방법 */
 
 export default {
 
