@@ -3,7 +3,7 @@
     <h4>{{ $t("title.writeRecipe") }}</h4>
     <p>단계 : {{ step + 1 }}</p>
     <!-- Step 1 : 이유 단계, 소요시간 선택 -->
-    <div v-if="step === 0">
+    <div v-show="step === 0">
       <p>{{ $t("description.writeRecipe") }}</p>
       <p>
         {{ $t("content.step") }}
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Step 2 : 식재료 선택 -->
-    <div v-else-if="step === 1">
+    <div v-show="step === 1">
       <p>{{ $t("description.ingredient") }}</p>
       <p>{{ $t("content.choiceOfIngredient") }}</p>
 
@@ -39,7 +39,7 @@
               :id="`${item.key}`"
               type="checkbox"
               v-model="selectedIngredients"
-              :value="{ id: item.id, key: item.key, volume: '' }"
+              :value="{ ingredientId: item.id, key: item.key, volume: '' }"
             />
             <label :for="`${item.key}`">{{ $t("ingredient." + [item.key]) }}</label>
             <br v-if="category.id === 1 && idx % 3 === 1" />
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Step 3 : 제목(부제목), 대표사진, 재료양, 조리순서, Tip, 영상url 입력 -->
-    <div v-else-if="step === 2">
+    <div v-show="step === 2">
       <p>{{ $t("description.almostDone") }}</p>
       <!-- title & subtitle -->
       <p><input type="text" :placeholder="$t('content.title')" v-model="title" /></p>
@@ -65,7 +65,7 @@
           type="file"
           id="mainPicture"
           class="pickpicture"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           @change="uploadMainImg"
         /><label for="mainPicture">+</label>
       </p>
@@ -76,7 +76,7 @@
       <p v-for="(item, idx) in selectedIngredients" :key="idx">
         <label :for="item.key">{{ $t("ingredient." + [item.key]) }} </label>
         <input type="number" :id="item.key" v-model="item.volume" min="1" />
-        <span v-if="item.id !== 1"> g</span>
+        <span v-if="item.ingredientId !== 1"> g</span>
         <span v-else> ml</span>
       </p>
       <!-- cooking order-->
@@ -92,7 +92,7 @@
           :id="`cookingPicture${ord_idx}`"
           type="file"
           accept="image/*"
-          @change="uploadOrderImg(ord_idx, order, $event)"
+          @change="uploadOrderImg(order, $event)"
           class="pickpicture"
         /><label :for="`cookingPicture${ord_idx}`">+</label>
       </p>
@@ -105,7 +105,7 @@
         <input
           type="text"
           :placeholder="$t('content_description.tip')"
-          :value="tip"
+          :value="tip.text"
           @input="updateTip(idx, $event)"
         />
       </p>
@@ -116,6 +116,7 @@
           type="url"
           :placeholder="$t('content_description.movieClipUrl')"
           pattern="https://.*"
+          :value="clipUrl"
         />
       </p>
       <!-- Youtube Full link -->
@@ -125,11 +126,12 @@
           type="url"
           :placeholder="$t('content_description.youtubeUrl')"
           pattern="https://.*"
+          :value="youtubeUrl"
         />
       </p>
     </div>
 
-    <div v-else-if="step === 3">
+    <div v-show="step === 3">
       <p>{{ $t("description.finishAndSave") }}</p>
       <p><img :src="mainPicture" width="200px" height="150px" /></p>
       <p>{{ title }}</p>
@@ -164,27 +166,43 @@ import axios from "axios";
 export default {
   name: "RecipeWriteView",
   data: () => ({
-    //ing_data : [],  // for real code
+    // for real
+    // ing_data: [], // for real code
+    // step: 0, // 레시피 작성 과정 단계
+    // period: 0, // 이유 시기
+    // quantity: "", // 몇 회분
+    // timeTaken: 0, // 소요시간
+    // selectedIngredients: [], // 선택된 재료와 양
+    // title: "", // 레시피 제목
+    // subTitle: "", // 레시피 부제목
+    // mainPicture: "",
+    // mainImg: "", // 대표사진
+    // cookingOrder: [
+    //   { contents_no: 1, contents: "", imgUrl: "", fileData: "" },
+    // ], // 조리 순서
+    // Tips: [{ order_num: 1, text: "" }], // Tip
+    // youtubeUrl: "",
+    // clipUrl: "",
+
+    // for test
     ing_data, // for test
     step: 0, // 레시피 작성 과정 단계
     period: 0, // 이유 시기
-    quantity: "", // 몇 회분
+    quantity: "1", // 몇 회분
     timeTaken: 0, // 소요시간
     selectedIngredients: [], // 선택된 재료와 양
-    title: "", // 레시피 제목
-    subTitle: "", // 레시피 부제목
-    mainPicture: "",
+    title: "테스트-1", // 레시피 제목
+    subTitle: "부제목-1", // 레시피 부제목
+    mainPicture: "", // blob 이미지
     mainImg: "", // 대표사진
-    cookingOrder: [
-      { contents_no: 1, filename: "", contents: "", imgUrl: "", fileData: "" },
-    ], // 조리 순서
-    Tips: [""], // Tip
-    youtubeUrl: "",
-    clipUrl: "",
+    cookingOrder: [{ contents_no: 1, contents: "조리1", imgUrl: "", fileData: "" }], // 조리 순서
+    Tips: [{ order_num: 1, text: "쉽게 만들어요" }], // Tip
+    youtubeUrl: "https://youtube.com",
+    clipUrl: "https://youtube.com/clip",
   }),
 
-  beforeMoount() {
-    // this.callIngredientCategory();
+  beforeMount() {
+    this.callIngredientCategory();
   },
   methods: {
     async callIngredientCategory() {
@@ -204,7 +222,9 @@ export default {
       if (arrow > 0 && this.step === 0 && !this.checkQuantity()) {
         return;
       } else if (arrow > 0 && this.step === 1) {
-        this.selectedIngredients.push({ id: 1, key: "WATER", volume: "" });
+        //this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "" });
+        // for test
+        this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "50" });
       } else if (arrow < 0 && this.step === 2) {
         this.selectedIngredients.pop();
       } else if (arrow > 0 && this.step === 2) {
@@ -233,23 +253,19 @@ export default {
       if (this.checkFileType(files[0].type, "image/")) {
         this.mainPicture = URL.createObjectURL(files[0]);
         this.mainImg = files[0];
-        console.log(this.mainImg);
+        //console.log(this.mainImg);
       } else {
         alert("이미지 파일을 선택하셔야 합니다");
         this.setEmptyImg(e);
       }
     },
-    uploadOrderImg(ord_idx, targetOrder, e) {
+    uploadOrderImg(targetOrder, e) {
       let files = e.target.files;
 
-      //console.log(ord_idx, files[0].name, targetOrder);
       if (this.checkFileType(files[0].type, "image/")) {
         // Have to use wrapping method for array due to detecting changed array of VUE
-        // this.cookingOrderPic.splice(ord_idx, 1, URL.createObjectURL(files[0]));
         targetOrder.imgUrl = URL.createObjectURL(files[0]);
-        targetOrder.filename = files[0].name;
         targetOrder.fileData = files[0];
-        console.log(targetOrder.fileData);
       } else {
         alert("이미지 파일을 선택하셔야 합니다");
         this.setEmptyImg(e);
@@ -258,11 +274,12 @@ export default {
     addOrder() {
       this.cookingOrder.push({
         contents_no: this.cookingOrder.length + 1,
-        filename: "",
         contents: "",
         imgUrl: "",
         fileData: "",
       });
+
+      this.fileCnt++;
     },
     sortByContentId() {
       this.cookingOrder.sort(function (a, b) {
@@ -287,7 +304,7 @@ export default {
     },
     addTip() {
       if (this.Tips.length < 5) {
-        this.Tips.push("");
+        this.Tips.push({ orderNum: Tips.length, text: "" });
       }
     },
     updateTip(idx, e) {
@@ -342,11 +359,10 @@ export default {
         for (let i = 0; i < this.cookingOrder.length; i++) {
           if (
             !(
-              (this.cookingOrder[i].filename.length !== 0) ^
+              (this.cookingOrder[i].fileData.name.length !== 0) ^
               (this.cookingOrder[i].contents.trim().length === 0)
             )
           ) {
-            //   console.log(this.cookingOrder[i].filename, this.cookingOrder[i].contents);
             alert("조리순서 설명과 사진이 필요합니다1");
             return false;
           }
@@ -354,7 +370,7 @@ export default {
         return true;
       } else {
         if (
-          this.cookingOrder[0].filename.length === 0 ||
+          this.cookingOrder[0].fileData.name.length === 0 ||
           this.cookingOrder[0].contents.trim().length === 0
         ) {
           alert("조리순서 설명과 사진이 필요합니다2");
@@ -378,24 +394,20 @@ export default {
         URL.revokeObjectURL(this.cookingOrder[i].imgUrl);
         delete this.cookingOrder[i].imgUrl;
         if (
-          !this.cookingOrder[i].filename.length &&
+          !this.cookingOrder[i].fileData.name.length &&
           !this.cookingOrder[i].contents.trim().length
         ) {
           this.cookingOrder.splice(i, 1);
+        } else {
+          delete this.cookingOrder[i].fileData;
         }
       }
     },
     calibTips(tips) {
       for (let i = 0; i < tips.length; i++) {
-        if (
-          tips[i] == "" ||
-          tips[i] == null ||
-          tips[i] == undefined ||
-          (tips[i] != null && typeof tips[i] == "object" && !Object.keys(tips[i]).length)
-        ) {
+        tips[i].text.trim();
+        if (tips[i].text.length === 0) {
           tips.splice(i, 1);
-        } else {
-          tips[i].trim();
         }
       }
     },
@@ -429,60 +441,72 @@ export default {
       const params = {
         //for recipe table
         period: this.period,
-        timeTaken: this.timeTaken,
-        clip_link: this.clipUrl,
-        youtube_link: this.youtubeUrl,
+        quantity: this.quantity,
+        timeTakenId: this.timeTaken,
 
         // for content table
-        category: 0, // content category id for recipe
-        writer: "user_id", // id of user table
-        title: this.title,
-        subtitle: this.subTitle,
+        contentsEntity: {
+          category: 0, // content category id for recipe
+          writer: 1, // id of user table
+          title: this.title,
+          subTitle: this.subTitle,
+        },
 
-        receipe_ingredient_map: this.selectedIngredients,
-        cooking_order: this.cookingOrder,
+        recipeIngredientMapEntities: this.selectedIngredients,
+        cookingOrderEntities: this.cookingOrder,
       };
 
       // Add tips if it's existed
       if (this.Tips.length !== 0) {
-        params.tips = this.Tips;
+        params.tipEntities = this.Tips;
       }
 
       // Add urls if it's existed
       if (this.youtubeUrl.trim().length !== 0) {
-        params.youtube_link = this.youtubeUrl;
+        params.youtubeLink = this.youtubeUrl;
       }
 
       if (this.clipUrl.trim().length !== 0) {
-        params.clip_link = this.clipUrl;
+        params.clipLink = this.clipUrl;
       }
 
       return params;
     },
     publish() {
+      // make form data for server
+      const formData = new FormData();
+
+      // const mainPicture = document.getElementById("mainPicture");
+
+      // formData.append("file", mainPicture.files[0]);
+
+      formData.append("file", this.mainImg);
+      for (let i = 0; i < this.cookingOrder.length; i++) {
+        formData.append("file", this.cookingOrder[i].fileData);
+      }
+
       // calibarate all data
       this.calibrateAllData();
 
-      // make form data for server
-      const formData = new FormData();
-      formData.append("mainPicture", this.mainImg);
-      for (let i = 0; i < this.cookingOrder.length; i++) {
-        formData.append("cookingOrder", this.cookingOrder[i].fileData);
-      }
-
-      // param data
       const allParams = this.makeParams();
       console.log(allParams);
 
-      // save into db
-      axios
-        .post("http://localhost:8090/Recipe/write", "post", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          params: allParams,
-        })
-        .then(function (res) {});
+      axios.post("http://localhost:8090/Recipe/write", allParams).then(function (res) {
+        console.log("res", res);
+        const contentsId = res.contentsId;
+        // // save into db
+        axios
+          // 파일업로드를 위해서는 API 서버를 켜야합니다.
+          .post("http://localhost:8090/file/upload", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            params: {
+              contentsId,
+            },
+          })
+          .then(function (res2) {});
+      });
     },
   },
 };
