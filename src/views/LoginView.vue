@@ -28,13 +28,13 @@ export default {
   },
 
   methods : {
-    ...mapActions('user', ['setToken', 'setsnsId']),
+    ...mapActions('user', ['setsnsId','setToken']),
 
     loginWithKakao() {
       //로그인
       const _this = this;
 
-      console.log("this", this);
+      // console.log("this", this);
 
       Kakao.Auth.login({
         success: function(authObj) {
@@ -44,25 +44,31 @@ export default {
               url: '/v2/user/me', //계정 정보를 가져오는 request url             
               success: function(response) {
                 console.log(response)
-                console.log("response.id:"+response.id);
-                let KsnsId = 'K'+response.id; 
-                console.log("KsnsId:"+KsnsId);                 
-                  // let kid=response.id //카카오 계정 정보
-                  // console.log("kid:"+kid);
+                // console.log("response.id:"+response.id); //카카오 계정 정보
+                const KsnsId = 'K'+response.id; 
+                console.log("KsnsId:"+KsnsId); 
                 this.data = { //backend로 전송될 POST 데이터
 				          snsId:KsnsId
                 }
                   axios.post('http://localhost:8090/user/login', this.data)
                   .then((response) => {
-                    console.log("response", response);
-                  console.log(response.data)
+                  console.log("response: ", response);
+                  // console.log("response.data ",response.data)
+                  // console.log("response", response);
 
                 if(response?.status === _this.HTTP_OK){
                     const token = response.data.token;
-                    console.log("this (in)", this);
-                    console.log("token: "+token)
+                    // console.log("this (in)", this);
+                    // console.log("token: "+token)
                     _this.setToken(token);
+                    // location.href='/';
                     // location.href=this.basePath;
+
+                    // if( !_this.hasToken){ //token 값 확인
+                    //   console.log("token is alive")
+                    //   console.log("token: "+_this.token)
+                    // }
+                    //  console.log("token: "+_this.token)
                 }   
                   
                   }).catch(err => {
@@ -81,23 +87,18 @@ export default {
     },
   },
 
-
-
-
   mounted() {
     if (typeof Kakao === 'undefined') {
       const script = document.createElement('script');
       script.onload = () => {
-        ////로그인할때 sdk 초기화함/사용할 앱의 javascript key로 설정
+        //로그인할때 sdk 초기화함/사용할 앱의 javascript key로 설정
         Kakao.init('c45a020ee3dc6a62a6971ee87e00d20b');
         // Kakao.init('1259143e223d59d6de3d44e96cbca60e');
         // SDK 초기화 여부를 판단합니다.
         console.log(Kakao.isInitialized()); //true
-        console.log("003")
       };
       script.src = `https://developers.kakao.com/sdk/js/kakao.js`; //사용자 인증, 로그인, 로그아웃 등의 기능을 사용가능하도록함
       document.head.appendChild(script);
-      console.log("mounted end")
     }
   }
 }
