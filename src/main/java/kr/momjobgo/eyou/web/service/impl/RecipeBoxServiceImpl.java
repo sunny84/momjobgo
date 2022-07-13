@@ -1,7 +1,6 @@
 package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
-import kr.momjobgo.eyou.web.jpa.entity.TestEntity;
 import kr.momjobgo.eyou.web.jpa.repository.RecipeBoxRepository;
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
 import org.springframework.stereotype.Service;
@@ -34,9 +33,11 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
     }
 
     @Override
-    public RecipeBoxEntity insertRecipeBoxName(String name) {
+    public RecipeBoxEntity insertRecipeBoxName(String name, Long userId) {
         RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
         recipeBoxEntity.setName(name);
+        recipeBoxEntity.setUserId(userId);
+        recipeBoxEntity.setIsDefault(false);
         return recipeBoxRepository.save(recipeBoxEntity);
     }
 
@@ -56,6 +57,24 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
         }
         else {
             return "아이디가 존재하지 않음";
+        }
+    }
+
+    @Override
+    public String deleteRecipeBoxByName(String name) {
+        if(!recipeBoxRepository.findByName(name).isEmpty()) {
+            List<RecipeBoxEntity> recipeBoxEntityList = recipeBoxRepository.findByName(name);
+            for(int i=0; i<recipeBoxEntityList.size(); i++) {
+                RecipeBoxEntity recipeBox = recipeBoxEntityList.get(i);
+                if(recipeBox.getIsDefault() == true){
+                    return "기본 박스는 삭제 할 수 없습니다.";
+                }
+            }
+            recipeBoxRepository.deleteByName(name);
+            return "삭제성공";
+        }
+        else {
+            return "박스가 존재하지 않음";
         }
     }
 
