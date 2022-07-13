@@ -33,7 +33,6 @@ export default {
     loginWithKakao() {
       //로그인
       const _this = this;
-
       // console.log("this", this);
 
       Kakao.Auth.login({
@@ -43,9 +42,9 @@ export default {
           Kakao.API.request({
               url: '/v2/user/me', //계정 정보를 가져오는 request url             
               success: function(response) {
-                console.log(response)
-                // console.log("response.id:"+response.id); //카카오 계정 정보
-                const KsnsId = 'K'+response.id; 
+                console.log(response)//카카오 계정 정보
+                // console.log("response.id:"+response.id); 
+                const KsnsId = 'K'+response.id; //snsId에 K를 붙여서 카카오로 로그인한ID로 설정해줌 
                 console.log("KsnsId:"+KsnsId); 
                 this.data = { //backend로 전송될 POST 데이터
 				          snsId:KsnsId
@@ -59,7 +58,7 @@ export default {
                 if(response?.status === _this.HTTP_OK){
                     const token = response.data.token;
                     // console.log("this (in)", this);
-                    // console.log("token: "+token)
+                    console.log("token: "+token)
                     _this.setToken(token);
                     // location.href='/';
                     // location.href=this.basePath;
@@ -68,7 +67,6 @@ export default {
                     //   console.log("token is alive")
                     //   console.log("token: "+_this.token)
                     // }
-                    //  console.log("token: "+_this.token)
                 }   
                   
                   }).catch(err => {

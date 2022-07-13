@@ -46,7 +46,7 @@ export default {
         },
         
         setToken({commit}, token){
-            console.log("token", token);
+            //console.log("token", token);
             commit('setToken', token);
         }
     }
