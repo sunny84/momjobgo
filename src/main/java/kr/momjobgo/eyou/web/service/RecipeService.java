@@ -9,4 +9,5 @@ public interface RecipeService {
     List<RecipeEntity> getAll();
     RecipeEntity getById(Long id);
     List<RecipeEntity> getByContentsId(Long contentsId);
+    RecipeEntity write(RecipeEntity recipeEntities);
 }

@@ -13,15 +13,12 @@ public class RecipeIngredientMapEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_id")
+    @Column(name = "ingredient_id")
     private Long ingredientId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id")
+    @Column(name = "recipe_id")
     private Long recipeId;
 
     @Column(name = "volume")
     private Long volume;
-
 }
