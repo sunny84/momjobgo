@@ -10,7 +10,7 @@
               <p>
                 <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
               </p>
-              {{item.title}} <button @click="callRecipeBox">ㅁ</button><br/>
+              {{item.title}} <button @click="callRecipeBox(item.recipeId)">ㅁ</button><br/>
               {{item.subTitle}}<br/>
               {{item.timeTaken}} ★{{item.score}}.0 ... ({{item.commentsNumber}})<br/>
             </a>
@@ -35,7 +35,8 @@ export default {
       score : [],
       timeTaken : [],
       writer : 1,
-      mainPicture : ''
+      mainPicture : '',
+      defaultRecipeBox : [],
     }),
     created() {
       this.initialize();
@@ -45,7 +46,7 @@ export default {
         this.callContents();
         console.log(this.list.length);
       },
-      async callContents() {
+      async callContents(recipeId) {
         // console.log(`callContents ${this.list.length}`);
         // TODO:
         // const response = await this.$api(`/contents/writer=1`,"get", {
@@ -94,6 +95,7 @@ export default {
               subTitle: this.contents[i].subTitle,
               score: this.score[i],
               timeTaken: this.timeTaken[i],
+              recipeId: this.recipe[0].id,
               commentsNumber : 66   // TODO: comments
             });
 
@@ -105,8 +107,24 @@ export default {
       callWrite() {
         console.log("write button");
       },
-      callRecipeBox() {
+      async callRecipeBox(recipeId) {
         console.log("recipebox save button")
+        // 기본박스에 저장
+        // isDefault = true 인 id 에 저장        
+        await axios.get(`http://localhost:8090/recipebox/default`, {
+        }).then(response=>{
+            this.defaultRecipeBox = response.data;
+            // console.log("contents:", response.data);
+        }).catch(error=>{
+            console.error(error);
+        })
+
+        await axios.post(`http://localhost:8090/reciperecipebox/${this.defaultRecipeBox.id}?recipe=${recipeId}&user=${this.writer}`, {
+        }).then(response=>{
+            console.log("contents:", response.data);
+        }).catch(error=>{
+            console.error(error);
+        })
       },
       setEmptyImg(e) {
         e.target.src=emptyImg;
