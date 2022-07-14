@@ -44,27 +44,44 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             return null;
         }
     }
+
     @Override
     public List<RecipeRecipeBoxEntity> findByRecipeBoxId(Long boxId){
         return recipeRecipeBoxRepository.findByRecipeBoxId(boxId);
     }
 
     @Override
+    public List<RecipeRecipeBoxEntity> findRecipesByRecipeBoxId(Long boxId){
+        return recipeRecipeBoxRepository.findRecipesByRecipeBoxId(boxId);
+    }
+
+    @Override
+    public List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(Long boxId, Long recipeId, Long userId) {
+        return recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(boxId, recipeId, userId);
+    }
+
+    @Override
     public RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId, Long userId) {
-        RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
+        List<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(boxId, recipeId, userId);
+        if(findRecipeBox.isEmpty()){
+            RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
 
-        RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
-        recipeBoxEntity.setId(boxId);
-        RecipeEntity recipeEntity = new RecipeEntity();
-        recipeEntity.setId(recipeId);
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId);
+            RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
+            recipeBoxEntity.setId(boxId);
+            RecipeEntity recipeEntity = new RecipeEntity();
+            recipeEntity.setId(recipeId);
+            UserEntity userEntity = new UserEntity();
+            userEntity.setId(userId);
 
-        recipeRecipeBoxEntity.setRecipeBox(recipeBoxEntity);
-        recipeRecipeBoxEntity.setRecipe(recipeEntity);
-        recipeRecipeBoxEntity.setUser(userEntity);
-        return recipeRecipeBoxRepository.save(recipeRecipeBoxEntity);
-
+            recipeRecipeBoxEntity.setRecipeBox(recipeBoxEntity);
+            recipeRecipeBoxEntity.setRecipe(recipeEntity);
+            recipeRecipeBoxEntity.setUser(userEntity);
+            return recipeRecipeBoxRepository.save(recipeRecipeBoxEntity);
+        }
+        else{
+//            System.out.println("이미 존재합니다.");
+            return findRecipeBox.get(0);
+        }
     }
 
     @Override
