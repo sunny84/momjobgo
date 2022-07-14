@@ -94,7 +94,7 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
     }
 
     @Override
-    public RecipeBoxEntity findByIsDefault(Boolean isDefault) {
-        return recipeBoxRepository.findByIsDefault(isDefault);
+    public RecipeBoxEntity findByIsDefault() {
+        return recipeBoxRepository.findByIsDefault(true);
     }
 }

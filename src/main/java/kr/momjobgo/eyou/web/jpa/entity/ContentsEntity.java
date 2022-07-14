@@ -28,6 +28,6 @@ public class ContentsEntity extends BaseTimeEntity {
     @Column(name = "contents")
     private String contents;
 
-    @Column(name = "use")
-    private String use;
+    @Column(name = "enable")
+    private String enable;
 }

@@ -19,7 +19,6 @@ public interface RecipeBoxService {
     String deleteRecipeBoxAll();
     List<RecipeBoxEntity> findByName(String name);
     List<RecipeBoxEntity> findByNameContains(String name);
-    RecipeBoxEntity findByIsDefault(Boolean isDefault);
-
+    RecipeBoxEntity findByIsDefault();
 }
 

@@ -31,10 +31,15 @@ public class RecipeBoxController {
         return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBoxName(name, userId));
     }
 
-        @PostMapping("/default")
-        public ResponseEntity<?> insertRecipeBoxDefault(@RequestBody RecipeBoxEntity recipeBoxEntity){
-            return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBox(recipeBoxEntity));
-        }
+    @PostMapping("/default")
+    public ResponseEntity<?> insertRecipeBoxDefault(@RequestBody RecipeBoxEntity recipeBoxEntity){
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBox(recipeBoxEntity));
+    }
+
+    @GetMapping("/default")
+    public ResponseEntity<?> getRecipeBoxDefault(){
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.findByIsDefault());
+    }
 
         @PatchMapping("/")
         public ResponseEntity<?> updateRecipeBox(@RequestBody RecipeBoxEntity recipeBoxEntity){
