@@ -119,12 +119,13 @@ export default {
             console.error(error);
         })
 
-        await axios.post(`http://localhost:8090/reciperecipebox/${this.defaultRecipeBox.id}?recipe=${recipeId}&user=${this.writer}`, {
+        await axios.post(`http://localhost:8090/reciperecipebox/${this.defaultRecipeBox.id}?recipeId=${recipeId}&userId=${this.writer}`, {
         }).then(response=>{
             console.log("contents:", response.data);
         }).catch(error=>{
             console.error(error);
         })
+        location.href=`/recipeboxlist`;  //`/recipebox?${this.defaultRecipeBox.id}`;
       },
       setEmptyImg(e) {
         e.target.src=emptyImg;
