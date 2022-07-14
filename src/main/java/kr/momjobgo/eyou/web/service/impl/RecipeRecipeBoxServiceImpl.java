@@ -53,10 +53,12 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     public RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId, Long userId) {
         RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
 
-        RecipeBoxEntity recipeBoxEntity = recipeBoxRepository.getById(boxId);
-        RecipeEntity recipeEntity = recipeRepository.getById(recipeId);
-        System.out.println(recipeEntity);
-        UserEntity userEntity = userRepository.getById(userId);
+        RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
+        recipeBoxEntity.setId(boxId);
+        RecipeEntity recipeEntity = new RecipeEntity();
+        recipeEntity.setId(recipeId);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
 
         recipeRecipeBoxEntity.setRecipeBox(recipeBoxEntity);
         recipeRecipeBoxEntity.setRecipe(recipeEntity);
