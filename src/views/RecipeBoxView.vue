@@ -14,10 +14,10 @@
             <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
             <div class="boxes"><!-- v-if="step===1"-->
                 <ul v-for="(item, index) in recipeBoxes" :key="index">
-                    <li v-if="item.isDefault == true" @click="select(item.id)">{{item.name}}{{item.id}}</li>
+                    <li v-if="item.isDefault == true" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
                 </ul>
                 <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                    <li v-if="item.isDefault == false" @click="select(item.id)">{{item.name}}{{item.id}}</li>
+                    <li v-if="item.isDefault == false" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
                     <!-- <li v-else-if="item.isDefault == null" @click="select(item.id)">
                         {{item.name}}{{item.id}}
                     </li> -->
@@ -33,6 +33,7 @@
                     </li>
                 </ul>
                 <br/>
+                <span>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
             </div>
         <!--CONTENTS-->
             <div class="contents" v-if="step===1">
@@ -135,7 +136,7 @@
                     </div>
                     <div class="moveBoxBody">
                         <ul v-for="(item, index) in recipeBoxes" :key="index">
-                            <li v-if="item.isDefault == true" @click="select(item.id)">
+                            <li v-if="item.isDefault == true" @click="moveRecipeBox(item.id)">
                                 <button v-on:click="deleteBoxId(item.id)">X</button>
                                 <p>
                                     <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
@@ -144,14 +145,14 @@
                             </li>
                         </ul>
                         <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                            <li v-if="item.isDefault == false" @click="select(item.id)">
+                            <li v-if="item.isDefault == false" @click="moveRecipeBox(item.id)">
                                 <button v-on:click="deleteBoxId(item.id)">X</button>
                                 <p>
                                     <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
                                 {{item.name}}
                             </li>
-                            <li v-else-if="item.isDefault == null" @click="select(item.id)">
+                            <li v-else-if="item.isDefault == null" @click="moveRecipeBox(item.id)">
                                 <button v-on:click="deleteBoxId(item.id)">X</button>
                                 <p>
                                     <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
@@ -201,7 +202,7 @@ export default {
         mainPicture : '',
         boxList : [],
         checkedRecipeIds : [],
-        boxName: '기본박스'
+        boxName: '기본박스',
     }),
 
     components: {
@@ -314,13 +315,27 @@ export default {
         setEmptyImg(e) {
             e.target.src=emptyImg;
         },
-        select(id) {
-            console.log(`boxId: ${id}`);
+        selectRecipeBox(id) {
+            console.log(`selectRecipeBox: ${id}`);
             this.callRecipeBoxById(id)
             this.callContents();
         },
+        moveRecipeBox(id) {
+            console.log(`moveRecipeBox: ${id}`);
+            this.checkedRecipeIds.forEach(async (item, index, arr) => {
+                console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);
+                await axios.post(`http://localhost:8090/reciperecipebox/${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`, {
+                }).then(response=>{
+                    // console.log("contents:", response.data);
+                }).catch(error=>{
+                    console.error(error);
+                })
+            });
+            // this.callRecipeBoxById(id)
+            // this.callContents();
+        },
         async addNewBox(name) {
-            console.log("addNewBox");
+            console.log("addNewBox : "+name);
             this.boxName = name;
             await axios.post(`http://localhost:8090/recipebox/name=${name}&user=${this.writer}`, {
             }).then(response=>{
@@ -359,17 +374,20 @@ export default {
         },
         moveRecipe() {
             console.log("Move")
-            console.log(this.checkedRecipeIds)
             this.moveStep = 1
-            this.checkedRecipeIds.forEach(e => console.log(e));
-            // const response = await this.$api(`http://localhost:8090/recipebox/`,"post", {
-            //   //write: this.writer
-            // });
-            // this.contents = response.data;
-            // console.log(response.data);
         },
         deleteRecipe() {
-            console.log("Delete")
+            console.log("Delete")            
+            // 선택된 레시피박스의 checked 된 recipeId 를 삭제한다.
+            this.checkedRecipeIds.forEach(async (item, index, arr) => {
+                console.log(`${this.selectedRecipeBox.id}?recipe=${item}`);
+                await axios.delete(`http://localhost:8090/reciperecipebox/${this.selectedRecipeBox.id}?recipe=${item}`, {
+                }).then(response=>{
+                    // console.log("contents:", response.data);
+                }).catch(error=>{
+                    console.error(error);
+                })
+            });
         },
         cancel() {
             console.log("cancel")
