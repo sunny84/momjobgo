@@ -13,13 +13,12 @@ public class TipEntity {
     @Column(name = "id", nullable=false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @Column(name = "recipe_id")
     private Long recipeId;
 
     @Column(name = "text")
     private String text;
 
-    @Column(name = "order")
-    private Byte order;
+    @Column(name = "order_num")
+    private Byte orderNum;
 }
