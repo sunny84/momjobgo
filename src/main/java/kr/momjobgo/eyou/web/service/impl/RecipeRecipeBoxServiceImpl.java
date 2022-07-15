@@ -1,5 +1,6 @@
 package kr.momjobgo.eyou.web.service.impl;
 
+import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeRecipeBoxEntity;
@@ -61,7 +62,8 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     }
 
     @Override
-    public RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId, Long userId) {
+    public RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId) {
+        Long userId = UserManager.getUser().getId();
         List<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(boxId, recipeId, userId);
         if(findRecipeBox.isEmpty()){
             RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
