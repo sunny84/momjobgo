@@ -11,6 +11,6 @@ public interface RecipeRecipeBoxService {
     List<RecipeRecipeBoxEntity> findRecipesByRecipeBoxId(Long boxId);
     List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(Long boxId, Long recipeId, Long userId);
 
-    RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId, Long userId);
+    RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId);
     String deleteRecipeRecipeBox(Long id);
 }
