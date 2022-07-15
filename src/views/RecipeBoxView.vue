@@ -13,26 +13,26 @@
             </div>
             <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
             <div class="boxes"><!-- v-if="step===1"-->
-                <swiper ref="RecipeBoxView" :options="swiperOption" role="tablist">
                 <ul v-for="(item, index) in recipeBoxes" :key="index">
-                    <li v-if="item.isDefault == true" @click="selectRecipeBox(item.id)">
-                    <swiper-slide role="tab">{{item.name}}{{item.id}}</swiper-slide></li>
+                    <li v-if="item.isDefault == true" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
                 </ul>
                 <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                    <li v-if="item.isDefault == false" @click="selectRecipeBox(item.id)">
-                    <swiper-slide role="tab">{{item.name}}{{item.id}}</swiper-slide></li>
+                    <li v-if="item.isDefault == false" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
+                    <!-- <li v-else-if="item.isDefault == null" @click="select(item.id)">
+                        {{item.name}}{{item.id}}
+                    </li> -->
                 </ul>
                 <ul>
                     <li>
-                    <swiper-slide   swiper-slide role="tab"><confirm-input 
+                        <confirm-input 
                             :text="'+ '+$t('button.addNewBox')"
                             :title="$t('button.addNewBox')"
                             :value="boxName"
                             :callback="text => addNewBox(text)"
-                        /></swiper-slide>
+                        />
                     </li>
                 </ul>
-                </swiper>
+                <br/>
                 <span>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
             </div>
         <!--CONTENTS-->
@@ -174,8 +174,6 @@
 import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
 import ConfirmInput from 'vue-confirm-input'
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
 export default {
     name : "RecipeBoxView",
@@ -205,20 +203,10 @@ export default {
         boxList : [],
         checkedRecipeIds : [],
         boxName: '기본박스',
-        swiperOption: {
-            slidesPerView: 'auto',
-            spaceBetween: 6, // swiper-slide 사이의 간격 지정
-            slidesOffsetBefore: 0, // slidesOffsetBefore는 첫번째 슬라이드의 시작점에 대한 변경시 사용
-            slidesOffsetAfter: 0, // slidesOffsetAfter는 마지막 슬라이드 시작점 + 마지막 슬라이드 너비에 해당하는 위치의 변경이 필요할 때 사용
-            freeMode: true, // freeMode를 사용시 스크롤하는 느낌으로 구현 가능
-            centerInsufficientSlides: true, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
-        }
     }),
 
     components: {
-        ConfirmInput,
-        swiper,
-        swiperSlide
+        ConfirmInput
     },
 
     created() {
@@ -416,7 +404,7 @@ export default {
     },
 }
 </script>
-<style lang="scss" scoped>
+<style>
 button
 {
     background: inherit ; 
@@ -459,22 +447,4 @@ li {
 .boxes li {
     float: left;
 } */
-.swiper-container {
-  .swiper-wrapper {
-    .swiper-slide {
-      width: auto; // auto 값을 지정해야 슬라이드의 width값이 텍스트 길이 기준으로 바뀜
-      min-width: 56px; // min-width를 지정하지 않을 경우 텍스트가 1개 내지는 2개가 들어갈 때 탭 모양이 상이할 수 있으므로 넣어준다.
-      padding: 0px 14px;
-      font-size: 14px;
-      line-height: 36px;
-      text-align: center;
-      color: #84868c;
-      border: 0;
-      border-radius: 18px;
-      background: #f3f4f7;
-      appearance: none;
-      cursor: pointer;
-    }
-  }
-}
 </style>
