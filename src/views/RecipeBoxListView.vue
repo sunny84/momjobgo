@@ -14,22 +14,22 @@
         <button @click="callEdit">{{$t("button.edit")}}</button>
         <tr v-for="(item, index) in recipeRecipeBoxes" :key="index">
           <td v-if="item.isDefault == true">
-            <a :href="`/recipebox`" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
+            <router-link :to="'/recipebox/'+item.id">
               <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                <img :src=item.fileId width="200px" height="150px" @error="setEmptyImg">
               </p>
               {{item.name}} {{item.recipesCount}}<br/>
-            </a>
+            </router-link>
           </td>
         </tr>
         <tr v-for="(item, index) in recipeRecipeBoxes" :key="`o-${index}`">
           <td v-if="item.isDefault == false">
-            <a :href="`/recipebox`" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
+            <router-link :to="'/recipebox/'+item.id">
               <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                <img :src=item.fileId width="200px" height="150px" @error="setEmptyImg">
               </p>
               {{item.name}} {{item.recipesCount}}<br/>
-            </a>
+            </router-link>
           </td>
         </tr>
         <tr>          
@@ -62,7 +62,6 @@ export default {
     recipeBoxes : [],
     recipeRecipeBoxes : [],
     mainPicture : '',
-    writer : 1,
     boxName: '기본박스',
   }),
 
@@ -76,21 +75,18 @@ export default {
 
   methods: {
     initialize() {
-      this.callRecipeBox();
-    },
-
-    callRecipeBox() {
       this.getRecipeBoxAll();
     },
 
-    async getRecipeBoxAll() {
-      await axios.get(`http://localhost:8090/recipebox/all`, {
-      }).then(response=>{
+    async getRecipeBoxAll() {      
+      const response = await this.$api(
+        "http://localhost:8090/api/recipebox/all",
+        "get",
+      );
+      if (response.status === this.HTTP_OK) {
         this.recipeBoxes = response.data;
-        // console.log("recipebox:", response.data);
-      }).catch(error=>{
-        console.error(error);
-      })
+        console.log(response.data);
+      }
       this.getRecipeRecipeBox();
     },
 
@@ -100,19 +96,24 @@ export default {
         var i = 0;
         this.recipeRecipeBoxes = [];
         while(i < this.recipeBoxes.length ){
-          await axios.get(`http://localhost:8090/reciperecipebox/box=${this.recipeBoxes[i].id}`, { //&user=${this.writer}`, {
-          }).then(response=>{
-              this.recipeRecipeBoxes.push({
-                id: this.recipeBoxes[i].id,
-                name: this.recipeBoxes[i].name,
-                recipesCount: response.data.length,
-                isDefault: this.recipeBoxes[i].isDefault,
-                // img:,
-                data: response.data
-              });
-          }).catch(error=>{
-              console.error(error);
-          })
+          const response = await this.$api(
+            `http://localhost:8090/api/reciperecipebox`,
+            "get",
+            { box: this.recipeBoxes[i].id }
+          );
+
+          if (response.status === this.HTTP_OK) {
+            
+            this.recipeRecipeBoxes.push({
+              id: this.recipeBoxes[i].id,
+              name: this.recipeBoxes[i].name,
+              recipesCount: response.data.length,
+              isDefault: this.recipeBoxes[i].isDefault,
+              fileId: 'http://localhost:8090/file/download?fileId=' + 4, // TODO: API 사용해 fileId 얻어오기
+              data: response.data
+            });
+            console.log(response.data);
+          }
           i = i + 1;
         }
       }
@@ -126,13 +127,13 @@ export default {
     async addNewBox(name) {
         console.log("addNewBox : "+name);
         this.boxName = name;
-        await axios.post(`http://localhost:8090/recipebox/name=${name}&user=${this.writer}`, {
-        }).then(response=>{
+        const response = await this.$api(
+          `http://localhost:8090/api/recipebox/${name}`,
+          "post"
+        );
+        if (response.status === this.HTTP_OK) {
             this.selectedRecipeBox = response.data;
-            this.writer = this.selectedRecipeBox.userId;
-        }).catch(error=>{
-            console.error(error);
-        })
+        }
         this.initialize();
     },
 
