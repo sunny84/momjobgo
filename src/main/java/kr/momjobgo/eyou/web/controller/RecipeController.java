@@ -36,7 +36,7 @@ public class RecipeController {
         return ResponseEntity.ok().body( recipeService.getAll() );
     }
 
-    @GetMapping("/id={id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( recipeService.getById(id) ); }
 
     @GetMapping("/contents={contentsId}")
