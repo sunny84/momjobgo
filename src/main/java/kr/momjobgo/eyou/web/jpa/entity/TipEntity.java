@@ -20,5 +20,5 @@ public class TipEntity {
     private String text;
 
     @Column(name = "order_num")
-    private Byte orderNum;
+    private Short orderNum;
 }
