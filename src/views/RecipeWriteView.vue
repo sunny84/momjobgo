@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4>{{ $t("title.writeRecipe") }}</h4>
+    <p align="right" @click="reset()">X</p>
     <p>단계 : {{ step + 1 }}</p>
     <!-- Step 1 : 이유 단계, 소요시간 선택 -->
     <div v-show="step === 0">
@@ -85,7 +86,7 @@
       <p v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
         <button @click="goUp(ord_idx)">↑</button>
         <button @click="goDown(ord_idx)">↓</button>
-        <span>{{ order.contents_no }}</span>
+        <span>{{ order.contentsNo }}</span>
         <textarea width="140px" height="50" v-model="order.contents"></textarea>
         <img :src="order.imgUrl" width="50px" height="50px" @error="setEmptyImg" />
         <input
@@ -167,44 +168,63 @@ export default {
   name: "RecipeWriteView",
   data: () => ({
     // for real
-    // ing_data: [], // for real code
-    // step: 0, // 레시피 작성 과정 단계
-    // period: 0, // 이유 시기
-    // quantity: "", // 몇 회분
-    // timeTaken: 0, // 소요시간
-    // selectedIngredients: [], // 선택된 재료와 양
-    // title: "", // 레시피 제목
-    // subTitle: "", // 레시피 부제목
-    // mainPicture: "",
-    // mainImg: "", // 대표사진
-    // cookingOrder: [
-    //   { contents_no: 1, contents: "", imgUrl: "", fileData: "" },
-    // ], // 조리 순서
-    // Tips: [{ order_num: 1, text: "" }], // Tip
-    // youtubeUrl: "",
-    // clipUrl: "",
-
-    // for test
-    ing_data, // for test
+    ing_data: [], // for real code
     step: 0, // 레시피 작성 과정 단계
     period: 0, // 이유 시기
-    quantity: "1", // 몇 회분
+    quantity: "", // 몇 회분
     timeTaken: 0, // 소요시간
     selectedIngredients: [], // 선택된 재료와 양
-    title: "테스트-1", // 레시피 제목
-    subTitle: "부제목-1", // 레시피 부제목
-    mainPicture: "", // blob 이미지
+    title: "", // 레시피 제목
+    subTitle: "", // 레시피 부제목
+    mainPicture: "",
     mainImg: "", // 대표사진
-    cookingOrder: [{ contents_no: 1, contents: "조리1", imgUrl: "", fileData: "" }], // 조리 순서
-    Tips: [{ order_num: 1, text: "쉽게 만들어요" }], // Tip
-    youtubeUrl: "https://youtube.com",
-    clipUrl: "https://youtube.com/clip",
+    cookingOrder: [{ contentsNo: 1, contents: "", imgUrl: "", fileData: "" }], // 조리 순서
+    Tips: [{ orderNum: 1, text: "" }], // Tip
+    youtubeUrl: "",
+    clipUrl: "",
+
+    // for test
+    // ing_data, // for test
+    // step: 0, // 레시피 작성 과정 단계
+    // period: 0, // 이유 시기
+    // quantity: "1", // 몇 회분
+    // timeTaken: 0, // 소요시간
+    // selectedIngredients: [], // 선택된 재료와 양
+    // title: "테스트-1", // 레시피 제목
+    // subTitle: "부제목-1", // 레시피 부제목
+    // mainPicture: "", // blob 이미지
+    // mainImg: "", // 대표사진
+    // cookingOrder: [{ contentsNo: 1, contents: "조리1", imgUrl: "", fileData: "" }], // 조리 순서
+    // Tips: [{ orderNum: 1, text: "쉽게 만들어요" }], // Tip
+    // youtubeUrl: "https://youtube.com",
+    // clipUrl: "https://youtube.com/clip",
   }),
 
   beforeMount() {
     this.callIngredientCategory();
   },
   methods: {
+    initWriteRecipeProcess() {
+      this.step = 0;
+      this.period = 0;
+      this.quantity = "";
+      this.timeTaken = 0;
+      this.selectedIngredients = [];
+      this.title = "";
+      this.subTitle = "";
+      this.mainPicture = "";
+      this.mainImg = "";
+      this.cookingOrder = [{ contentsNo: 1, contents: "", imgUrl: "", fileData: "" }];
+      this.Tips = [{ orderNum: 1, text: "" }];
+      this.youtubeUrl = "";
+      this.clipUrl = "";
+    },
+    reset() {
+      if (confirm("작성을 취소하시겠습니까?")) {
+        location.href = "/";
+        this.initWriteRecipeProcess();
+      }
+    },
     async callIngredientCategory() {
       const response = await this.$api(
         "http://localhost:8090/Ingredient/join/category",
@@ -222,8 +242,6 @@ export default {
       if (arrow > 0 && this.step === 0 && !this.checkQuantity()) {
         return;
       } else if (arrow > 0 && this.step === 1) {
-        //this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "" });
-        // for test
         this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "50" });
       } else if (arrow < 0 && this.step === 2) {
         this.selectedIngredients.pop();
@@ -273,7 +291,7 @@ export default {
     },
     addOrder() {
       this.cookingOrder.push({
-        contents_no: this.cookingOrder.length + 1,
+        contentsNo: this.cookingOrder.length + 1,
         contents: "",
         imgUrl: "",
         fileData: "",
@@ -283,32 +301,32 @@ export default {
     },
     sortByContentId() {
       this.cookingOrder.sort(function (a, b) {
-        return a.contents_no - b.contents_no;
+        return a.contentsNo - b.contentsNo;
       });
     },
     goDown(idx) {
       // go down for cooking order
       if (idx < this.cookingOrder.length - 1) {
-        this.cookingOrder[idx].contents_no = idx + 2;
-        this.cookingOrder[idx + 1].contents_no = idx + 1;
+        this.cookingOrder[idx].contentsNo = idx + 2;
+        this.cookingOrder[idx + 1].contentsNo = idx + 1;
       }
       this.sortByContentId();
     },
     goUp(idx) {
       // go up for cooking order
       if (idx > 0) {
-        this.cookingOrder[idx].contents_no = idx;
-        this.cookingOrder[idx - 1].contents_no = idx + 1;
+        this.cookingOrder[idx].contentsNo = idx;
+        this.cookingOrder[idx - 1].contentsNo = idx + 1;
       }
       this.sortByContentId();
     },
     addTip() {
       if (this.Tips.length < 5) {
-        this.Tips.push({ orderNum: Tips.length, text: "" });
+        this.Tips.push({ orderNum: this.Tips.length + 1, text: "" });
       }
     },
     updateTip(idx, e) {
-      this.Tips.splice(idx, 1, e.target.value);
+      this.Tips[idx].text = e.target.value;
     },
     checkQuantity() {
       if (this.quantity >= 1) {
@@ -335,8 +353,7 @@ export default {
       }
     },
     checkMainImage() {
-      // console.log(this.mainImg);
-      if (this.mainImg.name.length !== 0) {
+      if (this.mainImg !== 0 && this.mainImg.name.length !== 0) {
         return true;
       } else {
         alert("대표사진을 입력하세요");
@@ -353,13 +370,13 @@ export default {
       return true;
     },
     checkCookingOrder() {
-      // first cooking order should be existed]
-      //console.log(this.cookingOrder.length);
+      // first cooking order should be existed
       if (this.cookingOrder.length > 1) {
         for (let i = 0; i < this.cookingOrder.length; i++) {
           if (
             !(
-              (this.cookingOrder[i].fileData.name.length !== 0) ^
+              (this.cookingOrder[i].fileData.length !== 0 &&
+                this.cookingOrder[i].fileData.name.length !== 0) ^
               (this.cookingOrder[i].contents.trim().length === 0)
             )
           ) {
@@ -370,6 +387,7 @@ export default {
         return true;
       } else {
         if (
+          this.cookingOrder[0].fileData.length == 0 ||
           this.cookingOrder[0].fileData.name.length === 0 ||
           this.cookingOrder[0].contents.trim().length === 0
         ) {
@@ -389,7 +407,6 @@ export default {
       return true;
     },
     calibCookingOrder() {
-      //delete this.cookingOrder.imgUrl;
       for (let i = 0; i < this.cookingOrder.length; i++) {
         URL.revokeObjectURL(this.cookingOrder[i].imgUrl);
         delete this.cookingOrder[i].imgUrl;
@@ -476,10 +493,6 @@ export default {
       // make form data for server
       const formData = new FormData();
 
-      // const mainPicture = document.getElementById("mainPicture");
-
-      // formData.append("file", mainPicture.files[0]);
-
       formData.append("file", this.mainImg);
       for (let i = 0; i < this.cookingOrder.length; i++) {
         formData.append("file", this.cookingOrder[i].fileData);
@@ -489,12 +502,12 @@ export default {
       this.calibrateAllData();
 
       const allParams = this.makeParams();
-      console.log(allParams);
+      //console.log(allParams);
 
       axios.post("http://localhost:8090/Recipe/write", allParams).then(function (res) {
         console.log("res", res);
         const contentsId = res.contentsId;
-        // // save into db
+        // save into db
         axios
           // 파일업로드를 위해서는 API 서버를 켜야합니다.
           .post("http://localhost:8090/file/upload", formData, {
@@ -513,14 +526,6 @@ export default {
 </script>
 
 <style scoped>
-.mainpicture {
-  width: 160px;
-  height: 120px;
-  border: solid 1px;
-  text-align: center;
-  cursor: pointer;
-}
-
 .pickpicture {
   display: none;
   z-index: 5;
