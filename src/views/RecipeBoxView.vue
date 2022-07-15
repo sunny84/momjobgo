@@ -53,13 +53,13 @@
                             </p>
                         </td>
                         <td>
-                            <a :href="item.title" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
+                            <router-link :to="item.title"><!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
                             {{item.title}} <br/>
                             {{item.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
                                 <li v-if="item.period == idx">{{period}} {{item.boxName}}|{{item.recipeId}}|{{item.boxId}}</li>
                             </ul>
-                            </a>
+                            </router-link>
                         </td>
                     </tr>
                 </table>
@@ -83,13 +83,13 @@
                             </p>
                         </td>
                         <td>
-                            <a :href="item.title" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
+                            <router-link :to="item.title"><!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
                             {{item.title}} <br/>
                             {{item.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
                                 <li v-if="item.period == idx">{{period}} {{item.boxName}} {{item.recipeId}} {{item.boxId}}</li>
                             </ul>
-                            </a>
+                            </router-link>
                         </td>
                         <td>
                             <input
@@ -116,14 +116,6 @@
                     <div class="moveBoxHeader">
                         <ul>
                             <li>{{$t("content.moveBox")}}</li>
-                            <!-- <li>
-                                <confirm-input 
-                                :text="'- '+'박스 삭제'"
-                                :title="'박스 삭제'"
-                                :value="boxName"
-                                :callback="text => deleteBox(text)"
-                                />
-                            </li> -->
                             <li>
                                 <confirm-input 
                                 :text="'+ '+$t('button.addNewBox')"
@@ -198,7 +190,6 @@ export default {
         contents : [],
         score : [],
         timeTaken : [],
-        writer : 1,
         mainPicture : '',
         boxList : [],
         checkedRecipeIds : [],
@@ -210,6 +201,8 @@ export default {
     },
 
     created() {
+        console.log("this.$route.params.boxId", this.$route.params.boxId);
+
         this.initialize();
     },
 
@@ -218,52 +211,35 @@ export default {
             this.callRecipeBox(this.boxName);
             this.callContents();
         },
-        async callRecipeBox() {
-            await axios.get(`http://localhost:8090/recipebox/all`, {
-            }).then(response=>{
+        async callRecipeBox() {            
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/all`,
+            "get"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.recipeBoxes = response.data;
                 this.selectedRecipeBox = this.recipeBoxes;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
-        },
-        async callRecipeBoxByName(name) {
-            await axios.get(`http://localhost:8090/recipebox/name=${name}`, {
-            }).then(response=>{
-                this.recipeBoxes = response.data;
-                this.selectedRecipeBox = this.recipeBoxes;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
         },
         async callRecipeBoxById(id) {
-            await axios.get(`http://localhost:8090/recipebox/id=${id}`, {
-            }).then(response=>{
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/${id}`,
+            "get"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.selectedRecipeBox = response.data;
-                this.writer = this.selectedRecipeBox.userId;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
         },
         async callContents() {
-            // console.log(`callContents ${this.list.length}`);
-            // TODO:
-            // const response = await this.$api(`/contents/writer=1`,"get", {
-            //   // writer: this.writer
-            // });
-            // this.contents = response.data;
-            // console.log(response.data);
-            // console.log(`writer: ${this.writer}`);
-            await axios.get(`http://localhost:8090/contents/writer=${this.writer}`, {
-            }).then(response=>{
+            // TODO: 접속자 컨텐츠만 가져오도록 API 추가 필요
+            const response = await this.$api(
+            // `http://localhost:8090/api/contents`,
+            `http://localhost:8090/contents`,
+            "get"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.contents = response.data;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
 
             // console.log(`contents length : ${this.contents.length}`);
             if(this.contents.length > 0)
@@ -272,28 +248,30 @@ export default {
                 this.list = [];
                 while(i < this.contents.length ){
                     // console.log(i,"회");
+                    const response1 = await this.$api(
+                    `http://localhost:8090/Recipe/contents=${this.contents[i].id}`,
+                    "get"
+                    );
+                    if (response1.status === this.HTTP_OK) {
+                        this.recipe = response1.data;
+                    }
+                    // TODO: 동작 오류
+                    // const response2 = await this.$api(
+                    // `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
+                    // "get",
+                    // );
+                    // if (response2.status === this.HTTP_OK) {
+                    //     this.score[i] = response2.data.score;
+                    // }
+                    this.score[i] = 5;//response2.data.score;
 
-                    await axios.get(`http://localhost:8090/Recipe/contents=${this.contents[i].id}`, {
-                    }).then(response=>{
-                        this.recipe = response.data
-                        // console.log("Recipe:", response.data);
-                    }).catch(error=>{
-                        console.error(error);
-                    })
-                    await axios.get(`http://localhost:8090/score/recipe=${this.recipe[0].id}`, {
-                    }).then(response=>{
-                        this.score[i] = response.data.score;
-                        // console.log("score:", response.data);
-                    }).catch(error=>{
-                        console.error(error);
-                    })
-                    await axios.get(`http://localhost:8090/time-taken/id=${this.recipe[0].timeTakenId}`, {
-                    }).then(response=>{
-                        this.timeTaken[i] = response.data.time;
-                        // console.log("timeTaken:", response.data);
-                    }).catch(error=>{
-                        console.error(error);
-                    })
+                    const response3 = await this.$api(
+                    `http://localhost:8090/time-taken/${this.recipe[0].timeTakenId}`,
+                    "get"
+                    );
+                    if (response3.status === this.HTTP_OK) {
+                        this.timeTaken[i] = response3.data.score;
+                    }
 
                     this.list.push({
                         title: this.contents[i].title,
@@ -324,12 +302,17 @@ export default {
             console.log(`moveRecipeBox: ${id}`);
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);
-                await axios.post(`http://localhost:8090/reciperecipebox/${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`, {
-                }).then(response=>{
+                const response = await this.$api(
+                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,   // TODO: API
+                "post",
+                {
+                    recipe: item,
+                    to: id
+                }
+                );
+                if (response.status === this.HTTP_OK) {
                     // console.log("contents:", response.data);
-                }).catch(error=>{
-                    console.error(error);
-                })
+                }
             });
             // this.callRecipeBoxById(id)
             // this.callContents();
@@ -337,35 +320,24 @@ export default {
         async addNewBox(name) {
             console.log("addNewBox : "+name);
             this.boxName = name;
-            await axios.post(`http://localhost:8090/recipebox/name=${name}&user=${this.writer}`, {
-            }).then(response=>{
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/${name}`,
+            "post"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.selectedRecipeBox = response.data;
-                this.writer = this.selectedRecipeBox.userId;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
             this.initialize();
-        },
-        async deleteBox(name) {
-            console.log("deleteBox: "+name);
-            this.value = name
-            await axios.delete(`http://localhost:8090/recipebox/name=${name}`, {
-            }).then(response=>{
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
-            // this.initialize();
         },
         async deleteBoxId(id) {
             console.log("deleteBoxId: "+id);
-            await axios.delete(`http://localhost:8090/recipebox/id=${id}`, {
-            }).then(response=>{
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/${id}`,
+            "delete"
+            );
+            if (response.status === this.HTTP_OK) {
                 // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
             this.initialize();
         },
         callEdit() {
@@ -381,12 +353,14 @@ export default {
             // 선택된 레시피박스의 checked 된 recipeId 를 삭제한다.
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}`);
-                await axios.delete(`http://localhost:8090/reciperecipebox/${this.selectedRecipeBox.id}?recipe=${item}`, {
-                }).then(response=>{
+                const response = await this.$api(
+                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,   // TODO: API
+                "delete",
+                { recipe: item }
+                );
+                if (response.status === this.HTTP_OK) {
                     // console.log("contents:", response.data);
-                }).catch(error=>{
-                    console.error(error);
-                })
+                }
             });
         },
         cancel() {
