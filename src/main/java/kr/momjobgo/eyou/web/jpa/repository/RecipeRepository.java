@@ -19,7 +19,6 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
             "HAVING COUNT(DISTINCT m.ingredientId) = :IdsCnt))")
     List<RecipeEntity> findByFilter(@Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
 
-
-    List<RecipeEntity> findByContentsId(Long contentsId);
+//    List<RecipeEntity> findByContentsId(Long contentsId);
 }
 
