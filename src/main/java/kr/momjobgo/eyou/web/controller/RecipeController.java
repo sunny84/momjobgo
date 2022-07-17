@@ -30,6 +30,7 @@ public class RecipeController {
 
     @GetMapping("/filter")
     public ResponseEntity<?> getPeriod(
+            @RequestParam(value = "sort", required = false) Long sort,
             @RequestParam(value = "period", required = false) Long period,
             @RequestParam(value = "timeTakenId", required = false) Long timeTakenId,
             @RequestParam(value = "Ids", required = false) String ids) {
@@ -40,7 +41,7 @@ public class RecipeController {
                         Ids.add(Long.parseLong(arr[i]));
                     }
                 }
-                return ResponseEntity.ok().body( recipeService.findByFilter(period, timeTakenId, Ids) );
+                return ResponseEntity.ok().body( recipeService.findByFilter(sort, period, timeTakenId, Ids) );
             }
 
     @GetMapping("")

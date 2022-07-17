@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface RecipeService {
-    List<RecipeEntity> findByFilter(Long period, Long timeTakenId, List<Long> Ids);
+    List<RecipeEntity> findByFilter(Long sort, Long period, Long timeTakenId, List<Long> Ids);
     List<RecipeEntity> getAll();
     RecipeEntity getById(Long id);
 //    List<RecipeEntity> getByContentsId(Long contentsId);
