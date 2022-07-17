@@ -6,6 +6,7 @@ import kr.momjobgo.eyou.web.service.ContentsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class ContentsServiceImpl implements ContentsService {
 //        } else {
 //            return null;
 //        }
+    }
+
+    @Override
+    public Map<String, String> getContentsByRecipeId(Long recipeId){
+        return contentsRepository.getContentsByRecipeId(recipeId);
     }
 }
