@@ -28,8 +28,8 @@ public class RecipeController {
         this.recipeService = recipeService;
      }
 
-    @GetMapping("/api/filter")
-    public ResponseEntity<?> getPeriod(
+    @GetMapping("/filter")
+    public ResponseEntity<?> getFilterList(
             @RequestParam(value = "sort", required = false) Long sort,
             @RequestParam(value = "period", required = false) Long period,
             @RequestParam(value = "timeTakenId", required = false) Long timeTakenId,

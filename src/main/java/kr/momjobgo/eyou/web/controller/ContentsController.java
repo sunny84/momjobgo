@@ -3,10 +3,7 @@ package kr.momjobgo.eyou.web.controller;
 
 import kr.momjobgo.eyou.web.service.ContentsService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/contents")
@@ -26,4 +23,8 @@ public class ContentsController {
     @GetMapping("/writer={writer}")
     public ResponseEntity<?> getByWriter(@PathVariable Long writer) { return ResponseEntity.ok().body( contentsService.getByWriter(writer) ); }
 
+    @GetMapping("/join/Recipe")
+    public ResponseEntity<?> getContentsByRecipeId(@RequestParam(value = "recipeId") Long recipeId){
+        return ResponseEntity.ok().body( contentsService.getContentsByRecipeId(recipeId));
+    }
 }

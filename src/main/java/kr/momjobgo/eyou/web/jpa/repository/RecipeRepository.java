@@ -25,12 +25,12 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 //            "ORDER BY (CASE " +
 //                        "WHEN :sort IS NULL THEN r.contentsEntity.updatedAt " +
 //                        "ELSE AVG(s.score) END) DESC")
-    @Query(value = "SELECT r.*, (rrm.recipe_id) subscribe FROM RECIPE r " +
+    @Query(value = "SELECT (rrm.recipe_id) subscribe, r.* FROM RECIPE r " +
             "INNER JOIN CONTENTS c ON r.contents_id = c.id " +
             "LEFT JOIN SCORE s ON r.id = s.recipe_id " +
             "LEFT JOIN (SELECT recipe_id FROM RECIPE_RECIPEBOX_MAP " +
 //                        "WHERE user_id = :userId " +
-                        "GROUP BY recipe_id) rrm 2ON r.id = rrm.recipe_id " +
+                        "GROUP BY recipe_id) rrm ON r.id = rrm.recipe_id " +
             "WHERE r.open = true " +
                 "AND (:period IS NULL OR r.period = :period) " +
                 "AND (:timeTakenId IS NULL OR r.time_taken_id = :timeTakenId) " +
