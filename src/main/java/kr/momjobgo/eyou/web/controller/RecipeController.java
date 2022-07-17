@@ -28,7 +28,7 @@ public class RecipeController {
         this.recipeService = recipeService;
      }
 
-    @GetMapping("/filter")
+    @GetMapping("/api/filter")
     public ResponseEntity<?> getPeriod(
             @RequestParam(value = "sort", required = false) Long sort,
             @RequestParam(value = "period", required = false) Long period,

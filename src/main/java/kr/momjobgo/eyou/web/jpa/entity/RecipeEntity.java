@@ -42,6 +42,9 @@ public class RecipeEntity {
     @Column(name = "youtube_link")
     private String youtubeLink;
 
+    @Column(name = "subscribe")
+    private Long subscribe;
+
     @OneToMany
     @JoinColumn(name = "recipe_id")
     private List<TipEntity> tipEntities;
