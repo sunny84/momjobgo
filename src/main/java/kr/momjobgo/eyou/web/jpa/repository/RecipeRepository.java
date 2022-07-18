@@ -1,7 +1,6 @@
 package kr.momjobgo.eyou.web.jpa.repository;
 
 import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -45,7 +44,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
                         "WHEN :sort IS NULL THEN c.updated_at " +
                         "ELSE AVG(s.score) END) DESC",
         nativeQuery = true)
-    List<RecipeEntity> findByFilter(Pageable pageable, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
+    List<RecipeEntity> findByFilter(@Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
 
 //    List<RecipeEntity> findByContentsId(Long contentsId);
 }
