@@ -61,8 +61,7 @@ export default {
       },
       async callContents(recipeId) {
         const response = await this.$api(
-        //`http://localhost:8090/api/contents/`,
-        `http://localhost:8090/contents/`,
+        `http://localhost:8090/api/contents/`,
         "get"
         );
         if (response.status === this.HTTP_OK) {

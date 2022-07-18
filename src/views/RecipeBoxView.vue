@@ -231,10 +231,8 @@ export default {
             }
         },
         async callContents() {
-            // TODO: 접속자 컨텐츠만 가져오도록 API 추가 필요
             const response = await this.$api(
-            // `http://localhost:8090/api/contents`,
-            `http://localhost:8090/contents`,
+            `http://localhost:8090/api/contents`,
             "get"
             );
             if (response.status === this.HTTP_OK) {
