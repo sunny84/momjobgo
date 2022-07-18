@@ -117,7 +117,7 @@
           type="url"
           :placeholder="$t('content_description.movieClipUrl')"
           pattern="https://.*"
-          :value="clipUrl"
+          v-model="clipUrl"
         />
       </p>
       <!-- Youtube Full link -->
@@ -127,7 +127,7 @@
           type="url"
           :placeholder="$t('content_description.youtubeUrl')"
           pattern="https://.*"
-          :value="youtubeUrl"
+          v-model="youtubeUrl"
         />
       </p>
     </div>
@@ -221,7 +221,7 @@ export default {
     },
     reset() {
       if (confirm("작성을 취소하시겠습니까?")) {
-        location.href = "/";
+        this.$router.push("/");
         this.initWriteRecipeProcess();
       }
     },
@@ -411,7 +411,7 @@ export default {
         URL.revokeObjectURL(this.cookingOrder[i].imgUrl);
         delete this.cookingOrder[i].imgUrl;
         if (
-          !this.cookingOrder[i].fileData.name.length &&
+          !this.cookingOrder[i].fileData &&
           !this.cookingOrder[i].contents.trim().length
         ) {
           this.cookingOrder.splice(i, 1);
@@ -505,8 +505,9 @@ export default {
       //console.log(allParams);
 
       axios.post("http://localhost:8090/Recipe/write", allParams).then(function (res) {
-        console.log("res", res);
-        const contentsId = res.contentsId;
+        //console.log("res", res);
+        const contentsId = res.data.contentsId;
+
         // save into db
         axios
           // 파일업로드를 위해서는 API 서버를 켜야합니다.
@@ -515,7 +516,7 @@ export default {
               "Content-Type": "multipart/form-data",
             },
             params: {
-              contentsId,
+              contentsId: contentsId,
             },
           })
           .then(function (res2) {});

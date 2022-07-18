@@ -6,14 +6,14 @@
         <button @click="callWrite">{{$t("button.write")}}</button>
         <tr v-for="(item, index) in list" :key="index">
           <td>
-            <a :href="item.name" target="_blank"> <!--TODO: a herf="레시피 상세페이지로 이동"-->
+            <router-link :to="'/recipe/'+item.recipeId"><!-- TODO: 경로 확인 -->
               <p>
                 <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
               </p>
+            </router-link>
               {{item.title}} <button @click="callRecipeBox(item.recipeId)">ㅁ</button><br/>
               {{item.subTitle}}<br/>
               {{item.timeTaken}} ★{{item.score}}.0 ... ({{item.commentsNumber}})<br/>
-            </a>
           </td>
           <td>
           </td>
@@ -25,6 +25,7 @@
 <script>
 import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
+import { mapGetters } from "vuex"
 
 export default {
     name : "MyRecipeView",
@@ -38,57 +39,62 @@ export default {
       mainPicture : '',
       defaultRecipeBox : [],
     }),
+    computed : {  
+      ...mapGetters('user', ['hasToken', 'token'])
+    },
     created() {
       this.initialize();
     },
     methods : {
       initialize() {
+        this.getDefaultBoxId();
         this.callContents();
-        console.log(this.list.length);
+      },
+      async getDefaultBoxId() {
+        const response = await this.$api(
+        `http://localhost:8090/api/recipebox/default`,
+        "get"
+        );
+        if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+            this.defaultRecipeBox = response.data;
+        }
       },
       async callContents(recipeId) {
-        // console.log(`callContents ${this.list.length}`);
-        // TODO:
-        // const response = await this.$api(`/contents/writer=1`,"get", {
-        //   // writer: this.writer
-        // });
-        // this.contents = response.data;
-        // console.log(response.data);
-        await axios.get(`http://localhost:8090/contents/writer=${this.writer}`, {
-        }).then(response=>{
-          this.contents = response.data;
-          // console.log("contents:", response.data);
-        }).catch(error=>{
-          console.error(error);
-        })
-
+        const response = await this.$api(
+        `http://localhost:8090/api/contents/`,
+        "get"
+        );
+        if (response.status === this.HTTP_OK) {
+            this.contents = response.data;
+        }
         if(this.contents.length > 0)
         {
           var i = 0;
           this.list = [];
           while(i < this.contents.length ){
             // console.log(i,"회");
-            await axios.get(`http://localhost:8090/Recipe/contents=${this.contents[i].id}`, {
-            }).then(response=>{
-              this.recipe = response.data
-              // console.log("Recipe:", response.data);
-            }).catch(error=>{
-              console.error(error);
-            })
-            await axios.get(`http://localhost:8090/score/recipe=${this.recipe[0].id}`, {
-            }).then(response=>{
-              this.score[i] = response.data.score;
-              // console.log("score:", response.data);
-            }).catch(error=>{
-              console.error(error);
-            })
-            await axios.get(`http://localhost:8090/time-taken/id=${this.recipe[0].timeTakenId}`, {
-            }).then(response=>{
-              this.timeTaken[i] = response.data.time;
-              // console.log("timeTaken:", response.data);
-            }).catch(error=>{
-              console.error(error);
-            })
+            const response = await this.$api(
+            `http://localhost:8090/Recipe/contents=${this.contents[i].id}`,
+            "get"
+            );
+            if (response.status === this.HTTP_OK) {
+                this.recipe = response.data;
+            }
+            // const response2 = await this.$api(
+            // `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
+            // "get"
+            // );
+            // if (response2.status === this.HTTP_OK) {
+            //     this.score[i] = response2.data.score;
+            //     console.log(response2.data.score);
+            // }
+            const response3 = await this.$api(
+            `http://localhost:8090/time-taken/${this.recipe[0].timeTakenId}`,
+            "get"
+            );
+            if (response3.status === this.HTTP_OK) {
+                this.timeTaken[i] = response3.data.time;
+            }
 
             this.list.push({
               title: this.contents[i].title,
@@ -104,28 +110,29 @@ export default {
           // console.log(`list: ${this.list}`);
         } 
       },
-      callWrite() {
-        console.log("write button");
-      },
       async callRecipeBox(recipeId) {
         console.log("recipebox save button")
+        //로그인 확인
+        const _this = this;
+        if( !_this.hasToken ){
+          console.log("token is alive")
+          console.log("token: "+_this.token)
+          // 로그인 페이지로 이동
+          location.href='/login';
+        }
         // 기본박스에 저장
-        // isDefault = true 인 id 에 저장        
-        await axios.get(`http://localhost:8090/recipebox/default`, {
-        }).then(response=>{
-            this.defaultRecipeBox = response.data;
-            // console.log("contents:", response.data);
-        }).catch(error=>{
-            console.error(error);
-        })
-
-        await axios.post(`http://localhost:8090/reciperecipebox/${this.defaultRecipeBox.id}?recipeId=${recipeId}&userId=${this.writer}`, {
-        }).then(response=>{
-            console.log("contents:", response.data);
-        }).catch(error=>{
-            console.error(error);
-        })
-        location.href=`/recipeboxlist`;  //`/recipebox?${this.defaultRecipeBox.id}`;
+        const response = await this.$api(
+        `http://localhost:8090/api/reciperecipebox?box=${this.defaultRecipeBox.id}&recipe=${recipeId}`,
+        "post"
+        );
+        if (response.status === this.HTTP_OK) {
+          console.log(response.data);
+        }
+        // 레시피박스 페이지로 이동
+        location.href=`/recipebox/${this.defaultRecipeBox.id}`;
+      },
+      callWrite() {
+        console.log("write button");
       },
       setEmptyImg(e) {
         e.target.src=emptyImg;
@@ -133,7 +140,7 @@ export default {
     },
 }
 </script>
-<style>
+<style scoped>
 ul{
  list-style:none;
  padding-left:0px;
