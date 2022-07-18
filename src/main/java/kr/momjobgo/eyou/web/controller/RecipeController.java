@@ -1,6 +1,5 @@
 package kr.momjobgo.eyou.web.controller;
 
-import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.jpa.entity.ContentsEntity;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
@@ -10,7 +9,6 @@ import kr.momjobgo.eyou.web.jpa.repository.RecipeIngredientMapRepository;
 import kr.momjobgo.eyou.web.jpa.repository.TipRepository;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +28,8 @@ public class RecipeController {
         this.recipeService = recipeService;
      }
 
-    @GetMapping("/api/filter")
+    @GetMapping("/filter")
     public ResponseEntity<?> getFilterList(
-            @RequestParam(value = "page") int page,
             @RequestParam(value = "sort", required = false) Long sort,
             @RequestParam(value = "period", required = false) Long period,
             @RequestParam(value = "timeTakenId", required = false) Long timeTakenId,
@@ -44,9 +41,7 @@ public class RecipeController {
                         Ids.add(Long.parseLong(arr[i]));
                     }
                 }
-//                Long userId = UserManager.getUser().getId();
-//                System.out.println("===> user ID : "+ userId);
-                return ResponseEntity.ok().body( recipeService.findByFilter(PageRequest.of(page, 10), sort, period, timeTakenId, Ids) );
+                return ResponseEntity.ok().body( recipeService.findByFilter(sort, period, timeTakenId, Ids) );
             }
 
     @GetMapping("")
