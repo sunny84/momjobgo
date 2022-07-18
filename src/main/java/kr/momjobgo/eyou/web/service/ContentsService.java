@@ -11,4 +11,6 @@ public interface ContentsService {
     List<ContentsEntity> getByWriter(Long writer);
 
     Map<String, String> getContentsByRecipeId(Long recipeId);
+
+    List<ContentsEntity> getByUserId(Long userId);
 }
