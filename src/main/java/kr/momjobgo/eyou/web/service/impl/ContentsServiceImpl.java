@@ -46,4 +46,9 @@ public class ContentsServiceImpl implements ContentsService {
     public Map<String, String> getContentsByRecipeId(Long recipeId){
         return contentsRepository.getContentsByRecipeId(recipeId);
     }
+
+    @Override
+    public List<ContentsEntity> getByUserId(Long userId) {
+        return contentsRepository.findByWriter(userId);
+    }
 }
