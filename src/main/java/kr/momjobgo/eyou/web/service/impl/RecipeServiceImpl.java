@@ -6,6 +6,7 @@ import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
 import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -36,8 +37,8 @@ public class RecipeServiceImpl implements RecipeService {
      }
 
     @Override
-    public List<RecipeEntity> findByFilter(Long sort, Long period, Long timeTakenId, List<Long> Ids) {
-        return recipeRepository.findByFilter(sort, period, timeTakenId, Ids, Long.valueOf(Ids.size()), 0L);
+    public List<RecipeEntity> findByFilter(Pageable pageable, Long sort, Long period, Long timeTakenId, List<Long> Ids) {
+        return recipeRepository.findByFilter(pageable, sort, period, timeTakenId, Ids, Long.valueOf(Ids.size()), 0L);
     }
 
     @Override
