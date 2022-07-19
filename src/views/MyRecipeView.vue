@@ -4,11 +4,17 @@
     <div class="contents">        
         <h4>{{$t("content.myRecipe")}} {{ list.length }}</h4>
         <button @click="callWrite">{{$t("button.write")}}</button>
+        <!-- <confirm-input 
+            :text="$t('button.addNewBox')"
+            :title="$t('button.addNewBox')"
+            :value="boxName"
+            :callback="text => updateRecipeBox(text)"
+        /> -->
         <tr v-for="(item, index) in list" :key="index">
           <td>
             <router-link :to="'/recipe/'+item.recipeId"><!-- TODO: 경로 확인 -->
               <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                <img :src=item.img width="200px" height="150px" @error="setEmptyImg">
               </p>
             </router-link>
               {{item.title}} <button @click="callRecipeBox(item.recipeId)">ㅁ</button><br/>
@@ -26,6 +32,7 @@
 import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
 import { mapGetters } from "vuex"
+import ConfirmInput from 'vue-confirm-input'
 
 export default {
     name : "MyRecipeView",
@@ -39,6 +46,9 @@ export default {
       mainPicture : '',
       defaultRecipeBox : [],
     }),
+    components: {
+        ConfirmInput
+    },
     computed : {  
       ...mapGetters('user', ['hasToken', 'token'])
     },
@@ -57,6 +67,17 @@ export default {
         );
         if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
             this.defaultRecipeBox = response.data;
+        }
+        if(response.data.isNaN){
+          // create Default Box
+          const response = await this.$api(
+          `http://localhost:8090/api/recipebox/default`,
+          "post",
+          {}
+          );
+          if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+              this.defaultRecipeBox = response.data;
+          }
         }
       },
       async callContents(recipeId) {
@@ -80,14 +101,14 @@ export default {
             if (response.status === this.HTTP_OK) {
                 this.recipe = response.data;
             }
-            // const response2 = await this.$api(
-            // `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
-            // "get"
-            // );
-            // if (response2.status === this.HTTP_OK) {
-            //     this.score[i] = response2.data.score;
-            //     console.log(response2.data.score);
-            // }
+            const response2 = await this.$api(
+            `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
+            "get"
+            );
+            if (response2.status === this.HTTP_OK) {
+                this.score[i] = response2.data.score;
+                console.log(response2.data.score);
+            }
             const response3 = await this.$api(
             `http://localhost:8090/time-taken/${this.recipe[0].timeTakenId}`,
             "get"
@@ -102,6 +123,8 @@ export default {
               score: this.score[i],
               timeTaken: this.timeTaken[i],
               recipeId: this.recipe[0].id,
+              img: 'http://localhost:8090/file/download?fileId=' + this.contents[i].id,
+              // img: 'http://localhost:8090/file/download/contents?contentsId=' + this.contents[i].id,
               commentsNumber : 66   // TODO: comments
             });
 
@@ -137,6 +160,17 @@ export default {
       setEmptyImg(e) {
         e.target.src=emptyImg;
       },
+      async updateRecipeBox(name) {
+        console.log("updateRecipeBox : "+name);
+        const response = await this.$api(
+        `http://localhost:8090/api/recipebox/${this.defaultRecipeBox.id}`,
+        "patch",
+        {name: name}
+        );
+        if (response.status === this.HTTP_CREATED) {
+          console.log("이름 변경 성공")
+        }
+      }
     },
 }
 </script>

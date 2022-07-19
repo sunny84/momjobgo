@@ -213,7 +213,7 @@ export default {
         },
         async callRecipeBox() {            
             const response = await this.$api(
-            `http://localhost:8090/api/recipebox/all`,
+            `http://localhost:8090/api/recipebox/mine`,
             "get"
             );
             if (response.status === this.HTTP_OK) {
@@ -253,15 +253,14 @@ export default {
                     if (response1.status === this.HTTP_OK) {
                         this.recipe = response1.data;
                     }
-                    // TODO: 동작 오류
-                    // const response2 = await this.$api(
-                    // `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
-                    // "get",
-                    // );
-                    // if (response2.status === this.HTTP_OK) {
-                    //     this.score[i] = response2.data.score;
-                    // }
-                    this.score[i] = 5;//response2.data.score;
+                    const response2 = await this.$api(
+                    `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
+                    "get",
+                    );
+                    if (response2.status === this.HTTP_OK) {
+                        this.score[i] = response2.data.score;
+                    }
+                    this.score[i] = response2.data.score;
 
                     const response3 = await this.$api(
                     `http://localhost:8090/time-taken/${this.recipe[0].timeTakenId}`,

@@ -80,8 +80,8 @@ export default {
 
     async getRecipeBoxAll() {      
       const response = await this.$api(
-        "http://localhost:8090/api/recipebox/all",
-        "get",
+        `http://localhost:8090/api/recipebox/mine`,
+        "get"
       );
       if (response.status === this.HTTP_OK) {
         this.recipeBoxes = response.data;
@@ -96,27 +96,33 @@ export default {
         var i = 0;
         this.recipeRecipeBoxes = [];
         while(i < this.recipeBoxes.length ){
+          var count = 0;
+          var recipe = [];
           const response = await this.$api(
             `http://localhost:8090/api/reciperecipebox`,
             "get",
             { box: this.recipeBoxes[i].id }
           );
-
-          if (response.status === this.HTTP_OK) {
-            
+          if (response.status === this.HTTP_OK){
+            if(!response.data.isNaN){
+              count = response.data.length;
+              recipe.push({recipe: response.data.recipe});
+            }
+            // TODO: contentsId로 fildId 얻어오기
+            // this.getFileId(recipe.isNaN?this.mainPicture:recipe.contentsId);
             this.recipeRecipeBoxes.push({
               id: this.recipeBoxes[i].id,
               name: this.recipeBoxes[i].name,
-              recipesCount: response.data.length,
+              recipesCount: count,
               isDefault: this.recipeBoxes[i].isDefault,
-              fileId: 'http://localhost:8090/file/download?fileId=' + 4, // TODO: API 사용해 fileId 얻어오기
-              data: response.data
+              //fileId: 'http://localhost:8090/file/download/contents?contentsId=' + recipe.isNaN?this.mainPicture:recipe.contentsId
             });
-            console.log(response.data);
           }
           i = i + 1;
+          // console.log(this.recipeRecipeBoxes);
         }
       }
+      console.log(this.recipeRecipeBoxes);
     },
 
     callEdit() {
@@ -140,6 +146,15 @@ export default {
     setEmptyImg(e) {
       e.target.src=emptyImg;
     },
+    async getFileId(id){
+        const response = await this.$api(
+          `http://localhost:8090/file?contentsId=${id}`,
+          "get"
+        );
+        if (response.status === this.HTTP_OK) {
+            console.log(response.data);
+        }
+    }
   },
 }
 </script>
