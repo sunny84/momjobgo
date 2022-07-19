@@ -170,8 +170,6 @@ import ConfirmInput from 'vue-confirm-input'
 export default {
     name : "RecipeBoxView",
     data: ()=>({
-        name : "",
-        recipes : 0,
         recipeBoxes : [],
         selectedRecipeBox : [],
         /* 
@@ -186,12 +184,7 @@ export default {
         */
         moveStep : 0,
         list : [],
-        recipe : [],
-        contents : [],
-        score : [],
-        timeTaken : [],
         mainPicture : '',
-        boxList : [],
         checkedRecipeIds : [],
         boxName: '기본박스',
     }),
@@ -208,20 +201,20 @@ export default {
 
     methods : {
         initialize() {
-            this.callRecipeBox(this.boxName);
-            this.callContents();
+            this.getRecipeBoxById(this.$route.params.boxId);
+            this.getRecipeBoxList();
+            this.getRecipeRecipeBoxList(this.$route.params.boxId);
         },
-        async callRecipeBox() {            
+        async getRecipeBoxList() {            
             const response = await this.$api(
-            `http://localhost:8090/api/recipebox/all`,
+            `http://localhost:8090/api/recipebox/mine`,
             "get"
             );
             if (response.status === this.HTTP_OK) {
                 this.recipeBoxes = response.data;
-                this.selectedRecipeBox = this.recipeBoxes;
             }
         },
-        async callRecipeBoxById(id) {
+        async getRecipeBoxById(id) {
             const response = await this.$api(
             `http://localhost:8090/api/recipebox/${id}`,
             "get"
@@ -230,71 +223,38 @@ export default {
                 this.selectedRecipeBox = response.data;
             }
         },
-        async callContents() {
+        async getRecipeRecipeBoxList(id) {
+            this.list = [];
             const response = await this.$api(
-            `http://localhost:8090/api/contents`,
-            "get"
-            );
+            `http://localhost:8090/api/reciperecipebox/recipe`,
+            "get",
+            {box: id}
+            );            
             if (response.status === this.HTTP_OK) {
-                this.contents = response.data;
-            }
-
-            // console.log(`contents length : ${this.contents.length}`);
-            if(this.contents.length > 0)
-            {
-                var i = 0;
-                this.list = [];
-                while(i < this.contents.length ){
-                    // console.log(i,"회");
-                    const response1 = await this.$api(
-                    `http://localhost:8090/Recipe/contents=${this.contents[i].id}`,
-                    "get"
-                    );
-                    if (response1.status === this.HTTP_OK) {
-                        this.recipe = response1.data;
-                    }
-                    // TODO: 동작 오류
-                    // const response2 = await this.$api(
-                    // `http://localhost:8090/score/recipe/${this.recipe[0].id}`,
-                    // "get",
-                    // );
-                    // if (response2.status === this.HTTP_OK) {
-                    //     this.score[i] = response2.data.score;
-                    // }
-                    this.score[i] = 5;//response2.data.score;
-
-                    const response3 = await this.$api(
-                    `http://localhost:8090/time-taken/${this.recipe[0].timeTakenId}`,
-                    "get"
-                    );
-                    if (response3.status === this.HTTP_OK) {
-                        this.timeTaken[i] = response3.data.score;
-                    }
-
+                console.log(response.data);
+                response.data.forEach( obj => {
                     this.list.push({
-                        title: this.contents[i].title,
-                        subTitle: this.contents[i].subTitle,
-                        score: this.score[i],
-                        timeTaken: this.timeTaken[i],
-                        period: this.recipe[0].period,
+                        title: obj.title,
+                        subTitle: obj.subTitle,
+                        score: obj.score,
+                        timeTaken: obj.timeTaken,
+                        period: obj.period,
+                        recipeId: obj.recipeId,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
-                        recipeId: this.recipe[0].id,
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
-                    });
-
-                    i = i + 1;          
-                }
-                // console.log(this.list);
-            } 
+                    })
+                });                 
+            }
         },
         setEmptyImg(e) {
             e.target.src=emptyImg;
         },
         selectRecipeBox(id) {
+            console.log("this.$route.params.boxId", this.$route.params.boxId);
             console.log(`selectRecipeBox: ${id}`);
-            this.callRecipeBoxById(id)
-            this.callContents();
+            this.getRecipeBoxById(id)
+            this.getRecipeRecipeBoxList(id);
         },
         moveRecipeBox(id) {
             console.log(`moveRecipeBox: ${id}`);
@@ -312,8 +272,8 @@ export default {
                     // console.log("contents:", response.data);
                 }
             });
-            // this.callRecipeBoxById(id)
-            // this.callContents();
+            // this.getRecipeBoxById(id)
+            // this.getRecipeRecipeBoxList(id);
         },
         async addNewBox(name) {
             console.log("addNewBox : "+name);
