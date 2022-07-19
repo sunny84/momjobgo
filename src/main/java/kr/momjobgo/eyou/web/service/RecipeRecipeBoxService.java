@@ -7,6 +7,7 @@ import java.util.List;
 public interface RecipeRecipeBoxService {
     List<RecipeRecipeBoxEntity> getAll();
     RecipeRecipeBoxEntity getRecipeRecipeBox(Long id);
+    List<RecipeRecipeBoxEntity> getRecipeRecipeBoxByUserId();
     List<RecipeRecipeBoxEntity> findByRecipeBoxId(Long boxId);
     List<RecipeRecipeBoxEntity> findRecipesByRecipeBoxId(Long boxId);
     List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(Long boxId, Long recipeId, Long userId);

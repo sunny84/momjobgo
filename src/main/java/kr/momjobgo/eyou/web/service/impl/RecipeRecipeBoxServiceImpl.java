@@ -34,6 +34,13 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             }
     @Override
     public List<RecipeRecipeBoxEntity> getAll() { return recipeRecipeBoxRepository.findAll(); }
+
+    @Override
+    public List<RecipeRecipeBoxEntity> getRecipeRecipeBoxByUserId(){
+        Long userId = UserManager.getUser().getId();
+        return recipeRecipeBoxRepository.findByUserId(userId);
+    }
+
     @Override
     public RecipeRecipeBoxEntity getRecipeRecipeBox(Long id){
 
