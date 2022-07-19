@@ -44,9 +44,9 @@ public class RecipeController {
                         Ids.add(Long.parseLong(arr[i]));
                     }
                 }
-//                Long userId = UserManager.getUser().getId();
-//                System.out.println("===> user ID : "+ userId);
-                return ResponseEntity.ok().body( recipeService.findByFilter(PageRequest.of(page, 10), sort, period, timeTakenId, Ids) );
+                Long userId = UserManager.getUser().getId();
+                System.out.println("===> user ID : "+ userId);
+                return ResponseEntity.ok().body( recipeService.findByFilter(PageRequest.of(page, 2), userId, sort, period, timeTakenId, Ids) );
             }
 
     @GetMapping("")

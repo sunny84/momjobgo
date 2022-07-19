@@ -27,12 +27,14 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 //            "ORDER BY (CASE " +
 //                        "WHEN :sort IS NULL THEN r.contentsEntity.updatedAt " +
 //                        "ELSE AVG(s.score) END) DESC")
-    @Query(value = "SELECT rrm.recipe_id subscribe, AVG(s.score) score, r.id, r.period, r.time_taken_id, c.title, c.sub_title FROM RECIPE r " +
+    @Query(value = "SELECT f.file_save_name, rrm.recipe_id subscribe, AVG(s.score) score, r.id, r.period, r.time_taken_id, c.title, c.sub_title FROM RECIPE r " +
             "INNER JOIN CONTENTS c ON r.contents_id = c.id " +
             "LEFT JOIN SCORE s ON r.id = s.recipe_id " +
             "LEFT JOIN (SELECT recipe_id FROM RECIPE_RECIPEBOX_MAP " +
-//                        "WHERE user_id = :userId " +
+                        "WHERE user_id = :userId " +
                         "GROUP BY recipe_id) rrm ON r.id = rrm.recipe_id " +
+            "LEFT JOIN (SELECT file_save_name, contents_id FROM FILE " +
+                        "WHERE file_real_name LIKE BINARY 'M%') f ON f.contents_id = r.contents_id " +
             "WHERE r.open = true " +
                 "AND (:period IS NULL OR r.period = :period) " +
                 "AND (:timeTakenId IS NULL OR r.time_taken_id = :timeTakenId) " +
@@ -46,7 +48,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
                         "WHEN :sort IS NULL THEN c.updated_at " +
                         "ELSE AVG(s.score) END) DESC",
         nativeQuery = true)
-    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
+    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("userId") Long userId, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
 
 //    List<RecipeEntity> findByContentsId(Long contentsId);
 }
