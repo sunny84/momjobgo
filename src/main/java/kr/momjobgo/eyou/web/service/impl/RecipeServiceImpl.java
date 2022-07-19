@@ -104,4 +104,20 @@ public class RecipeServiceImpl implements RecipeService {
 
         return result;
     }
+
+    @Override
+    public String updateOpen(Long id) {
+        Optional<RecipeEntity> recipeEntity = recipeRepository.findById(id);
+
+        if (recipeEntity.isPresent()) {
+            if (recipeEntity.get().getOpen()) {
+                recipeEntity.get().setOpen(false);
+            } else {
+                recipeEntity.get().setOpen(true);
+            }
+            recipeRepository.save(recipeEntity.get());
+            return "Success to update open";
+        }
+        return "Fail to update open";
+    }
 }

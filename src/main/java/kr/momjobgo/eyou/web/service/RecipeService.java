@@ -15,4 +15,6 @@ public interface RecipeService {
     RecipeEntity getById(Long id);
     List<RecipeEntity> getByContentsId(Long contentsId);
     Map<String, Object> write(HttpServletRequest req, @RequestBody RecipeRequest request);
+
+    String updateOpen(Long id);
 }
