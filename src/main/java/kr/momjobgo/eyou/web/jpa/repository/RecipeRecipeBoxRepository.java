@@ -15,4 +15,5 @@ public interface RecipeRecipeBoxRepository extends JpaRepository<RecipeRecipeBox
     List<RecipeRecipeBoxEntity> findRecipesByRecipeBoxId(Long boxId);
 //    SELECT * FROM eyou.RECIPE_RECIPEBOX_MAP WHERE recipe_box_id = 22 AND recipe_id = 8 AND user_id = 1
     List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(@Param("recipeBox") Long boxId, @Param("recipe") Long recipeId, @Param("user") Long userId);
+    List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndUserId(Long boxId, Long userId);
 }

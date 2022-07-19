@@ -37,7 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
      }
 
     @Override
-    public List<RecipeEntity> findByFilter(Pageable pageable, Long sort, Long period, Long timeTakenId, List<Long> Ids) {
+    public List<Map<String, Object>> findByFilter(Pageable pageable, Long sort, Long period, Long timeTakenId, List<Long> Ids) {
         return recipeRepository.findByFilter(pageable, sort, period, timeTakenId, Ids, Long.valueOf(Ids.size()), 0L);
     }
 
@@ -56,11 +56,10 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-//    @Override
-//    public List<RecipeEntity> getByContentsId(Long contentsId){
-//        System.out.println(contentsId);
-//        return recipeRepository.findByContentsId(contentsId);
-//    }
+    @Override
+    public List<RecipeEntity> getByContentsId(Long contentsId){
+        return recipeRepository.findByContentsId(contentsId);
+    }
 
     @Transactional
     public Map<String, Object> write(HttpServletRequest req, @RequestBody RecipeRequest request) {
@@ -104,5 +103,21 @@ public class RecipeServiceImpl implements RecipeService {
         result.put("recipeId", resultRecipe.getId());
 
         return result;
+    }
+
+    @Override
+    public String updateOpen(Long id) {
+        Optional<RecipeEntity> recipeEntity = recipeRepository.findById(id);
+
+        if (recipeEntity.isPresent()) {
+            if (recipeEntity.get().getOpen()) {
+                recipeEntity.get().setOpen(false);
+            } else {
+                recipeEntity.get().setOpen(true);
+            }
+            recipeRepository.save(recipeEntity.get());
+            return "Success to update open";
+        }
+        return "Fail to update open";
     }
 }

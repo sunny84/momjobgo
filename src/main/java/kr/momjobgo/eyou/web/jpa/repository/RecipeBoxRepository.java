@@ -13,8 +13,10 @@ public interface RecipeBoxRepository extends JpaRepository<RecipeBoxEntity, Long
 
     List<RecipeBoxEntity> findByNameContains(String name);
 
-    RecipeBoxEntity findByIsDefault(Boolean isDefault);
+    RecipeBoxEntity findByIsDefaultAndUserId(Boolean isDefault, Long userId);
 
     @Transactional
     void deleteByName(String name);
+
+    List<RecipeBoxEntity> findByUserId(Long userId);
 }

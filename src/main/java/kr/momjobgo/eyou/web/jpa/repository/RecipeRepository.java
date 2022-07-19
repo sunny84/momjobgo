@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
@@ -26,7 +27,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 //            "ORDER BY (CASE " +
 //                        "WHEN :sort IS NULL THEN r.contentsEntity.updatedAt " +
 //                        "ELSE AVG(s.score) END) DESC")
-    @Query(value = "SELECT (rrm.recipe_id) subscribe, r.* FROM RECIPE r " +
+    @Query(value = "SELECT rrm.recipe_id subscribe, AVG(s.score) score, r.id, r.period, r.time_taken_id, c.title, c.sub_title FROM RECIPE r " +
             "INNER JOIN CONTENTS c ON r.contents_id = c.id " +
             "LEFT JOIN SCORE s ON r.id = s.recipe_id " +
             "LEFT JOIN (SELECT recipe_id FROM RECIPE_RECIPEBOX_MAP " +
@@ -45,8 +46,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
                         "WHEN :sort IS NULL THEN c.updated_at " +
                         "ELSE AVG(s.score) END) DESC",
         nativeQuery = true)
-    List<RecipeEntity> findByFilter(Pageable pageable, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
-
-//    List<RecipeEntity> findByContentsId(Long contentsId);
+    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
+    List<RecipeEntity> findByContentsId(Long contentsId);
 }
 
