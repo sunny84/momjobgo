@@ -47,7 +47,6 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
                         "ELSE AVG(s.score) END) DESC",
         nativeQuery = true)
     List<Map<String, Object>> findByFilter(Pageable pageable, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
-
-//    List<RecipeEntity> findByContentsId(Long contentsId);
+    List<RecipeEntity> findByContentsId(Long contentsId);
 }
 

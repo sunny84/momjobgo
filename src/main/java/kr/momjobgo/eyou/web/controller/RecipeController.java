@@ -62,4 +62,6 @@ public class RecipeController {
         return ResponseEntity.ok().body(recipeService.write(req, request));
     }
 
+    @GetMapping("/contents={contentsId}")
+    public ResponseEntity<?> getByContentsId(@PathVariable Long contentsId) { return ResponseEntity.ok().body( recipeService.getByContentsId(contentsId) ); }
 }
