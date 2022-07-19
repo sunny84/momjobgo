@@ -1,9 +1,15 @@
 <template>
   <div class="filterList">
     <div v-for="(recipe, $index) in recipeList" :key="$index">
-      <div>
-
+      <div v-if="recipe.file_save_name!=null">
+        <img :src="recipe.file_save_name" width="200px" height="150px" @error="setEmptyImg" />
       </div>
+      <div v-else style="width:200px; height:150px; background-color:#EEEEEE;" >
+        이미지 없음        
+      </div>
+      <span v-if="recipe.subscribe!=null">구독중</span>
+      <!-- <span v-else>구독아님</span> -->
+      <br/>
       <span>{{recipe.title}}</span><br/>
       <span>{{recipe.sub_title}}</span>
       <div>
@@ -21,6 +27,7 @@
 <script>
 import InfiniteLoading from 'vue-infinite-loading';
 import { mapGetters } from "vuex";
+import emptyImg from "@/assets/emptyImg.png";
 
 export default {
   name : "RecipeFilterListView",
@@ -38,6 +45,10 @@ export default {
   },
 
   methods: {
+    setEmptyImg(e) {
+      e.target.src = emptyImg;
+    },
+
     async infiniteHandler($state){
       let params = `page=${this.page}`;
       if(this.period > -1) params += `&period=${this.period}`;

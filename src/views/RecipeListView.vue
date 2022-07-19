@@ -4,10 +4,10 @@
       <h4>우리아기,</h4>
       <h4>어떤 요리가 좋을까요?</h4>
       <div>
-        <router-link to="/filter">필터</router-link> | 
-        <button @click="setSort(0)">최신순</button>&nbsp;|&nbsp;
-        <button @click="setSort(1)">별점순</button>&nbsp;|&nbsp;
-        <button>후기순</button>&nbsp;|&nbsp;
+        <router-link to="/filter">필터</router-link>&nbsp;
+        <button @click="setSort(0)">최신순</button>&nbsp;
+        <button @click="setSort(1)">별점순</button>&nbsp;
+        <button>후기순</button>&nbsp;
         <button>재료명순</button>
       </div>
     </div>
