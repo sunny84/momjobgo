@@ -56,11 +56,10 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-//    @Override
-//    public List<RecipeEntity> getByContentsId(Long contentsId){
-//        System.out.println(contentsId);
-//        return recipeRepository.findByContentsId(contentsId);
-//    }
+    @Override
+    public List<RecipeEntity> getByContentsId(Long contentsId){
+        return recipeRepository.findByContentsId(contentsId);
+    }
 
     @Transactional
     public Map<String, Object> write(HttpServletRequest req, @RequestBody RecipeRequest request) {

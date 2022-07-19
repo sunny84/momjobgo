@@ -13,8 +13,7 @@ public interface RecipeService {
     List<Map<String, Object>> findByFilter(Pageable pageable, Long sort, Long period, Long timeTakenId, List<Long> Ids);
     List<RecipeEntity> getAll();
     RecipeEntity getById(Long id);
-
-    //List<RecipeEntity> getByContentsId(Long contentsId);
+    List<RecipeEntity> getByContentsId(Long contentsId);
     Map<String, Object> write(HttpServletRequest req, @RequestBody RecipeRequest request);
 
     String updateOpen(Long id);

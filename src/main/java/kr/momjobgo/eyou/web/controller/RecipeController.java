@@ -51,6 +51,9 @@ public class RecipeController {
         return ResponseEntity.ok().body(recipeService.write(req, request));
     }
 
+    @GetMapping("/contents={contentsId}")
+    public ResponseEntity<?> getByContentsId(@PathVariable Long contentsId) { return ResponseEntity.ok().body( recipeService.getByContentsId(contentsId) ); }
+    
     @PatchMapping("/updateOpen={id}")
     public ResponseEntity<?> updateOpen(Long id) {
         return ResponseEntity.ok().body(recipeService.updateOpen(id));
