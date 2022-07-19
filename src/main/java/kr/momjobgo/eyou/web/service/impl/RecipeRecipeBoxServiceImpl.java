@@ -68,8 +68,14 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                 if(recipeEntity.isPresent()){
                     recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
                     recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
-                    recipe.put("score", scoreRepository.findByRecipeId(recipeEntity.get().getId()).get().getScore());
-                    recipe.put("timeTaken", timeTakenRepository.findById(recipeEntity.get().getTimeTakenId()).get().getTime());
+                    Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipeEntity.get().getId());
+                    if(scoreEntity.isPresent()){
+                        recipe.put("score", scoreEntity.get().getScore());
+                    }
+                    Optional<TimeTakenEntity> timeTakenEntity = timeTakenRepository.findById(recipeEntity.get().getTimeTakenId());
+                    if(timeTakenEntity.isPresent()){
+                        recipe.put("timeTaken", timeTakenEntity.get().getTime());
+                    }
                     recipe.put("period", recipeEntity.get().getPeriod());
                     recipe.put("recipeId", recipeEntity.get().getId());
                 }
