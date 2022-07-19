@@ -3,6 +3,7 @@ package kr.momjobgo.eyou.web.jpa.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kr.momjobgo.eyou.web.jpa.entity.base.BaseTimeEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JoinColumnOrFormula;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity(name = "RECIPEBOX")
 public class RecipeBoxEntity extends BaseTimeEntity {
     @Id
