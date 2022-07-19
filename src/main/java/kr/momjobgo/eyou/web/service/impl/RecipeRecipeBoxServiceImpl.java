@@ -1,19 +1,12 @@
 package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.config.security.UserManager;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeRecipeBoxEntity;
-import kr.momjobgo.eyou.web.jpa.entity.UserEntity;
-import kr.momjobgo.eyou.web.jpa.repository.RecipeBoxRepository;
-import kr.momjobgo.eyou.web.jpa.repository.RecipeRecipeBoxRepository;
-import kr.momjobgo.eyou.web.jpa.repository.RecipeRepository;
-import kr.momjobgo.eyou.web.jpa.repository.UserRepository;
+import kr.momjobgo.eyou.web.jpa.entity.*;
+import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeRecipeBoxService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
@@ -21,24 +14,35 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     RecipeBoxRepository recipeBoxRepository;
     RecipeRepository recipeRepository;
     UserRepository userRepository;
+    ScoreRepository scoreRepository;
+    TimeTakenRepository timeTakenRepository;
 
     public RecipeRecipeBoxServiceImpl(
             RecipeRecipeBoxRepository recipeRecipeBoxRepository,
             RecipeBoxRepository recipeBoxRepository,
             RecipeRepository recipeRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            ScoreRepository scoreRepository,
+            TimeTakenRepository timeTakenRepository) {
                 this.recipeRecipeBoxRepository = recipeRecipeBoxRepository;
                 this.recipeBoxRepository = recipeBoxRepository;
                 this.recipeRepository = recipeRepository;
                 this.userRepository = userRepository;
+                this.scoreRepository = scoreRepository;
+                this.timeTakenRepository = timeTakenRepository;
             }
     @Override
     public List<RecipeRecipeBoxEntity> getAll() { return recipeRecipeBoxRepository.findAll(); }
 
     @Override
     public List<RecipeRecipeBoxEntity> getRecipeRecipeBoxByUserId(){
-        Long userId = UserManager.getUser().getId();
-        return recipeRecipeBoxRepository.findByUserId(userId);
+        List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByUserId(UserManager.getUser().getId());
+
+        if(!recipeRecipeBoxEntity.isEmpty()){
+            return recipeRecipeBoxEntity;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -51,6 +55,29 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> findByRecipeContents(Long boxId) {
+        List recipes = new ArrayList<>();
+        List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, UserManager.getUser().getId());
+        if(!recipeRecipeBoxEntity.isEmpty()){
+            recipeRecipeBoxEntity.forEach(item -> {
+                Map<String, Object> recipe = new HashMap<>();
+                Optional<RecipeEntity> recipeEntity = recipeRepository.findById(item.getRecipe().getId());
+                if(recipeEntity.isPresent()){
+                    recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
+                    recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
+                    recipe.put("score", scoreRepository.findByRecipeId(recipeEntity.get().getId()).get().getScore());
+                    recipe.put("timeTaken", timeTakenRepository.findById(recipeEntity.get().getTimeTakenId()).get().getTime());
+                    recipe.put("period", recipeEntity.get().getPeriod());
+                    recipe.put("recipeId", recipeEntity.get().getId());
+                }
+                recipes.add(recipe);
+            });
+        }
+//        System.out.println(recipes);
+        return recipes;
     }
 
     @Override
