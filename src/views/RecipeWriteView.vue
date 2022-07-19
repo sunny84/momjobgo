@@ -493,9 +493,13 @@ export default {
       // make form data for server
       const formData = new FormData();
 
-      formData.append("file", this.mainImg);
+      formData.append("file", this.mainImg, "M" + this.mainImg.name);
       for (let i = 0; i < this.cookingOrder.length; i++) {
-        formData.append("file", this.cookingOrder[i].fileData);
+        formData.append(
+          "file",
+          this.cookingOrder[i].fileData,
+          "C" + this.cookingOrder[i].fileData.name
+        );
       }
 
       // calibarate all data
