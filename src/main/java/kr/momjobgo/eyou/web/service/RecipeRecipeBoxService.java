@@ -4,6 +4,7 @@ import kr.momjobgo.eyou.web.jpa.entity.RecipeRecipeBoxEntity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface RecipeRecipeBoxService {
     List<RecipeRecipeBoxEntity> getAll();
@@ -12,8 +13,9 @@ public interface RecipeRecipeBoxService {
     List<Map<String, Object>> findByRecipeContents(Long boxId);
     List<RecipeRecipeBoxEntity> findByRecipeBoxId(Long boxId);
     List<RecipeRecipeBoxEntity> findRecipesByRecipeBoxId(Long boxId);
-    List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(Long boxId, Long recipeId, Long userId);
 
     RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId);
+    RecipeRecipeBoxEntity moveRecipeBox(Long fromBoxId, Long recipeId, Long toBoxId);
     String deleteRecipeRecipeBox(Long id);
+    Object deleteRecipe(Long id, Long recipeId);
 }

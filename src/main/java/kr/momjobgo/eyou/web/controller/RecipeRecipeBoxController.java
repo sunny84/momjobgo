@@ -38,5 +38,23 @@ public class RecipeRecipeBoxController {
     public ResponseEntity<?> insertRecipeBox(
             @RequestParam(value = "box", required = false) Long boxId,
             @RequestParam(value = "recipe", required = false) Long recipeId
-    ) { return ResponseEntity.ok().body( recipeRecipeBoxService.insertRecipeBox(boxId, recipeId) ); }
+    ) {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.insertRecipeBox(boxId, recipeId) );
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<?> moveRecipeBox(
+            @PathVariable Long id,
+            @RequestParam(value = "recipe", required = false) Long recipeId,
+            @RequestParam(value = "to", required = false) Long toBoxId
+    ) {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.moveRecipeBox(id, recipeId, toBoxId) );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRecipe(
+            @PathVariable Long id,
+            @RequestParam(value = "recipe", required = false) Long recipeId) {
+        return ResponseEntity.ok().body(recipeRecipeBoxService.deleteRecipe(id, recipeId));
+    }
 }
