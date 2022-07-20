@@ -87,4 +87,10 @@ export default {
 </script>
 
 <style>
+	.filterList {
+		display: grid;
+		grid-template-columns: repeat(2, 200px);
+		/* grid-auto-rows: 65px; */
+		grid-gap: 20px;
+	}
 </style>
