@@ -156,6 +156,7 @@ export default {
       },
       callWrite() {
         console.log("write button");
+        location.href=`/write`;
       },
       setEmptyImg(e) {
         e.target.src=emptyImg;
