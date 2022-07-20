@@ -160,7 +160,6 @@
 </template>
 
 <script>
-import ing_data from "@/assets/ingredients.json"; // for test
 import emptyImg from "@/assets/emptyImg.png";
 import axios from "axios";
 
@@ -182,25 +181,9 @@ export default {
     Tips: [{ orderNum: 1, text: "" }], // Tip
     youtubeUrl: "",
     clipUrl: "",
-
-    // for test
-    // ing_data, // for test
-    // step: 0, // 레시피 작성 과정 단계
-    // period: 0, // 이유 시기
-    // quantity: "1", // 몇 회분
-    // timeTaken: 0, // 소요시간
-    // selectedIngredients: [], // 선택된 재료와 양
-    // title: "테스트-1", // 레시피 제목
-    // subTitle: "부제목-1", // 레시피 부제목
-    // mainPicture: "", // blob 이미지
-    // mainImg: "", // 대표사진
-    // cookingOrder: [{ contentsNo: 1, contents: "조리1", imgUrl: "", fileData: "" }], // 조리 순서
-    // Tips: [{ orderNum: 1, text: "쉽게 만들어요" }], // Tip
-    // youtubeUrl: "https://youtube.com",
-    // clipUrl: "https://youtube.com/clip",
   }),
 
-  beforeMount() {
+  created() {
     this.callIngredientCategory();
   },
   methods: {
@@ -226,14 +209,15 @@ export default {
       }
     },
     async callIngredientCategory() {
-      const response = await this.$api(
-        "http://localhost:8090/Ingredient/join/category",
-        "get"
+      await this.$api("http://localhost:8090/Ingredient/join/category", "get").then(
+        (res) => {
+          if (res.status === this.HTTP_OK) {
+            this.ing_data = res.data;
+          } else {
+            console.log("NOT Ok");
+          }
+        }
       );
-
-      if (response.status === this.HTTP_OK) {
-        this.ing_data = response.data;
-      }
     },
 
     validateByStep(arrow) {
@@ -242,7 +226,7 @@ export default {
       if (arrow > 0 && this.step === 0 && !this.checkQuantity()) {
         return;
       } else if (arrow > 0 && this.step === 1) {
-        this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "50" });
+        this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "" });
       } else if (arrow < 0 && this.step === 2) {
         this.selectedIngredients.pop();
       } else if (arrow > 0 && this.step === 2) {
@@ -489,16 +473,28 @@ export default {
 
       return params;
     },
-    publish() {
+    async publish() {
       // make form data for server
       const formData = new FormData();
 
       formData.append("file", this.mainImg, "M" + this.mainImg.name);
       for (let i = 0; i < this.cookingOrder.length; i++) {
+        // change file name
+        var filename = this.cookingOrder[i].fileData.name;
+        console.log(
+          "C" +
+            filename.substring(0, filename.lastIndexOf(".")) +
+            String(i + 1).padStart(2, 0) +
+            filename.substring(filename.lastIndexOf("."), filename.length)
+        );
+
         formData.append(
           "file",
           this.cookingOrder[i].fileData,
-          "C" + this.cookingOrder[i].fileData.name
+          "C" +
+            filename.substring(0, filename.lastIndexOf(".")) +
+            String(i + 1).padStart(2, 0) +
+            filename.substring(filename.lastIndexOf("."), filename.length)
         );
       }
 
@@ -506,25 +502,31 @@ export default {
       this.calibrateAllData();
 
       const allParams = this.makeParams();
-      //console.log(allParams);
 
-      axios.post("http://localhost:8090/Recipe/write", allParams).then(function (res) {
-        //console.log("res", res);
-        const contentsId = res.data.contentsId;
+      await axios
+        .post("http://localhost:8090/Recipe/write", allParams)
+        .then(function (res) {
+          const contentsId = res.data.contentsId;
+          const recipeId = res.data.recipeId;
 
-        // save into db
-        axios
-          // 파일업로드를 위해서는 API 서버를 켜야합니다.
-          .post("http://localhost:8090/file/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            params: {
-              contentsId: contentsId,
-            },
-          })
-          .then(function (res2) {});
-      });
+          // save into db
+          axios
+            // 파일업로드를 위해서는 API 서버를 켜야합니다.
+            .post("http://localhost:8090/file/upload", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              params: {
+                contentsId: contentsId,
+              },
+            })
+            .then(function (res2) {
+              if (res2.status === this.HTTP_OK) {
+                this.$router.push("/recipedetail/" + this.recipeId);
+                this.initWriteRecipeProcess();
+              }
+            });
+        });
     },
   },
 };
