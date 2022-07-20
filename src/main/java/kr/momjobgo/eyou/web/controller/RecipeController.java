@@ -58,4 +58,9 @@ public class RecipeController {
     public ResponseEntity<?> updateOpen(Long id) {
         return ResponseEntity.ok().body(recipeService.updateOpen(id));
     }
+
+    @GetMapping("/detail={id}")
+    public ResponseEntity<?> getDetailById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(recipeService.getDetailById(id));
+    }
 }
