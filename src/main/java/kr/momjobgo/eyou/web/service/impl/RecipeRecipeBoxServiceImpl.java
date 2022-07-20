@@ -16,6 +16,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     UserRepository userRepository;
     ScoreRepository scoreRepository;
     TimeTakenRepository timeTakenRepository;
+    FileRepository fileRepository;
 
     public RecipeRecipeBoxServiceImpl(
             RecipeRecipeBoxRepository recipeRecipeBoxRepository,
@@ -23,13 +24,15 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             RecipeRepository recipeRepository,
             UserRepository userRepository,
             ScoreRepository scoreRepository,
-            TimeTakenRepository timeTakenRepository) {
+            TimeTakenRepository timeTakenRepository,
+            FileRepository fileRepository) {
                 this.recipeRecipeBoxRepository = recipeRecipeBoxRepository;
                 this.recipeBoxRepository = recipeBoxRepository;
                 this.recipeRepository = recipeRepository;
                 this.userRepository = userRepository;
                 this.scoreRepository = scoreRepository;
                 this.timeTakenRepository = timeTakenRepository;
+                this.fileRepository = fileRepository;
             }
     @Override
     public List<RecipeRecipeBoxEntity> getAll() { return recipeRecipeBoxRepository.findAll(); }
@@ -62,9 +65,9 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
         List recipes = new ArrayList<>();
         List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, UserManager.getUser().getId());
         if(!recipeRecipeBoxEntity.isEmpty()){
-            recipeRecipeBoxEntity.forEach(item -> {
+            recipeRecipeBoxEntity.forEach(rrb -> {
                 Map<String, Object> recipe = new HashMap<>();
-                Optional<RecipeEntity> recipeEntity = recipeRepository.findById(item.getRecipe().getId());
+                Optional<RecipeEntity> recipeEntity = recipeRepository.findById(rrb.getRecipe().getId());
                 if(recipeEntity.isPresent()){
                     recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
                     recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
@@ -78,6 +81,13 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                     }
                     recipe.put("period", recipeEntity.get().getPeriod());
                     recipe.put("recipeId", recipeEntity.get().getId());
+                    recipe.put("contentsId", recipeEntity.get().getContentsId());
+                    List<FileEntity> fileEntity = fileRepository.findByContentsId(recipeEntity.get().getContentsId());
+                    fileEntity.forEach(file -> {
+                        if(file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
+                            recipe.put("fileId", file.getId());
+                        }
+                    });
                 }
                 recipes.add(recipe);
             });
