@@ -16,4 +16,6 @@ public interface RecipeRecipeBoxService {
 
     RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId);
     String deleteRecipeRecipeBox(Long id);
+
+    List<Map<String, Object>> getSubscribeList(Long userId, Long period);
 }
