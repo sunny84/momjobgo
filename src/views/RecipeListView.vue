@@ -3,6 +3,7 @@
     <div>
       <h4>우리아기,</h4>
       <h4>어떤 요리가 좋을까요?</h4>
+      <SubscribeListView></SubscribeListView>
       <div>
         <router-link to="/filter">필터</router-link>&nbsp;
         <button @click="setSort(0)">최신순</button>&nbsp;
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import SubscribeListView from "../components/RecipeSubscribeListView.vue";
 import FilterListView from "../components/RecipeFilterListView.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -24,6 +26,7 @@ export default {
   }),
 
   components: {
+    SubscribeListView,
     FilterListView,
   },
 
