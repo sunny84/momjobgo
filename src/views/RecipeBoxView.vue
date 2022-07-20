@@ -261,7 +261,7 @@ export default {
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);
                 const response = await this.$api(
-                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,   // TODO: API
+                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
                 "post",
                 {
                     recipe: item,
@@ -269,11 +269,11 @@ export default {
                 }
                 );
                 if (response.status === this.HTTP_OK) {
-                    // console.log("contents:", response.data);
+                    console.log("moveRecipeBox:", response.data);
                 }
             });
-            // this.getRecipeBoxById(id)
-            // this.getRecipeRecipeBoxList(id);
+            //this.getRecipeBoxById(this.$route.params.boxId)
+            this.getRecipeRecipeBoxList(this.$route.params.boxId);
         },
         async addNewBox(name) {
             console.log("addNewBox : "+name);
@@ -294,7 +294,7 @@ export default {
             "delete"
             );
             if (response.status === this.HTTP_OK) {
-                // console.log("contents:", response.data);
+                console.log(response.data);
             }
             this.initialize();
         },
@@ -312,14 +312,15 @@ export default {
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}`);
                 const response = await this.$api(
-                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,   // TODO: API
+                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
                 "delete",
                 { recipe: item }
                 );
                 if (response.status === this.HTTP_OK) {
-                    // console.log("contents:", response.data);
+                    console.log(response.data);
                 }
             });
+            this.getRecipeRecipeBoxList(this.$route.params.boxId);
         },
         cancel() {
             console.log("cancel")
@@ -328,6 +329,7 @@ export default {
         done() {
             console.log("done")
             this.step = 1
+            this.initialize();
         },
         cancelMove() {
             console.log("cancelMove")
