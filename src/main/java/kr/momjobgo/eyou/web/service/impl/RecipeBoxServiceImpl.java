@@ -44,11 +44,32 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
     }
 
     @Override
-    public RecipeBoxEntity insertRecipeBox(RecipeBoxEntity entity) { return recipeBoxRepository.save(entity); }
+    public RecipeBoxEntity insertRecipeBox() {
+        RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
+        recipeBoxEntity.setName("default");
+        recipeBoxEntity.setUserId(UserManager.getUser().getId());
+        recipeBoxEntity.setIsDefault(true);
+        return recipeBoxRepository.save(recipeBoxEntity);
+    }
 
     @Override
-    public RecipeBoxEntity updateRecipeBox(RecipeBoxEntity entity) {
-        return recipeBoxRepository.save(entity);
+    public RecipeBoxEntity updateRecipeBox(Long id, String name) {
+        Optional<RecipeBoxEntity> optional = recipeBoxRepository.findById(id);
+        System.out.println(optional);
+
+        RecipeBoxEntity recipeBoxEntity;
+        if(optional.isPresent()) {
+            System.out.println("===> 1");
+            recipeBoxEntity = recipeBoxRepository.getById(id);
+            recipeBoxEntity.setName(name);
+        }
+        else{
+            System.out.println("===> 2");
+            recipeBoxEntity = new RecipeBoxEntity();
+            recipeBoxEntity.setName(name);
+        }
+        recipeBoxRepository.save(recipeBoxEntity);
+        return recipeBoxEntity;
     }
 
     @Override
@@ -97,6 +118,12 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
 
     @Override
     public RecipeBoxEntity findByIsDefault() {
-        return recipeBoxRepository.findByIsDefault(true);
+        Long userId = UserManager.getUser().getId();
+        return recipeBoxRepository.findByIsDefaultAndUserId(true, userId);
+    }
+
+    @Override
+    public List<RecipeBoxEntity> findByUserId(Long userId){
+        return recipeBoxRepository.findByUserId(userId);
     }
 }

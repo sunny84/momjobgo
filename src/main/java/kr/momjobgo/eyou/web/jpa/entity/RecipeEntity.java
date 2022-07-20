@@ -16,6 +16,9 @@ public class RecipeEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "contents_id", insertable = false, updatable = false)
+    private Long contentsId;
+
     @OneToOne
     @JoinColumn(name = "contents_id")
     private ContentsEntity contentsEntity;
@@ -42,8 +45,8 @@ public class RecipeEntity {
     @Column(name = "youtube_link")
     private String youtubeLink;
 
-    @Column(name = "subscribe")
-    private Long subscribe;
+//    @Column(name = "subscribe")
+//    private Long subscribe;
 
     @OneToMany
     @JoinColumn(name = "recipe_id")

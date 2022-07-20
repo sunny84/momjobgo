@@ -1,5 +1,6 @@
 package kr.momjobgo.eyou.web.controller;
 
+import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,11 @@ public class RecipeBoxController {
         return ResponseEntity.ok().body( recipeBoxService.getAll() );
     }
 
+    @GetMapping("/mine")
+    public ResponseEntity<?> getByUser() {
+        return ResponseEntity.ok().body( recipeBoxService.findByUserId(UserManager.getUser().getId()) );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( recipeBoxService.getById(id) ); }
 
@@ -31,8 +37,8 @@ public class RecipeBoxController {
     }
 
     @PostMapping("/default")
-    public ResponseEntity<?> insertRecipeBoxDefault(@RequestBody RecipeBoxEntity recipeBoxEntity){
-        return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBox(recipeBoxEntity));
+    public ResponseEntity<?> insertRecipeBoxDefault(){
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.insertRecipeBox());
     }
 
     @GetMapping("/default")
@@ -40,10 +46,12 @@ public class RecipeBoxController {
         return ResponseEntity.status(HttpStatus.CREATED).body(recipeBoxService.findByIsDefault());
     }
 
-        @PatchMapping("/")
-        public ResponseEntity<?> updateRecipeBox(@RequestBody RecipeBoxEntity recipeBoxEntity){
-            return ResponseEntity.ok().body(recipeBoxService.updateRecipeBox(recipeBoxEntity));
-        }
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateRecipeBoxTest(
+            @PathVariable Long id,
+            @RequestParam(value = "name", required = false)  String name){
+        return ResponseEntity.ok().body(recipeBoxService.updateRecipeBox(id, name));
+    }
 
         @DeleteMapping("/{id}")    // id에 해당되는 데이터 삭제. 없는 id일 경유 500 에러 발생
         public ResponseEntity<?> deleteRecipeBoxById(@PathVariable Long id) {
