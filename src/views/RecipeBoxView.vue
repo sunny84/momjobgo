@@ -49,7 +49,7 @@
                     <tr v-for="(item, index) in list" :key="index">
                         <td>
                             <p>
-                                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
                             </p>
                         </td>
                         <td>
@@ -79,7 +79,7 @@
                     <tr v-for="(item, index) in list" :key="index">
                         <td>
                             <p>
-                                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
                             </p>
                         </td>
                         <td>
@@ -131,7 +131,7 @@
                             <li v-if="item.isDefault == true" @click="moveRecipeBox(item.id)">
                                 <button v-on:click="deleteBoxId(item.id)">X</button>
                                 <p>
-                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
                                 {{item.name}}
                             </li>
@@ -140,14 +140,14 @@
                             <li v-if="item.isDefault == false" @click="moveRecipeBox(item.id)">
                                 <button v-on:click="deleteBoxId(item.id)">X</button>
                                 <p>
-                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
                                 {{item.name}}
                             </li>
                             <li v-else-if="item.isDefault == null" @click="moveRecipeBox(item.id)">
                                 <button v-on:click="deleteBoxId(item.id)">X</button>
                                 <p>
-                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
                                 {{item.name}}
                             </li>
@@ -240,6 +240,9 @@ export default {
                         timeTaken: obj.timeTaken,
                         period: obj.period,
                         recipeId: obj.recipeId,
+                        contentsId: obj.contentsId,
+                        fileId: obj.fileId,
+                        file: obj.fileId?`http://localhost:8090/file/download?fileId=${obj.fileId}`:this.mainPicture,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
