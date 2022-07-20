@@ -2,8 +2,8 @@
   <div class="SubscribeList">
     <hooper :autoPlay="true" :playSpeed="2000" id="hooper">
       <slide v-for="(recipe, $index) in recipeList" :key="$index" class="slide">
-        <div v-if="recipe.file_save_name!=null">
-          <img :src="recipe.file_save_name" width="200px" height="150px" @error="setEmptyImg" />
+        <div v-if="recipe.file_id!=null">
+          <img :src="getImgURL(recipe.file_id)" width="200px" height="150px" @error="setEmptyImg" />
         </div>
         <div v-else style="width:200px; height:150px; background-color:#EEEEEE;" >
           이미지 없음 {{$index}}    
@@ -43,6 +43,12 @@ export default {
   methods: {
     initialize() {
       this.callSubscribeList();
+    },
+
+    getImgURL(id) {
+      const url = 'http://localhost:8090/file/download?fileId=' + id;
+      console.log(url);
+      return url
     },
 
     setEmptyImg(e) {
