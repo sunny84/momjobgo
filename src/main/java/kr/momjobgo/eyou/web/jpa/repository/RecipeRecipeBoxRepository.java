@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface RecipeRecipeBoxRepository extends JpaRepository<RecipeRecipeBoxEntity, Long> {
@@ -16,7 +17,7 @@ public interface RecipeRecipeBoxRepository extends JpaRepository<RecipeRecipeBox
     List<RecipeRecipeBoxEntity> findByUserId(Long userId);
     List<RecipeRecipeBoxEntity> findRecipesByRecipeBoxId(Long boxId);
 //    SELECT * FROM eyou.RECIPE_RECIPEBOX_MAP WHERE recipe_box_id = 22 AND recipe_id = 8 AND user_id = 1
-    List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(@Param("recipeBox") Long boxId, @Param("recipe") Long recipeId, @Param("user") Long userId);
+    Optional<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(@Param("recipeBox") Long boxId, @Param("recipe") Long recipeId, @Param("user") Long userId);
     List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndUserId(Long boxId, Long userId);
 
     @Query(value = "SELECT rrm.id, r.period, r.time_taken_id, AVG(s.score) score, c.title, f.id file_id FROM RECIPE_RECIPEBOX_MAP rrm " +
