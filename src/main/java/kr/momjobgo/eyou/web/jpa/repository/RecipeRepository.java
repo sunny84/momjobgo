@@ -44,14 +44,16 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
             "WHERE r.open = true " +
                 "AND (:period IS NULL OR r.period = :period) " +
                 "AND (:timeTakenId IS NULL OR r.time_taken_id = :timeTakenId) " +
-                "AND (:IdsCnt = :v OR rim.ingredient_id IN (:Ids)) " +
+                "AND (:IdsCnt = 0 OR rim.ingredient_id IN (:Ids)) " +
             "GROUP BY r.id " +
-            "ORDER BY COUNT(DISTINCT rim.ingredient_id) DESC, " +
+//            "ORDER BY COUNT(DISTINCT rim.ingredient_id) DESC, " +
+            "ORDER BY (CASE WHEN :IdsCnt = 0 THEN 0=0 " +
+                            "ELSE COUNT(DISTINCT rim.ingredient_id) END) DESC, " +
                 "(CASE " +
                     "WHEN :sort IS NULL THEN c.updated_at " +
                     "ELSE AVG(s.score) END) DESC",
             nativeQuery = true)
-    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("userId") Long userId, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
+    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("userId") Long userId, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt);
     List<RecipeEntity> findByContentsId(Long contentsId);
 }
 

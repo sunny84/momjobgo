@@ -44,7 +44,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Map<String, Object>> findByFilter(Pageable pageable, Long userId, Long sort, Long period, Long timeTakenId, List<Long> Ids) {
-        return recipeRepository.findByFilter(pageable, userId, sort, period, timeTakenId, Ids, Long.valueOf(Ids.size()), 0L);
+        return recipeRepository.findByFilter(pageable, userId, sort, period, timeTakenId, Ids, Long.valueOf(Ids.size()));
     }
 
     @Override
