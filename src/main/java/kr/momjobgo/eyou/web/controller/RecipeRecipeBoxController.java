@@ -45,9 +45,7 @@ public class RecipeRecipeBoxController {
             @RequestParam(value = "period", required = false) Long period) {
 //        Long userId = UserManager.getUser().getId();
 //        System.out.println("===> user ID : "+ userId);
-        return ResponseEntity.ok().body( recipeRecipeBoxService.getSubscribeList(1L, period) );
-    ) {
-        return ResponseEntity.ok().body( recipeRecipeBoxService.insertRecipeBox(boxId, recipeId) );
+        return ResponseEntity.ok().body(recipeRecipeBoxService.getSubscribeList(1L, period));
     }
 
     @PostMapping("/{id}")
