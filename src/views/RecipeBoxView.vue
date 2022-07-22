@@ -37,27 +37,25 @@
             </div>
         <!--CONTENTS-->
             <div class="contents" v-if="step===1">
-                {{$t("content.all")}} {{ list.length }}
+                {{$t("content.all")}} {{ recipeList.length }}
                 <button @click="callEdit">{{$t("button.edit")}}</button>
                 <table>
                     <thead>
                         <td></td>
                         <td></td>
                     </thead>
-                    <!-- DB로 부터 가져와야 레시피 목록
-                        최대 5개의 레시피 목록을 가져온다. -->
-                    <tr v-for="(item, index) in list" :key="index">
+                    <tr v-for="(recipe, index) in recipeList.slice(0,5)" :key="index"><!-- 최대 5개 -->
                         <td>
                             <p>
-                                <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
+                                <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                             </p>
                         </td>
                         <td>
-                            <router-link :to="item.title"><!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-                            {{item.title}} <br/>
-                            {{item.subTitle}} <br/>
+                            <router-link :to="'/recipedetail/'+recipe.recipeId">
+                            {{recipe.title}} <br/>
+                            {{recipe.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
-                                <li v-if="item.period == idx">{{period}} {{item.boxName}}|{{item.recipeId}}|{{item.boxId}}</li>
+                                <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}}|{{recipe.recipeId}}|{{recipe.boxId}}</li>
                             </ul>
                             </router-link>
                         </td>
@@ -65,7 +63,7 @@
                 </table>
             </div>
             <div class="contents" v-if="step===2">
-                {{$t("content.all")}} {{ list.length }}
+                {{$t("content.all")}} {{ recipeList.length }}
                 <button @click="cancel">{{$t("button.cancel")}}</button>&nbsp;
                 <button @click="done">{{$t("button.done")}}</button>
                 <table>
@@ -74,20 +72,18 @@
                         <td></td>
                         <td></td>
                     </thead>
-                    <!-- DB로 부터 가져와야 레시피 목록
-                        최대 5개의 레시피 목록을 가져온다. -->
-                    <tr v-for="(item, index) in list" :key="index">
+                    <tr v-for="(recipe, index) in recipeList.slice(0,5)" :key="index"><!-- 최대 5개 -->
                         <td>
                             <p>
-                                <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
+                                <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                             </p>
                         </td>
                         <td>
-                            <router-link :to="item.title"><!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-                            {{item.title}} <br/>
-                            {{item.subTitle}} <br/>
+                            <router-link :to="'/recipedetail/'+recipe.recipeId">
+                            {{recipe.title}} <br/>
+                            {{recipe.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
-                                <li v-if="item.period == idx">{{period}} {{item.boxName}} {{item.recipeId}} {{item.boxId}}</li>
+                                <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}} {{recipe.recipeId}} {{recipe.boxId}}</li>
                             </ul>
                             </router-link>
                         </td>
@@ -95,10 +91,10 @@
                             <input
                                 type="checkbox"
                                 id=index
-                                :value=item.recipeId 
+                                :value=recipe.recipeId 
                                 v-model="checkedRecipeIds"
                             >
-                            <!-- <label for=index>{{item.title}}</label> -->
+                            <!-- <label for=index>{{recipe.title}}</label> -->
                         </td>
                     </tr>
                     <tr>
@@ -127,29 +123,29 @@
                         </ul>
                     </div>
                     <div class="moveBoxBody">
-                        <ul v-for="(item, index) in recipeBoxes" :key="index">
-                            <li v-if="item.isDefault == true" @click="moveRecipeBox(item.id)">
-                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                        <ul v-for="(recipe, index) in recipeBoxes" :key="index">
+                            <li v-if="recipe.isDefault == true" @click="moveRecipeBox(recipe.id)">
+                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
                                 <p>
-                                    <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
-                                {{item.name}}
+                                {{recipe.name}}
                             </li>
                         </ul>
-                        <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                            <li v-if="item.isDefault == false" @click="moveRecipeBox(item.id)">
-                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                        <ul v-for="(recipe, index) in recipeBoxes" :key="`o-${index}`">
+                            <li v-if="recipe.isDefault == false" @click="moveRecipeBox(recipe.id)">
+                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
                                 <p>
-                                    <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
-                                {{item.name}}
+                                {{recipe.name}}
                             </li>
-                            <li v-else-if="item.isDefault == null" @click="moveRecipeBox(item.id)">
-                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                            <li v-else-if="recipe.isDefault == null" @click="moveRecipeBox(recipe.id)">
+                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
                                 <p>
-                                    <img :src="item.file" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
-                                {{item.name}}
+                                {{recipe.name}}
                             </li>
                         </ul>
                     </div>
@@ -163,7 +159,6 @@
     </div>
 </template>
 <script>
-import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
 import ConfirmInput from 'vue-confirm-input'
 
@@ -173,7 +168,7 @@ export default {
         recipeBoxes : [],
         selectedRecipeBox : [],
         /* 
-            step=0 레시피 박스 화면
+            step=0 레시피 박스 화면 RecipeBoxListView.vue 로 분리
             step=1 레시시 박스 상세 화면
             step=2 레시피 박스 편집 화면
         */
@@ -183,10 +178,11 @@ export default {
             moveStep=1 레시시 박스 편집 > 이동 화면
         */
         moveStep : 0,
-        list : [],
+        recipeList : [],
         mainPicture : '',
         checkedRecipeIds : [],
         boxName: '기본박스',
+        boxId: 0
     }),
 
     components: {
@@ -194,16 +190,15 @@ export default {
     },
 
     created() {
-        console.log("this.$route.params.boxId", this.$route.params.boxId);
-
+        this.boxId = this.$route.params.boxId;
         this.initialize();
     },
 
     methods : {
         initialize() {
-            this.getRecipeBoxById(this.$route.params.boxId);
+            this.getRecipeBoxById(this.boxId);
             this.getRecipeBoxList();
-            this.getRecipeRecipeBoxList(this.$route.params.boxId);
+            this.getRecipeRecipeBoxList(this.boxId);
         },
         async getRecipeBoxList() {            
             const response = await this.$api(
@@ -224,7 +219,7 @@ export default {
             }
         },
         async getRecipeRecipeBoxList(id) {
-            this.list = [];
+            this.recipeList = [];
             const response = await this.$api(
             `http://localhost:8090/api/reciperecipebox/recipe`,
             "get",
@@ -233,7 +228,7 @@ export default {
             if (response.status === this.HTTP_OK) {
                 console.log(response.data);
                 response.data.forEach( obj => {
-                    this.list.push({
+                    this.recipeList.push({
                         title: obj.title,
                         subTitle: obj.subTitle,
                         score: obj.score,
@@ -254,8 +249,7 @@ export default {
             e.target.src=emptyImg;
         },
         selectRecipeBox(id) {
-            console.log("this.$route.params.boxId", this.$route.params.boxId);
-            console.log(`selectRecipeBox: ${id}`);
+            console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
             this.getRecipeBoxById(id)
             this.getRecipeRecipeBoxList(id);
         },
@@ -275,8 +269,8 @@ export default {
                     console.log("moveRecipeBox:", response.data);
                 }
             });
-            //this.getRecipeBoxById(this.$route.params.boxId)
-            this.getRecipeRecipeBoxList(this.$route.params.boxId);
+            //this.getRecipeBoxById(this.boxId)
+            this.getRecipeRecipeBoxList(this.boxId);
         },
         async addNewBox(name) {
             console.log("addNewBox : "+name);
@@ -323,7 +317,7 @@ export default {
                     console.log(response.data);
                 }
             });
-            this.getRecipeRecipeBoxList(this.$route.params.boxId);
+            this.getRecipeRecipeBoxList(this.boxId);
         },
         cancel() {
             console.log("cancel")

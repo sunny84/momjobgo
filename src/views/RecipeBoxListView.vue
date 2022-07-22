@@ -4,41 +4,81 @@
     <h4>{{ $t("title.recipeBox") }}</h4>
     <div class="menu">
         <ul>
-            <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
-            <li><a href="/recipeboxlist">{{ $t("menu.savedRecipe") }}</a></li>
-            <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
+            <li><router-link :to="'/myrecipe'">{{ $t("menu.myRecipe") }}</router-link></li>
+            <li><router-link :to="'/recipeboxlist'">{{ $t("menu.savedRecipe") }}</router-link></li>
+            <li><router-link :to="'#'">{{ $t("menu.historyRecipe") }}</router-link></li>
         </ul>
     </div>
     <!--CONTENT-->
     <div class="contents">        
         <button @click="callEdit">{{$t("button.edit")}}</button>
-        <tr v-for="(item, index) in recipeRecipeBoxes" :key="index">
-          <td v-if="item.isDefault == true">
-            <router-link :to="'/recipebox/'+item.id">
-              <p>
-                <img :src=item.fileId width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              {{item.name}} {{item.recipesCount}}<br/>
+        <tr v-for="(box, index) in recipeBoxes" :key="index">
+          <td v-if="box.isDefault == true">
+            <router-link :to="'/recipebox/'+box.id">
+              <ul>
+                <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
+                  <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
+                    <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
+                      <p><img
+                        :src="r.mainImgId?`http://localhost:8090/file/download?fileId=${r.mainImgId}`:mainPicture"
+                        width="200px" 
+                        height="150px" 
+                        @error="setEmptyImg"
+                      /></p>
+                    </li>
+                  </ul>
+                  {{box.name}} {{box.recipe.length}}<br/>
+                </li>
+                <li v-else><!-- 레시피가 없는 박스 -->
+                  <p><img
+                    :src="mainPicture" 
+                    width="200px" 
+                    height="150px" 
+                    @error="setEmptyImg"
+                  /></p>
+                  {{box.name}} 0<br/>
+                  </li>
+              </ul>
             </router-link>
           </td>
         </tr>
-        <tr v-for="(item, index) in recipeRecipeBoxes" :key="`o-${index}`">
-          <td v-if="item.isDefault == false">
-            <router-link :to="'/recipebox/'+item.id">
-              <p>
-                <img :src=item.fileId width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              {{item.name}} {{item.recipesCount}}<br/>
+        <tr v-for="(box, index) in recipeBoxes" :key="`o-${index}`">
+          <td v-if="box.isDefault == false">
+            <router-link :to="'/recipebox/'+box.id"> 
+              <ul>
+                <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
+                  <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
+                    <li><!-- v-if="i==0" 첫번째 레시피 이미지 -->
+                      <p><img
+                        :src="r.mainImgId?`http://localhost:8090/file/download?fileId=${r.mainImgId}`:mainPicture"
+                        width="200px" 
+                        height="150px" 
+                        @error="setEmptyImg"
+                      /></p>
+                    </li>
+                  </ul>
+                  {{box.name}} {{box.recipe.length}}<br/>
+                </li>
+                <li v-else><!-- 레시피가 없는 박스 -->
+                  <p><img
+                    :src="mainPicture" 
+                    width="200px" 
+                    height="150px" 
+                    @error="setEmptyImg"
+                  /></p>
+                  {{box.name}} 0<br/>
+                  </li>
+              </ul>
             </router-link>
           </td>
         </tr>
         <tr>          
           <td>
             <confirm-input
-            :text="'+ '+$t('button.addNewBox')"
-            :title="$t('button.addNewBox')"
-            :value="boxName"
-            :callback="text => addNewBox(text)"
+              :text="'+ '+$t('button.addNewBox')"
+              :title="$t('button.addNewBox')"
+              :value="boxName"
+              :callback="text => addNewBox(text)"
             />
             <p>
               <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
@@ -52,7 +92,6 @@
 </template>
 
 <script>
-import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
 import ConfirmInput from 'vue-confirm-input'
 
@@ -60,7 +99,6 @@ export default {
   name : "RecipeBoxListView",
   data: ()=>({
     recipeBoxes : [],
-    recipeRecipeBoxes : [],
     mainPicture : '',
     boxName: '기본박스',
   }),
@@ -85,44 +123,8 @@ export default {
       );
       if (response.status === this.HTTP_OK) {
         this.recipeBoxes = response.data;
-        console.log(response.data);
+        console.log(this.recipeBoxes);
       }
-      this.getRecipeRecipeBox();
-    },
-
-    async getRecipeRecipeBox() {
-      if(this.recipeBoxes.length > 0)
-      {
-        var i = 0;
-        this.recipeRecipeBoxes = [];
-        while(i < this.recipeBoxes.length ){
-          var count = 0;
-          var recipe = [];
-          const response = await this.$api(
-            `http://localhost:8090/api/reciperecipebox`,
-            "get",
-            { box: this.recipeBoxes[i].id }
-          );
-          if (response.status === this.HTTP_OK){
-            if(!response.data.isNaN){
-              count = response.data.length;
-              recipe.push({recipe: response.data.recipe});
-            }
-            // TODO: contentsId로 fildId 얻어오기
-            // this.getFileId(recipe.isNaN?this.mainPicture:recipe.contentsId);
-            this.recipeRecipeBoxes.push({
-              id: this.recipeBoxes[i].id,
-              name: this.recipeBoxes[i].name,
-              recipesCount: count,
-              isDefault: this.recipeBoxes[i].isDefault,
-              //fileId: 'http://localhost:8090/file/download/contents?contentsId=' + recipe.isNaN?this.mainPicture:recipe.contentsId
-            });
-          }
-          i = i + 1;
-          // console.log(this.recipeRecipeBoxes);
-        }
-      }
-      console.log(this.recipeRecipeBoxes);
     },
 
     callEdit() {
@@ -169,5 +171,11 @@ button
     padding:0; 
     overflow:visible; 
     cursor:pointer
+}
+ul {
+    list-style: none;
+}
+li {
+    float: left;
 }
 </style>
