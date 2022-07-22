@@ -14,13 +14,7 @@
             <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
             <div class="boxes"><!-- v-if="step===1"-->
                 <ul v-for="(item, index) in recipeBoxes" :key="index">
-                    <li v-if="item.isDefault == true" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
-                </ul>
-                <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                    <li v-if="item.isDefault == false" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
-                    <!-- <li v-else-if="item.isDefault == null" @click="select(item.id)">
-                        {{item.name}}{{item.id}}
-                    </li> -->
+                    <li @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
                 </ul>
                 <ul>
                     <li>
@@ -124,23 +118,7 @@
                     </div>
                     <div class="moveBoxBody">
                         <ul v-for="(recipe, index) in recipeBoxes" :key="index">
-                            <li v-if="recipe.isDefault == true" @click="moveRecipeBox(recipe.id)">
-                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
-                                <p>
-                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
-                                </p>
-                                {{recipe.name}}
-                            </li>
-                        </ul>
-                        <ul v-for="(recipe, index) in recipeBoxes" :key="`o-${index}`">
-                            <li v-if="recipe.isDefault == false" @click="moveRecipeBox(recipe.id)">
-                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
-                                <p>
-                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
-                                </p>
-                                {{recipe.name}}
-                            </li>
-                            <li v-else-if="recipe.isDefault == null" @click="moveRecipeBox(recipe.id)">
+                            <li @click="moveRecipeBox(recipe.id)">
                                 <button v-on:click="deleteBoxId(recipe.id)">X</button>
                                 <p>
                                     <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">

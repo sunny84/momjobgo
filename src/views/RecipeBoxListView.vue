@@ -13,42 +13,12 @@
     <div class="contents">        
         <button @click="callEdit">{{$t("button.edit")}}</button>
         <tr v-for="(box, index) in recipeBoxes" :key="index">
-          <td v-if="box.isDefault == true">
+          <td>
             <router-link :to="'/recipebox/'+box.id">
               <ul>
                 <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
                   <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
                     <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
-                      <p><img
-                        :src="r.mainImgId?`http://localhost:8090/file/download?fileId=${r.mainImgId}`:mainPicture"
-                        width="200px" 
-                        height="150px" 
-                        @error="setEmptyImg"
-                      /></p>
-                    </li>
-                  </ul>
-                  {{box.name}} {{box.recipe.length}}<br/>
-                </li>
-                <li v-else><!-- 레시피가 없는 박스 -->
-                  <p><img
-                    :src="mainPicture" 
-                    width="200px" 
-                    height="150px" 
-                    @error="setEmptyImg"
-                  /></p>
-                  {{box.name}} 0<br/>
-                  </li>
-              </ul>
-            </router-link>
-          </td>
-        </tr>
-        <tr v-for="(box, index) in recipeBoxes" :key="`o-${index}`">
-          <td v-if="box.isDefault == false">
-            <router-link :to="'/recipebox/'+box.id"> 
-              <ul>
-                <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
-                  <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
-                    <li><!-- v-if="i==0" 첫번째 레시피 이미지 -->
                       <p><img
                         :src="r.mainImgId?`http://localhost:8090/file/download?fileId=${r.mainImgId}`:mainPicture"
                         width="200px" 
