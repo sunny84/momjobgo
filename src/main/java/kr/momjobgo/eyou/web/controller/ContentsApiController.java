@@ -18,7 +18,6 @@ public class ContentsApiController {
 
     @GetMapping("")
     public ResponseEntity<?> getByUserId() {
-        Long userId = UserManager.getUser().getId();
-        return ResponseEntity.ok().body( contentsService.getByUserId(userId) );
+        return ResponseEntity.ok().body( contentsService.getByUserId() );
     }
 }

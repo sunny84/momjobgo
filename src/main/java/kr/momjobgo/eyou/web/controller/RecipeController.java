@@ -1,5 +1,6 @@
 package kr.momjobgo.eyou.web.controller;
 
+import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.data.domain.PageRequest;
