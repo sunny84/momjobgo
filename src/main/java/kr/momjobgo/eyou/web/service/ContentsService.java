@@ -12,5 +12,5 @@ public interface ContentsService {
 
     Map<String, String> getContentsByRecipeId(Long recipeId);
 
-    List<ContentsEntity> getByUserId(Long userId);
+    List<ContentsEntity> getByUserId();
 }
