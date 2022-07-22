@@ -2,8 +2,10 @@
   <div id="app">
     <nav>
       <router-link to="/">Home</router-link> |
-      <router-link to="/write">{{ $t("title.writeRecipe") }}</router-link> |
-      <router-link to="/recipedetail/26">{{ $t("title.viewRecipe") }}</router-link> |
+      <router-link to="/write" @click.native="checkToken">{{
+        $t("title.writeRecipe")
+      }}</router-link>
+      | <router-link to="/recipedetail/26">{{ $t("title.viewRecipe") }}</router-link> |
       <router-link to="/recipeboxlist">{{ $t("title.recipeBox") }}</router-link> |
       <router-link to="/login">login</router-link> |
       <router-link to="/about">About</router-link> |
@@ -22,9 +24,22 @@
 
 <script>
 import i18n from "@/i18n";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
+  computed: {
+    ...mapGetters("user", ["hasToken"]),
+  },
+
   methods: {
+    checkToken() {
+      // 현재 토큰이 있는지 확인 .
+      if (!this.hasToken) {
+        // 토큰이 없을 때 로그인 페이지로 이동.
+        this.$router.push({ path: "/login" });
+      }
+    },
+
     changeLocale(locale) {
       if (locale === "ko") {
         i18n.locale = "ko";
