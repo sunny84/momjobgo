@@ -3,32 +3,41 @@
         <div>
         <!--HEADER-->
             <h4>{{ $t("title.recipeBox") }}</h4>
-            <div class="menu">
-                <ul class="submenu">
-                    <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
-                    <li><a href="/recipeboxlist">{{ $t("menu.savedRecipe") }}</a></li>
-                    <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
+            <div class="navbar">
+                <ul class="subnav">                    
+                    <li><router-link :to="'/myrecipe'">{{ $t("menu.myRecipe") }}</router-link></li>
+                    <li><router-link :to="'/recipeboxlist'">{{ $t("menu.savedRecipe") }}</router-link></li>
+                    <li><router-link :to="'#'">{{ $t("menu.historyRecipe") }}</router-link></li>
                 </ul>
-                <br/>
             </div>
-            <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
-            <div class="boxes"><!-- v-if="step===1"-->
-                <ul v-for="(item, index) in recipeBoxes" :key="index">
-                    <li @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
-                </ul>
-                <ul>
-                    <li>
-                        <confirm-input 
-                            :text="'+ '+$t('button.addNewBox')"
-                            :title="$t('button.addNewBox')"
-                            :value="boxName"
-                            :callback="text => addNewBox(text)"
-                        />
-                    </li>
-                </ul>
-                <br/>
-                <span>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
+            
+            <div class="boxes-wrap">
+                <div class="boxes swiper-container swiper-navigation">
+                    <swiper class="swiper" ref="filterSwiper" :options="swiperOption" role="tablist">
+                        <swiper-slide class="swiper-slide" role="tab" 
+                            v-for="(item, index) in recipeBoxes"
+                            :key="index">
+                            <div>
+                                <button @click="selectRecipeBox(item.id)">{{item.name}}<span hidden>({{item.id}})</span></button>
+                            </div>
+                        </swiper-slide>
+                        <swiper-slide role="tab">
+                            <div>
+                                <button @click="addNewBoxPage()">+{{ $t('button.addNewBox') }}</button>
+                            </div>
+                        </swiper-slide>
+                    </swiper>
+                    <!-- <div class="wrapper">
+                    <div class="swiper-pagination" slot="pagination"></div>
+                    <div class="swiper-button-prev" slot="button-prev"></div>
+                    <div class="swiper-button-next" slot="button-next"></div>
+                    </div> -->
+                </div>
+                <div>
+                    <span hidden>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
+                </div>
             </div>
+            
         <!--CONTENTS-->
             <div class="contents" v-if="step===1">
                 {{$t("content.all")}} {{ recipeList.length }}
@@ -107,12 +116,7 @@
                         <ul>
                             <li>{{$t("content.moveBox")}}</li>
                             <li>
-                                <confirm-input 
-                                :text="'+ '+$t('button.addNewBox')"
-                                :title="$t('button.addNewBox')"
-                                :value="boxName"
-                                :callback="text => addNewBox(text)"
-                                />
+                                <button @click="addNewBoxPage()">+{{ $t('button.addNewBox') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -132,23 +136,55 @@
                     </div>
                 </div>
             </div>
+            <br/>
+            <div class="contents" id="new-box" v-if="step===3">
+                <fieldset>
+                    <legend>새 박스 추가</legend>
+                    <form v-on:submit="onSubmitForm">
+                        <label for="newBox">새로운 박스의 이름을 입력해 주세요.</label><br/>
+                        <input type="text" v-model="newBox" maxlength="10"> <button>추가</button>
+                    </form>
+                </fieldset>
+                <label id="result-label" hidden for="result"></label><br/>
+                <button @click="cancel">{{$t("button.cancel")}}</button> |
+                <button @click="done">{{$t("button.done")}}</button>
+            </div>
         <!--FOOTER-->
         </div>
     </div>
 </template>
 <script>
 import emptyImg from '@/assets/emptyImg.png'
-import ConfirmInput from 'vue-confirm-input'
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import "swiper/dist/css/swiper.min.css";
 
 export default {
     name : "RecipeBoxView",
     data: ()=>({
+        swiperOption: {
+            slidesPerView: 4,   // 'auto'
+            spaceBetween: 10,   // swiper-slide 사이의 간격 지정
+            slidesOffsetBefore: 0, // slidesOffsetBefore는 첫번째 슬라이드의 시작점에 대한 변경할 때 사용
+            slidesOffsetAfter: 0, // slidesOffsetAfter는 마지막 슬라이드 시작점 + 마지막 슬라이드 너비에 해당하는 위치의 변경이 필요할 때 사용
+            freeMode: true, // freeMode를 사용시 스크롤하는 느낌으로 구현 가능
+            centerInsufficientSlides: true, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
+            slideToClickedSlide: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+                navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        },
         recipeBoxes : [],
         selectedRecipeBox : [],
         /* 
             step=0 레시피 박스 화면 RecipeBoxListView.vue 로 분리
             step=1 레시시 박스 상세 화면
             step=2 레시피 박스 편집 화면
+            step=3 새 레시피 박스 입력 화면
         */
         step : 2,
         /* 
@@ -160,18 +196,13 @@ export default {
         mainPicture : '',
         checkedRecipeIds : [],
         boxName: '기본박스',
-        boxId: 0
+        boxId: 0,
+        newBox : "",
     }),
-
-    components: {
-        ConfirmInput
-    },
-
     created() {
         this.boxId = this.$route.params.boxId;
         this.initialize();
     },
-
     methods : {
         initialize() {
             this.getRecipeBoxById(this.boxId);
@@ -250,6 +281,30 @@ export default {
             //this.getRecipeBoxById(this.boxId)
             this.getRecipeRecipeBoxList(this.boxId);
         },
+        addNewBoxPage() {
+            console.log("addNewBoxPage step=2")
+            this.step = 3
+        },
+        onSubmitForm(e) {
+            console.log("onSubmitForm : "+e);
+            let text = `"${this.newBox}"로 새 레시피 박스를 추가하시겠습니까?`;
+            if (confirm(text) == true) {
+                this.addNewBox(this.newBox);
+                text = "추가 되었습니다.";
+            } else {
+                text = "취소 되었습니다.";
+            }
+            let element = document.getElementById("result-label");
+            let hidden = element.getAttribute("hidden");
+            if (hidden) {
+                element.removeAttribute("hidden");
+                element.innerText = text;
+            } else {
+                element.setAttribute("hidden", "hidden");
+                element.innerText = text;
+            }
+            e.preventDefault();
+        },
         async addNewBox(name) {
             console.log("addNewBox : "+name);
             this.boxName = name;
@@ -300,20 +355,47 @@ export default {
         cancel() {
             console.log("cancel")
             this.step = 1
+            this.moveStep = 0
+            this.initialize();
         },
         done() {
             console.log("done")
             this.step = 1
+            this.moveStep = 0
             this.initialize();
         },
         cancelMove() {
             console.log("cancelMove")
+            this.step = 1
             this.moveStep = 0
         },
     },
+    components: {
+        swiper,
+        swiperSlide,
+    },    
+    computed: {
+        swiper() {
+            console.log("computed:swiper");
+            return this.$refs.filterSwiper.swiper;
+        },
+        // isOverview() {
+        //     console.log("computed:isOverview");
+        //     return window.innerWidth >= this.swiper.virtualSize
+        // }
+    },
+    mounted () {
+        console.log("mounted");
+        // this.swiperInit();
+        // this.$nextTick(() => {
+        //     const swiperOption = this.$refs.filterSwiper.swiper;
+        //     swiperOption.controller.control = filterSwiper;
+        // });
+        // console.log(swiper)
+    },
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 button
 {
     background: inherit ; 
@@ -324,36 +406,55 @@ button
     overflow:visible; 
     cursor:pointer
 }
-ul {
+.swiper-container {
+  padding: 0 20px;
+  &:before,
+  &:after {
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    z-index: 10;
+    content: "";
+  }
+  &:before {
+    left: 0;
+    background: linear-gradient(90deg, #fff -20.19%, rgba(255, 255, 255, 0.8) 18.31%, rgba(255, 255, 255, 0) 75%);
+  }
+  &:after {
+    right: 0;
+    background: linear-gradient(270deg, #fff -20.19%, rgba(255, 255, 255, 0.8) 18.31%, rgba(255, 255, 255, 0) 75%);
+  }
+  .swiper-wrapper {
+    .swiper-slide {
+      width: auto;
+      min-width: 56px;
+      padding: 0px 14px;
+      font-size: 14px;
+      line-height: 36px;
+      text-align: center;
+      color: #84868c;
+      border: 0;
+      border-radius: 18px;
+      background: #f3f4f7;
+      appearance: none;
+      cursor: pointer;
+      &[aria-selected="true"] {
+        color: #fff;
+        background: #000;
+      }
+    }
+  }
+}
+.navbar ul {
     list-style: none;
 }
-li {
-    float: left;
-}
-/* .menu {
-}
-.menu ul{
+.contents ul {
     list-style: none;
 }
-.menu li {
+.contents li {
     float: left;
+    margin: 1px 6px;
 }
-.submenu {
-
-}
-.submenu ul{
-    list-style: none;
-}
-.submenu li {
-    float: left;
-}
-.boxes {
-
-}
-.boxes ul{
-    list-style: none;
-}
-.boxes li {
-    float: left;
-} */
 </style>
