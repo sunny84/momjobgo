@@ -69,7 +69,7 @@ export default {
       }
       if(this.sort == 1) params += '&sort=1';
       console.log(params);
-      const response = await this.$api(`http://localhost:8090/Recipe/api/filter?`+params, `get`);
+      const response = await this.$api(`http://localhost:8090/api/Recipe/filter?`+params, `get`);
       if (response.status === this.HTTP_OK) {
         if(response.data.length){
           // console.log(response.data);
