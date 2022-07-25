@@ -1,5 +1,6 @@
 package kr.momjobgo.eyou.web.service.impl;
 
+import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.jpa.entity.ContentsEntity;
 import kr.momjobgo.eyou.web.jpa.repository.ContentsRepository;
 import kr.momjobgo.eyou.web.service.ContentsService;
@@ -48,7 +49,7 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
     @Override
-    public List<ContentsEntity> getByUserId(Long userId) {
-        return contentsRepository.findByWriter(userId);
+    public List<ContentsEntity> getByUserId() {
+        return contentsRepository.findByWriter(UserManager.getUser().getId());
     }
 }

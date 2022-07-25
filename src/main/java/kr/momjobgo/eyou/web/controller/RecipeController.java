@@ -49,10 +49,6 @@ public class RecipeController {
     
     @GetMapping("/detail={id}")
     public ResponseEntity<?> getDetailById(@PathVariable Long id) {
-//            return Optional.ofNullable(userRepository.findOne(id))
-//                    .map(ResponseEntity::ok)
-//                    .orElse(ResponseEntity.notFound().build());
-//        }
         if(!recipeService.getDetailById(id).isEmpty())
             return ResponseEntity.ok().body(recipeService.getDetailById(id));
         else
