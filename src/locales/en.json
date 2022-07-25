@@ -5,6 +5,7 @@
 
     "title" : {
         "writeRecipe" : "Write Recipe",
+        "previewRecipe" : "Preview Recipe",
         "viewRecipe" : "View Recipe",
         "recipeBox" : "Recipe Box",
         "RecipeFilter" : "Filter"
