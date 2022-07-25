@@ -76,6 +76,10 @@ export default {
   created() {
     this.initialize();
   },
+  
+  mounted() {
+    this.$checkToken('recipeboxlist');
+  },
 
   components: {
       ConfirmInput
