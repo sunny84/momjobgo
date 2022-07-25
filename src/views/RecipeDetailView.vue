@@ -61,12 +61,16 @@
     </div>
 
     <!-- clip movie -->
+    <!-- clip url이 정상적인 youtube url인지 확인/
+          - 정상 : iframe으로  display
+          - 비정상 : broken movive image로 display -->
     <div v-if="recipe_data.clipLink">
       clip url이 삽입될 예정
       <!-- <iframe id="clip" width="200" height="150" :src="recipe_data.clipLink"></iframe> -->
     </div>
 
     <!-- youtube link -->
+    <!-- 정상 youtube url인지 확인/ 모달창으로 display? -->
     <div v-if="recipe_data.youtubeLink">
       <a :href="recipe_data.youtubeLink">Youtube Full 영상보기</a>
     </div>
