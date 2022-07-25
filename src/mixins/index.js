@@ -6,7 +6,7 @@ export default {
   data: () => ({
     ...Code,
   }),
-
+  
   methods: {
     /**
      * 공통 API 호출 함수
@@ -14,18 +14,21 @@ export default {
      * @param {*} method
      * @param {*} params
      * @param {*} body ('PUT', 'POST', 'PATCH', 'DELETE' 메소드에서만 적용 가능)
+     * @param {*} headers
      * @param {*} errorCallback
      * @returns
      */
-    async $api(url, method, params, body, errorCallback) {
+    async $api(url, method, params, body, headers, errorCallback) {
       return axios({
         headers: {
           Authorization: `Bearer ${store.getters["user/token"]}`,
+          ...headers
         },
+        headers : newHeaders,
         method: method,
         url,
         data: body,
-        params,
+        params : params,
       }).catch((e) => {
         if (
           e.response.status === this.HTTP_UNAUTHORIZED &&

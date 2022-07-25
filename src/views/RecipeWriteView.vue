@@ -407,7 +407,7 @@ export default {
     calibTips(tips) {
       for (let i = 0; i < tips.length; i++) {
         tips[i].text.trim();
-        if (tips[i].text.length === 0) {
+        if (tips[i].text.trim().length === 0) {
           tips.splice(i, 1);
         }
       }
@@ -503,30 +503,33 @@ export default {
 
       const allParams = this.makeParams();
 
-      await axios
-        .post("http://localhost:8090/Recipe/write", allParams)
-        .then(function (res) {
-          const contentsId = res.data.contentsId;
-          const recipeId = res.data.recipeId;
+      const resContents = await this.$api(
+        "http://localhost:8090/api/recipe/write",
+        "post",
+        "",
+        allParams
+      );
+      if (resContents.status == this.HTTP_OK) {
+        const contentsId = resContents.data.contentsId;
+        const recipeId = resContents.data.recipeId;
 
-          // save into db
-          axios
-            // 파일업로드를 위해서는 API 서버를 켜야합니다.
-            .post("http://localhost:8090/file/upload", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-              params: {
-                contentsId: contentsId,
-              },
-            })
-            .then(function (res2) {
-              if (res2.status === this.HTTP_OK) {
-                this.$router.push("/recipedetail/" + this.recipeId);
-                this.initWriteRecipeProcess();
-              }
-            });
-        });
+        console.log(
+          "[write result] contestId : " + contentsId + ", recipeId : " + recipeId
+        );
+
+        // upload files
+        const resFiles = await this.$api(
+          "http://localhost:8090/file/upload",
+          "post",
+          { contentsId: contentsId },
+          formData,
+          { "Content-Type": "multipart/form-data" }
+        );
+        if (resFiles.status == this.HTTP_OK) {
+          this.$router.push("/recipedetail/" + recipeId);
+          this.initWriteRecipeProcess();
+        }
+      }
     },
   },
 };
