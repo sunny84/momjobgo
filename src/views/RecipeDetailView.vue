@@ -33,8 +33,9 @@
     </p>
     <p>
       <span v-for="(ing, idx) in recipe_data.ingredients" :key="idx">
-        <span>{{ $t("ingredient." + ing.key) }} : {{ ing.volume }} </span
-        ><br v-if="idx % 2 === 1"
+        <span>{{ $t("ingredient." + ing.key) }} : {{ ing.volume }} </span>
+        <span v-if="ing.key !== 'WATER'">g</span>
+        <span v-else>ml</span><br v-if="idx % 2 === 1"
       /></span>
     </p>
 
@@ -52,9 +53,11 @@
     </div>
 
     <!-- Tip -->
-    <p>{{ $t("content.tip") }}</p>
-    <div v-for="(tip, idx) in recipe_data.tips" :key="idx">
-      <p>{{ tip.text }}</p>
+    <div v-if="recipe_data.tips">
+      <p>{{ $t("content.tip") }}</p>
+      <div v-for="(tip, idx) in recipe_data.tips" :key="idx">
+        <p>{{ tip.text }}</p>
+      </div>
     </div>
 
     <!-- clip movie -->
@@ -105,7 +108,7 @@ export default {
     },
     async updateOpen() {
       await this.$api(
-        "http://localhost:8090/Recipe/updateOpen=" + this.recipeId,
+        "http://localhost:8090/api/Recipe/updateOpen=" + this.recipeId,
         "get"
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
