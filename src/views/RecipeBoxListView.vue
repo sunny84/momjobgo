@@ -4,41 +4,51 @@
     <h4>{{ $t("title.recipeBox") }}</h4>
     <div class="menu">
         <ul>
-            <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
-            <li><a href="/recipeboxlist">{{ $t("menu.savedRecipe") }}</a></li>
-            <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
+            <li><router-link :to="'/myrecipe'">{{ $t("menu.myRecipe") }}</router-link></li>
+            <li><router-link :to="'/recipeboxlist'">{{ $t("menu.savedRecipe") }}</router-link></li>
+            <li><router-link :to="'#'">{{ $t("menu.historyRecipe") }}</router-link></li>
         </ul>
     </div>
     <!--CONTENT-->
     <div class="contents">        
         <button @click="callEdit">{{$t("button.edit")}}</button>
-        <tr v-for="(item, index) in recipeRecipeBoxes" :key="index">
-          <td v-if="item.isDefault == true">
-            <a :href="`/recipebox`" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-              <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              {{item.name}} {{item.recipesCount}}<br/>
-            </a>
-          </td>
-        </tr>
-        <tr v-for="(item, index) in recipeRecipeBoxes" :key="`o-${index}`">
-          <td v-if="item.isDefault == false">
-            <a :href="`/recipebox`" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-              <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              {{item.name}} {{item.recipesCount}}<br/>
-            </a>
+        <tr v-for="(box, index) in recipeBoxes" :key="index">
+          <td>
+            <router-link :to="'/recipebox/'+box.id">
+              <ul>
+                <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
+                  <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
+                    <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
+                      <p><img
+                        :src="r.mainImgId?`http://localhost:8090/file/download?fileId=${r.mainImgId}`:mainPicture"
+                        width="200px" 
+                        height="150px" 
+                        @error="setEmptyImg"
+                      /></p>
+                    </li>
+                  </ul>
+                  {{box.name}} {{box.recipe.length}}<br/>
+                </li>
+                <li v-else><!-- 레시피가 없는 박스 -->
+                  <p><img
+                    :src="mainPicture" 
+                    width="200px" 
+                    height="150px" 
+                    @error="setEmptyImg"
+                  /></p>
+                  {{box.name}} 0<br/>
+                  </li>
+              </ul>
+            </router-link>
           </td>
         </tr>
         <tr>          
           <td>
             <confirm-input
-            :text="'+ '+$t('button.addNewBox')"
-            :title="$t('button.addNewBox')"
-            :value="boxName"
-            :callback="text => addNewBox(text)"
+              :text="'+ '+$t('button.addNewBox')"
+              :title="$t('button.addNewBox')"
+              :value="boxName"
+              :callback="text => addNewBox(text)"
             />
             <p>
               <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
@@ -52,7 +62,6 @@
 </template>
 
 <script>
-import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
 import ConfirmInput from 'vue-confirm-input'
 
@@ -60,9 +69,7 @@ export default {
   name : "RecipeBoxListView",
   data: ()=>({
     recipeBoxes : [],
-    recipeRecipeBoxes : [],
     mainPicture : '',
-    writer : 1,
     boxName: '기본박스',
   }),
 
@@ -76,45 +83,17 @@ export default {
 
   methods: {
     initialize() {
-      this.callRecipeBox();
-    },
-
-    callRecipeBox() {
       this.getRecipeBoxAll();
     },
 
-    async getRecipeBoxAll() {
-      await axios.get(`http://localhost:8090/recipebox/all`, {
-      }).then(response=>{
+    async getRecipeBoxAll() {      
+      const response = await this.$api(
+        `http://localhost:8090/api/recipebox/mine`,
+        "get"
+      );
+      if (response.status === this.HTTP_OK) {
         this.recipeBoxes = response.data;
-        // console.log("recipebox:", response.data);
-      }).catch(error=>{
-        console.error(error);
-      })
-      this.getRecipeRecipeBox();
-    },
-
-    async getRecipeRecipeBox() {
-      if(this.recipeBoxes.length > 0)
-      {
-        var i = 0;
-        this.recipeRecipeBoxes = [];
-        while(i < this.recipeBoxes.length ){
-          await axios.get(`http://localhost:8090/reciperecipebox/box=${this.recipeBoxes[i].id}`, { //&user=${this.writer}`, {
-          }).then(response=>{
-              this.recipeRecipeBoxes.push({
-                id: this.recipeBoxes[i].id,
-                name: this.recipeBoxes[i].name,
-                recipesCount: response.data.length,
-                isDefault: this.recipeBoxes[i].isDefault,
-                // img:,
-                data: response.data
-              });
-          }).catch(error=>{
-              console.error(error);
-          })
-          i = i + 1;
-        }
+        console.log(this.recipeBoxes);
       }
     },
 
@@ -126,24 +105,33 @@ export default {
     async addNewBox(name) {
         console.log("addNewBox : "+name);
         this.boxName = name;
-        await axios.post(`http://localhost:8090/recipebox/name=${name}&user=${this.writer}`, {
-        }).then(response=>{
+        const response = await this.$api(
+          `http://localhost:8090/api/recipebox/${name}`,
+          "post"
+        );
+        if (response.status === this.HTTP_OK) {
             this.selectedRecipeBox = response.data;
-            this.writer = this.selectedRecipeBox.userId;
-        }).catch(error=>{
-            console.error(error);
-        })
+        }
         this.initialize();
     },
 
     setEmptyImg(e) {
       e.target.src=emptyImg;
     },
+    async getFileId(id){
+        const response = await this.$api(
+          `http://localhost:8090/file?contentsId=${id}`,
+          "get"
+        );
+        if (response.status === this.HTTP_OK) {
+            console.log(response.data);
+        }
+    }
   },
 }
 </script>
 
-<style>
+<style scoped>
 button
 {
     background: inherit ; 
@@ -153,5 +141,11 @@ button
     padding:0; 
     overflow:visible; 
     cursor:pointer
+}
+ul {
+    list-style: none;
+}
+li {
+    float: left;
 }
 </style>

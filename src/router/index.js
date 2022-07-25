@@ -8,6 +8,7 @@ import MyRecipeView from '@/views/MyRecipeView.vue'
 import RecipeFilterView from '@/views/RecipeFilterView.vue'
 import RecipeListView from '@/views/RecipeListView.vue'
 import RecipeBoxListView from '@/views/RecipeBoxListView.vue'
+import RecipeDetailView from '@/views/RecipeDetailView.vue'
 
 Vue.use(VueRouter)
 
@@ -23,7 +24,7 @@ const routes = [
     component: RecipeBoxListView
   },
   {
-    path : '/recipebox',
+    path : '/recipebox/:boxId',
     name: 'recipebox',
     component: RecipeBoxView
   },
@@ -36,6 +37,11 @@ const routes = [
     path : '/write',
     name: 'write',
     component: RecipeWriteView
+  },
+  {
+    path : '/recipedetail/:recipeId',
+    name: 'recipedetail',
+    component: RecipeDetailView
   },
   {
     path : '/login',

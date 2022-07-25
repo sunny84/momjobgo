@@ -3,69 +3,70 @@
         <div>
         <!--HEADER-->
             <h4>{{ $t("title.recipeBox") }}</h4>
-            <div class="menu">
-                <ul class="submenu">
-                    <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
-                    <li><a href="/recipeboxlist">{{ $t("menu.savedRecipe") }}</a></li>
-                    <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
+            <div class="navbar">
+                <ul class="subnav">                    
+                    <li><router-link :to="'/myrecipe'">{{ $t("menu.myRecipe") }}</router-link></li>
+                    <li><router-link :to="'/recipeboxlist'">{{ $t("menu.savedRecipe") }}</router-link></li>
+                    <li><router-link :to="'#'">{{ $t("menu.historyRecipe") }}</router-link></li>
                 </ul>
-                <br/>
             </div>
-            <!--레시피박스 페이지에서 비활성화, 레시피 박스 선택시 활성화-->
-            <div class="boxes"><!-- v-if="step===1"-->
-                <ul v-for="(item, index) in recipeBoxes" :key="index">
-                    <li v-if="item.isDefault == true" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
-                </ul>
-                <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                    <li v-if="item.isDefault == false" @click="selectRecipeBox(item.id)">{{item.name}}{{item.id}}</li>
-                    <!-- <li v-else-if="item.isDefault == null" @click="select(item.id)">
-                        {{item.name}}{{item.id}}
-                    </li> -->
-                </ul>
-                <ul>
-                    <li>
-                        <confirm-input 
-                            :text="'+ '+$t('button.addNewBox')"
-                            :title="$t('button.addNewBox')"
-                            :value="boxName"
-                            :callback="text => addNewBox(text)"
-                        />
-                    </li>
-                </ul>
-                <br/>
-                <span>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
+            
+            <div class="boxes-wrap">
+                <div class="boxes swiper-container swiper-navigation">
+                    <swiper class="swiper" ref="filterSwiper" :options="swiperOption" role="tablist">
+                        <swiper-slide class="swiper-slide" role="tab" 
+                            v-for="(item, index) in recipeBoxes"
+                            :key="index">
+                            <div>
+                                <button @click="selectRecipeBox(item.id)">{{item.name}}<span hidden>({{item.id}})</span></button>
+                            </div>
+                        </swiper-slide>
+                        <swiper-slide role="tab">
+                            <div>
+                                <button @click="addNewBoxPage()">+{{ $t('button.addNewBox') }}</button>
+                            </div>
+                        </swiper-slide>
+                    </swiper>
+                    <!-- <div class="wrapper">
+                    <div class="swiper-pagination" slot="pagination"></div>
+                    <div class="swiper-button-prev" slot="button-prev"></div>
+                    <div class="swiper-button-next" slot="button-next"></div>
+                    </div> -->
+                </div>
+                <div>
+                    <span hidden>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
+                </div>
             </div>
+            
         <!--CONTENTS-->
             <div class="contents" v-if="step===1">
-                {{$t("content.all")}} {{ list.length }}
+                {{$t("content.all")}} {{ recipeList.length }}
                 <button @click="callEdit">{{$t("button.edit")}}</button>
                 <table>
                     <thead>
                         <td></td>
                         <td></td>
                     </thead>
-                    <!-- DB로 부터 가져와야 레시피 목록
-                        최대 5개의 레시피 목록을 가져온다. -->
-                    <tr v-for="(item, index) in list" :key="index">
+                    <tr v-for="(recipe, index) in recipeList.slice(0,5)" :key="index"><!-- 최대 5개 -->
                         <td>
                             <p>
-                                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                             </p>
                         </td>
                         <td>
-                            <a :href="item.title" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-                            {{item.title}} <br/>
-                            {{item.subTitle}} <br/>
+                            <router-link :to="'/recipedetail/'+recipe.recipeId">
+                            {{recipe.title}} <br/>
+                            {{recipe.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
-                                <li v-if="item.period == idx">{{period}} {{item.boxName}}|{{item.recipeId}}|{{item.boxId}}</li>
+                                <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}}|{{recipe.recipeId}}|{{recipe.boxId}}</li>
                             </ul>
-                            </a>
+                            </router-link>
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="contents" v-if="step===2">
-                {{$t("content.all")}} {{ list.length }}
+                {{$t("content.all")}} {{ recipeList.length }}
                 <button @click="cancel">{{$t("button.cancel")}}</button>&nbsp;
                 <button @click="done">{{$t("button.done")}}</button>
                 <table>
@@ -74,31 +75,29 @@
                         <td></td>
                         <td></td>
                     </thead>
-                    <!-- DB로 부터 가져와야 레시피 목록
-                        최대 5개의 레시피 목록을 가져온다. -->
-                    <tr v-for="(item, index) in list" :key="index">
+                    <tr v-for="(recipe, index) in recipeList.slice(0,5)" :key="index"><!-- 최대 5개 -->
                         <td>
                             <p>
-                                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                             </p>
                         </td>
                         <td>
-                            <a :href="item.title" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-                            {{item.title}} <br/>
-                            {{item.subTitle}} <br/>
+                            <router-link :to="'/recipedetail/'+recipe.recipeId">
+                            {{recipe.title}} <br/>
+                            {{recipe.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
-                                <li v-if="item.period == idx">{{period}} {{item.boxName}} {{item.recipeId}} {{item.boxId}}</li>
+                                <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}} {{recipe.recipeId}} {{recipe.boxId}}</li>
                             </ul>
-                            </a>
+                            </router-link>
                         </td>
                         <td>
                             <input
                                 type="checkbox"
                                 id=index
-                                :value=item.recipeId 
+                                :value=recipe.recipeId 
                                 v-model="checkedRecipeIds"
                             >
-                            <!-- <label for=index>{{item.title}}</label> -->
+                            <!-- <label for=index>{{recipe.title}}</label> -->
                         </td>
                     </tr>
                     <tr>
@@ -116,48 +115,19 @@
                     <div class="moveBoxHeader">
                         <ul>
                             <li>{{$t("content.moveBox")}}</li>
-                            <!-- <li>
-                                <confirm-input 
-                                :text="'- '+'박스 삭제'"
-                                :title="'박스 삭제'"
-                                :value="boxName"
-                                :callback="text => deleteBox(text)"
-                                />
-                            </li> -->
                             <li>
-                                <confirm-input 
-                                :text="'+ '+$t('button.addNewBox')"
-                                :title="$t('button.addNewBox')"
-                                :value="boxName"
-                                :callback="text => addNewBox(text)"
-                                />
+                                <button @click="addNewBoxPage()">+{{ $t('button.addNewBox') }}</button>
                             </li>
                         </ul>
                     </div>
                     <div class="moveBoxBody">
-                        <ul v-for="(item, index) in recipeBoxes" :key="index">
-                            <li v-if="item.isDefault == true" @click="moveRecipeBox(item.id)">
-                                <button v-on:click="deleteBoxId(item.id)">X</button>
+                        <ul v-for="(recipe, index) in recipeBoxes" :key="index">
+                            <li @click="moveRecipeBox(recipe.id)">
+                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
                                 <p>
-                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
-                                {{item.name}}
-                            </li>
-                        </ul>
-                        <ul v-for="(item, index) in recipeBoxes" :key="`o-${index}`">
-                            <li v-if="item.isDefault == false" @click="moveRecipeBox(item.id)">
-                                <button v-on:click="deleteBoxId(item.id)">X</button>
-                                <p>
-                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-                                </p>
-                                {{item.name}}
-                            </li>
-                            <li v-else-if="item.isDefault == null" @click="moveRecipeBox(item.id)">
-                                <button v-on:click="deleteBoxId(item.id)">X</button>
-                                <p>
-                                    <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-                                </p>
-                                {{item.name}}
+                                {{recipe.name}}
                             </li>
                         </ul>
                     </div>
@@ -166,26 +136,55 @@
                     </div>
                 </div>
             </div>
+            <br/>
+            <div class="contents" id="new-box" v-if="step===3">
+                <fieldset>
+                    <legend>새 박스 추가</legend>
+                    <form v-on:submit="onSubmitForm">
+                        <label for="newBox">새로운 박스의 이름을 입력해 주세요.</label><br/>
+                        <input type="text" v-model="newBox" maxlength="10"> <button>추가</button>
+                    </form>
+                </fieldset>
+                <label id="result-label" hidden for="result"></label><br/>
+                <button @click="cancel">{{$t("button.cancel")}}</button> |
+                <button @click="done">{{$t("button.done")}}</button>
+            </div>
         <!--FOOTER-->
         </div>
     </div>
 </template>
 <script>
-import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
-import ConfirmInput from 'vue-confirm-input'
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import "swiper/dist/css/swiper.min.css";
 
 export default {
     name : "RecipeBoxView",
     data: ()=>({
-        name : "",
-        recipes : 0,
+        swiperOption: {
+            slidesPerView: 4,   // 'auto'
+            spaceBetween: 10,   // swiper-slide 사이의 간격 지정
+            slidesOffsetBefore: 0, // slidesOffsetBefore는 첫번째 슬라이드의 시작점에 대한 변경할 때 사용
+            slidesOffsetAfter: 0, // slidesOffsetAfter는 마지막 슬라이드 시작점 + 마지막 슬라이드 너비에 해당하는 위치의 변경이 필요할 때 사용
+            freeMode: true, // freeMode를 사용시 스크롤하는 느낌으로 구현 가능
+            centerInsufficientSlides: true, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
+            slideToClickedSlide: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+                navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        },
         recipeBoxes : [],
         selectedRecipeBox : [],
         /* 
-            step=0 레시피 박스 화면
+            step=0 레시피 박스 화면 RecipeBoxListView.vue 로 분리
             step=1 레시시 박스 상세 화면
             step=2 레시피 박스 편집 화면
+            step=3 새 레시피 박스 입력 화면
         */
         step : 2,
         /* 
@@ -193,179 +192,140 @@ export default {
             moveStep=1 레시시 박스 편집 > 이동 화면
         */
         moveStep : 0,
-        list : [],
-        recipe : [],
-        contents : [],
-        score : [],
-        timeTaken : [],
-        writer : 1,
+        recipeList : [],
         mainPicture : '',
-        boxList : [],
         checkedRecipeIds : [],
         boxName: '기본박스',
+        boxId: 0,
+        newBox : "",
     }),
-
-    components: {
-        ConfirmInput
-    },
-
     created() {
+        this.boxId = this.$route.params.boxId;
         this.initialize();
     },
-
     methods : {
         initialize() {
-            this.callRecipeBox(this.boxName);
-            this.callContents();
+            this.getRecipeBoxById(this.boxId);
+            this.getRecipeBoxList();
+            this.getRecipeRecipeBoxList(this.boxId);
         },
-        async callRecipeBox() {
-            await axios.get(`http://localhost:8090/recipebox/all`, {
-            }).then(response=>{
+        async getRecipeBoxList() {            
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/mine`,
+            "get"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.recipeBoxes = response.data;
-                this.selectedRecipeBox = this.recipeBoxes;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
         },
-        async callRecipeBoxByName(name) {
-            await axios.get(`http://localhost:8090/recipebox/name=${name}`, {
-            }).then(response=>{
-                this.recipeBoxes = response.data;
-                this.selectedRecipeBox = this.recipeBoxes;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
-        },
-        async callRecipeBoxById(id) {
-            await axios.get(`http://localhost:8090/recipebox/id=${id}`, {
-            }).then(response=>{
+        async getRecipeBoxById(id) {
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/${id}`,
+            "get"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.selectedRecipeBox = response.data;
-                this.writer = this.selectedRecipeBox.userId;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
         },
-        async callContents() {
-            // console.log(`callContents ${this.list.length}`);
-            // TODO:
-            // const response = await this.$api(`/contents/writer=1`,"get", {
-            //   // writer: this.writer
-            // });
-            // this.contents = response.data;
-            // console.log(response.data);
-            // console.log(`writer: ${this.writer}`);
-            await axios.get(`http://localhost:8090/contents/writer=${this.writer}`, {
-            }).then(response=>{
-                this.contents = response.data;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
-
-            // console.log(`contents length : ${this.contents.length}`);
-            if(this.contents.length > 0)
-            {
-                var i = 0;
-                this.list = [];
-                while(i < this.contents.length ){
-                    // console.log(i,"회");
-
-                    await axios.get(`http://localhost:8090/Recipe/contents=${this.contents[i].id}`, {
-                    }).then(response=>{
-                        this.recipe = response.data
-                        // console.log("Recipe:", response.data);
-                    }).catch(error=>{
-                        console.error(error);
-                    })
-                    await axios.get(`http://localhost:8090/score/recipe=${this.recipe[0].id}`, {
-                    }).then(response=>{
-                        this.score[i] = response.data.score;
-                        // console.log("score:", response.data);
-                    }).catch(error=>{
-                        console.error(error);
-                    })
-                    await axios.get(`http://localhost:8090/time-taken/id=${this.recipe[0].timeTakenId}`, {
-                    }).then(response=>{
-                        this.timeTaken[i] = response.data.time;
-                        // console.log("timeTaken:", response.data);
-                    }).catch(error=>{
-                        console.error(error);
-                    })
-
-                    this.list.push({
-                        title: this.contents[i].title,
-                        subTitle: this.contents[i].subTitle,
-                        score: this.score[i],
-                        timeTaken: this.timeTaken[i],
-                        period: this.recipe[0].period,
+        async getRecipeRecipeBoxList(id) {
+            this.recipeList = [];
+            const response = await this.$api(
+            `http://localhost:8090/api/reciperecipebox/recipe`,
+            "get",
+            {box: id}
+            );            
+            if (response.status === this.HTTP_OK) {
+                console.log(response.data);
+                response.data.forEach( obj => {
+                    this.recipeList.push({
+                        title: obj.title,
+                        subTitle: obj.subTitle,
+                        score: obj.score,
+                        timeTaken: obj.timeTaken,
+                        period: obj.period,
+                        recipeId: obj.recipeId,
+                        contentsId: obj.contentsId,
+                        fileId: obj.fileId,
+                        file: obj.fileId?`http://localhost:8090/file/download?fileId=${obj.fileId}`:this.mainPicture,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
-                        recipeId: this.recipe[0].id,
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
-                    });
-
-                    i = i + 1;          
-                }
-                // console.log(this.list);
-            } 
+                    })
+                });                 
+            }
         },
         setEmptyImg(e) {
             e.target.src=emptyImg;
         },
         selectRecipeBox(id) {
-            console.log(`selectRecipeBox: ${id}`);
-            this.callRecipeBoxById(id)
-            this.callContents();
+            console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
+            this.getRecipeBoxById(id)
+            this.getRecipeRecipeBoxList(id);
         },
         moveRecipeBox(id) {
             console.log(`moveRecipeBox: ${id}`);
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);
-                await axios.post(`http://localhost:8090/reciperecipebox/${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`, {
-                }).then(response=>{
-                    // console.log("contents:", response.data);
-                }).catch(error=>{
-                    console.error(error);
-                })
+                const response = await this.$api(
+                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                "post",
+                {
+                    recipe: item,
+                    to: id
+                }
+                );
+                if (response.status === this.HTTP_OK) {
+                    console.log("moveRecipeBox:", response.data);
+                }
             });
-            // this.callRecipeBoxById(id)
-            // this.callContents();
+            //this.getRecipeBoxById(this.boxId)
+            this.getRecipeRecipeBoxList(this.boxId);
+        },
+        addNewBoxPage() {
+            console.log("addNewBoxPage step=2")
+            this.step = 3
+        },
+        onSubmitForm(e) {
+            console.log("onSubmitForm : "+e);
+            let text = `"${this.newBox}"로 새 레시피 박스를 추가하시겠습니까?`;
+            if (confirm(text) == true) {
+                this.addNewBox(this.newBox);
+                text = "추가 되었습니다.";
+            } else {
+                text = "취소 되었습니다.";
+            }
+            let element = document.getElementById("result-label");
+            let hidden = element.getAttribute("hidden");
+            if (hidden) {
+                element.removeAttribute("hidden");
+                element.innerText = text;
+            } else {
+                element.setAttribute("hidden", "hidden");
+                element.innerText = text;
+            }
+            e.preventDefault();
         },
         async addNewBox(name) {
             console.log("addNewBox : "+name);
             this.boxName = name;
-            await axios.post(`http://localhost:8090/recipebox/name=${name}&user=${this.writer}`, {
-            }).then(response=>{
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/${name}`,
+            "post"
+            );
+            if (response.status === this.HTTP_OK) {
                 this.selectedRecipeBox = response.data;
-                this.writer = this.selectedRecipeBox.userId;
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            }
             this.initialize();
-        },
-        async deleteBox(name) {
-            console.log("deleteBox: "+name);
-            this.value = name
-            await axios.delete(`http://localhost:8090/recipebox/name=${name}`, {
-            }).then(response=>{
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
-            // this.initialize();
         },
         async deleteBoxId(id) {
             console.log("deleteBoxId: "+id);
-            await axios.delete(`http://localhost:8090/recipebox/id=${id}`, {
-            }).then(response=>{
-                // console.log("contents:", response.data);
-            }).catch(error=>{
-                console.error(error);
-            })
+            const response = await this.$api(
+            `http://localhost:8090/api/recipebox/${id}`,
+            "delete"
+            );
+            if (response.status === this.HTTP_OK) {
+                console.log(response.data);
+            }
             this.initialize();
         },
         callEdit() {
@@ -381,30 +341,61 @@ export default {
             // 선택된 레시피박스의 checked 된 recipeId 를 삭제한다.
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}`);
-                await axios.delete(`http://localhost:8090/reciperecipebox/${this.selectedRecipeBox.id}?recipe=${item}`, {
-                }).then(response=>{
-                    // console.log("contents:", response.data);
-                }).catch(error=>{
-                    console.error(error);
-                })
+                const response = await this.$api(
+                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                "delete",
+                { recipe: item }
+                );
+                if (response.status === this.HTTP_OK) {
+                    console.log(response.data);
+                }
             });
+            this.getRecipeRecipeBoxList(this.boxId);
         },
         cancel() {
             console.log("cancel")
             this.step = 1
+            this.moveStep = 0
+            this.initialize();
         },
         done() {
             console.log("done")
             this.step = 1
+            this.moveStep = 0
+            this.initialize();
         },
         cancelMove() {
             console.log("cancelMove")
+            this.step = 1
             this.moveStep = 0
         },
     },
+    components: {
+        swiper,
+        swiperSlide,
+    },    
+    computed: {
+        swiper() {
+            console.log("computed:swiper");
+            return this.$refs.filterSwiper.swiper;
+        },
+        // isOverview() {
+        //     console.log("computed:isOverview");
+        //     return window.innerWidth >= this.swiper.virtualSize
+        // }
+    },
+    mounted () {
+        console.log("mounted");
+        // this.swiperInit();
+        // this.$nextTick(() => {
+        //     const swiperOption = this.$refs.filterSwiper.swiper;
+        //     swiperOption.controller.control = filterSwiper;
+        // });
+        // console.log(swiper)
+    },
 }
 </script>
-<style>
+<style lang="scss" scoped>
 button
 {
     background: inherit ; 
@@ -415,36 +406,55 @@ button
     overflow:visible; 
     cursor:pointer
 }
-ul {
+.swiper-container {
+  padding: 0 20px;
+  &:before,
+  &:after {
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    z-index: 10;
+    content: "";
+  }
+  &:before {
+    left: 0;
+    background: linear-gradient(90deg, #fff -20.19%, rgba(255, 255, 255, 0.8) 18.31%, rgba(255, 255, 255, 0) 75%);
+  }
+  &:after {
+    right: 0;
+    background: linear-gradient(270deg, #fff -20.19%, rgba(255, 255, 255, 0.8) 18.31%, rgba(255, 255, 255, 0) 75%);
+  }
+  .swiper-wrapper {
+    .swiper-slide {
+      width: auto;
+      min-width: 56px;
+      padding: 0px 14px;
+      font-size: 14px;
+      line-height: 36px;
+      text-align: center;
+      color: #84868c;
+      border: 0;
+      border-radius: 18px;
+      background: #f3f4f7;
+      appearance: none;
+      cursor: pointer;
+      &[aria-selected="true"] {
+        color: #fff;
+        background: #000;
+      }
+    }
+  }
+}
+.navbar ul {
     list-style: none;
 }
-li {
-    float: left;
-}
-/* .menu {
-}
-.menu ul{
+.contents ul {
     list-style: none;
 }
-.menu li {
+.contents li {
     float: left;
+    margin: 1px 6px;
 }
-.submenu {
-
-}
-.submenu ul{
-    list-style: none;
-}
-.submenu li {
-    float: left;
-}
-.boxes {
-
-}
-.boxes ul{
-    list-style: none;
-}
-.boxes li {
-    float: left;
-} */
 </style>
