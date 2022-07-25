@@ -1,8 +1,8 @@
 package kr.momjobgo.eyou.web.controller;
 
 import kr.momjobgo.eyou.web.dto.RecipeRequest;
-import kr.momjobgo.eyou.web.service.RecipeService;
 import kr.momjobgo.eyou.web.service.RecipeApiService;
+import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 public class RecipeApiController {
 
     private RecipeApiService recipeApiService;
+    private RecipeService recipeService;
 
-    public RecipeApiController(RecipeApiService recipeApiService) {
+    public RecipeApiController(RecipeApiService recipeApiService, RecipeService recipeService) {
         this.recipeApiService = recipeApiService;
+        this.recipeService = recipeService;
     }
 
     @GetMapping("/mine")
