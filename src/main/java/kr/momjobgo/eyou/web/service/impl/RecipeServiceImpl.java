@@ -6,6 +6,7 @@ import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
@@ -14,13 +15,17 @@ import static java.lang.Integer.parseInt;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final ContentsRepository contentsRepository;
     private final FileRepository fileRepository;
     private final IngredientRepository ingredientRepository;
+    private final ScoreRepository scoreRepository;
+    private final TimeTakenRepository timeTakenRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository, ContentsRepository contentsRepository,
                              FileRepository fileRepository, IngredientRepository ingredientRepository,
                              ScoreRepository scoreRepository, TimeTakenRepository timeTakenRepository) {
         this.recipeRepository = recipeRepository;
+        this.contentsRepository = contentsRepository;
         this.fileRepository = fileRepository;
         this.ingredientRepository = ingredientRepository;
         this.scoreRepository = scoreRepository;
@@ -168,9 +173,7 @@ public class RecipeServiceImpl implements RecipeService {
                     if (fileRealName.charAt(0) == 'M') {
                         mainImgId = fileEntity.get(i).getId();
                     } else if (fileRealName.charAt(0) == 'C') {
-//                    System.out.println(fileEntity.get(i).getFileRealName());
                         C_orderImgId[Integer.parseInt(compareFileName) - 1] = fileEntity.get(i).getId();
-                        //System.out.println(fileRealName + " : " + Integer.parseInt(compareFileName));
                     }
                 }
 
@@ -189,16 +192,13 @@ public class RecipeServiceImpl implements RecipeService {
 
             /**  Tip **/
             List<TipEntity> tipEntities = recipe.getTipEntities();
-
-            System.out.println(tipEntities);
-            List<Map<String, Object>> Tips = new ArrayList<Map<String, Object>>();
             if (tipEntities != null && !tipEntities.isEmpty()) {
-                Map<String, Object> tip = new HashMap<>();
+                List<Map<String, Object>> Tips = new ArrayList<Map<String, Object>>();
                 for (int i = 0; i < tipEntities.size(); i++) {
+                    Map<String, Object> tip = new HashMap<>();
                     tip.put("orderNum", tipEntities.get(i).getOrderNum());
                     tip.put("text", tipEntities.get(i).getText());
 
-                    System.out.println(tip);
                     Tips.add(tip);
                 }
                 result.put("tips", Tips);
