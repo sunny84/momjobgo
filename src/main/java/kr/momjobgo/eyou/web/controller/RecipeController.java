@@ -1,12 +1,10 @@
 package kr.momjobgo.eyou.web.controller;
 
-import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,21 +44,18 @@ public class RecipeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) { return ResponseEntity.ok().body( recipeService.getById(id) ); }
 
-    @PostMapping("/write")
-    public ResponseEntity<?> writeRecipe(HttpServletRequest req, @RequestBody RecipeRequest request) {
-        return ResponseEntity.ok().body(recipeService.write(req, request));
-    }
-
     @GetMapping("/contents={contentsId}")
     public ResponseEntity<?> getByContentsId(@PathVariable Long contentsId) { return ResponseEntity.ok().body( recipeService.getByContentsId(contentsId) ); }
     
-    @PatchMapping("/updateOpen={id}")
-    public ResponseEntity<?> updateOpen(Long id) {
-        return ResponseEntity.ok().body(recipeService.updateOpen(id));
-    }
-
     @GetMapping("/detail={id}")
     public ResponseEntity<?> getDetailById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(recipeService.getDetailById(id));
+//            return Optional.ofNullable(userRepository.findOne(id))
+//                    .map(ResponseEntity::ok)
+//                    .orElse(ResponseEntity.notFound().build());
+//        }
+        if(!recipeService.getDetailById(id).isEmpty())
+            return ResponseEntity.ok().body(recipeService.getDetailById(id));
+        else
+            return ResponseEntity.notFound().build();
     }
 }
