@@ -250,7 +250,7 @@ export default {
                         recipeId: obj.recipeId,
                         contentsId: obj.contentsId,
                         fileId: obj.fileId,
-                        file: obj.fileId?`http://localhost:8090/file/download?fileId=${obj.fileId}`:this.mainPicture,
+                        file: obj.fileId?`http://localhost:8090/file/download/thumbnail?fileId=${obj.fileId}`:this.mainPicture,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
