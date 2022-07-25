@@ -9,7 +9,7 @@
       <router-link to="/recipeboxlist">{{ $t("title.recipeBox") }}</router-link> |
       <router-link to="/login">login</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/filter">{{ $t("title.RecipeFilter") }}</router-link> |
+      <!-- <router-link to="/filter">{{ $t("title.RecipeFilter") }}</router-link> | -->
       <router-link to="/recipelist">RecipeList</router-link>
     </nav>
     <div>
