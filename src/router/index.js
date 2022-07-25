@@ -44,7 +44,7 @@ const routes = [
     component: RecipeDetailView
   },
   {
-    path : '/login/:nextUrl',
+    path : '/login',
     name: 'login',
     component: LoginView
   },

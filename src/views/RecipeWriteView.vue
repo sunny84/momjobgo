@@ -161,6 +161,7 @@
 
 <script>
 import emptyImg from "@/assets/emptyImg.png";
+import axios from "axios";
 
 export default {
   name: "RecipeWriteView",
@@ -185,10 +186,6 @@ export default {
   created() {
     this.callIngredientCategory();
   },
-  mounted() {
-    this.$checkToken("write");
-  },
-
   methods: {
     initWriteRecipeProcess() {
       this.step = 0;
@@ -509,8 +506,8 @@ export default {
       const resContents = await this.$api(
         "http://localhost:8090/api/recipe/write",
         "post",
-        allParams,
-        ""
+        "",
+        allParams
       );
       if (resContents.status == this.HTTP_OK) {
         const contentsId = resContents.data.contentsId;
