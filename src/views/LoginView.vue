@@ -14,7 +14,7 @@
 import Vue from "vue";
 import axios from "axios";
 
-import { mapActions, mapGetters } from "vuex"
+import { mapActions, mapGetters } from "vuex";
 
 
 export default {
@@ -24,11 +24,11 @@ export default {
   },
 
   computed : {  
-    ...mapGetters('user', ['snsId', 'token'])
+    ...mapGetters('user', ['snsId', 'token','nickname','profile_img'])
   },
 
   methods : {
-    ...mapActions('user', ['setsnsId','setToken']),
+    ...mapActions('user', ['setsnsId','setToken','setNickname','setProfile_img']),
 
     loginWithKakao() {
       //로그인
@@ -45,7 +45,16 @@ export default {
                 console.log(response)//카카오 계정 정보
                 // console.log("response.id:"+response.id); 
                 const KsnsId = 'K'+response.id; //snsId에 K를 붙여서 카카오로 로그인한ID로 설정해줌 
-                console.log("KsnsId:"+KsnsId); 
+                const nickname = 'K'+response.properties.nickname; //카카오 닉네임
+                const profile_img = 'K'+response.properties.profile_image; //카카오 프로필이미지
+                // console.log("KsnsId:"+KsnsId); 
+                // console.log("nickname:"+nickname); 
+                // console.log("profile_img:"+profile_img); 
+
+                //kakao 닉네임,프로필사진,이메일정보 vuex저장
+                _this.setNickname(nickname);
+                _this.setProfile_img(profile_img);
+
                 this.data = { //backend로 전송될 POST 데이터
 				          snsId:KsnsId
                 }
