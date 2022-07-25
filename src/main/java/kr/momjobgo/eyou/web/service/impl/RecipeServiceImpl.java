@@ -1,20 +1,13 @@
 package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.config.security.UserManager;
-import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.jpa.entity.*;
 import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Integer.parseInt;
 
@@ -25,21 +18,18 @@ public class RecipeServiceImpl implements RecipeService {
     private final ContentsRepository contentsRepository;
     private final FileRepository fileRepository;
     private final IngredientRepository ingredientRepository;
-    @Autowired
-    private RecipeIngredientMapRepository recipeIngredientMapRepository;
-
-    @Autowired
-    private TipRepository tipRepository;
-
-    @Autowired
-    private CookingOrderRepository cookingOrderRepository;
+    private final ScoreRepository scoreRepository;
+    private final TimeTakenRepository timeTakenRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository, ContentsRepository contentsRepository,
-                             FileRepository fileRepository, IngredientRepository ingredientRepository) {
+                             FileRepository fileRepository, IngredientRepository ingredientRepository,
+                             ScoreRepository scoreRepository, TimeTakenRepository timeTakenRepository) {
         this.recipeRepository = recipeRepository;
         this.contentsRepository = contentsRepository;
         this.fileRepository = fileRepository;
         this.ingredientRepository = ingredientRepository;
+        this.scoreRepository = scoreRepository;
+        this.timeTakenRepository = timeTakenRepository;
      }
 
     @Override
@@ -49,6 +39,67 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeEntity> getAll() { return recipeRepository.findAll(); }
+
+    @Override
+    public List<Map<String, Object>> findByWriter(){
+        List recipes = new ArrayList<>();
+        contentsRepository.findByWriter(UserManager.getUser().getId()).forEach(contents -> {
+            recipeRepository.findByContentsId(contents.getId()).forEach(recipe -> {
+                Long recipeId = recipe.getId();
+                System.out.println(recipeId);
+//                recipes.add(getDetailById(recipeId));
+                RecipeEntity recipeEntity = recipeRepository.getById(recipeId);
+                Map<String, Object> result = new HashMap<>();
+                result.put("recipeId", recipeId);
+
+                /** Recipe 기본정보 **/
+                Long contentsId = recipeEntity.getContentsEntity().getId();
+                result.put("contentsId", contentsId);
+                result.put("writer", recipeEntity.getContentsEntity().getWriter());
+
+                result.put("title", recipeEntity.getContentsEntity().getTitle());
+                result.put("subTitle", recipeEntity.getContentsEntity().getSubTitle());
+                result.put("period", recipeEntity.getPeriod());
+                result.put("quantity", recipeEntity.getQuantity());
+                result.put("timeTaken", recipeEntity.getTimeTakenId());
+                result.put("open", recipeEntity.getOpen());
+
+                /** cooking order & images **/
+                List <CookingOrderEntity> cookingOrderEntities = recipeEntity.getCookingOrderEntities();
+                List <FileEntity> fileEntity=fileRepository.findByContentsId(contentsId);
+                List <Map<String, Object>> cookingDataWithFileInfo = new ArrayList<Map<String, Object>>();
+                result.put("cookingOrderExist", cookingOrderEntities.isEmpty()?"N":"Y");
+                if(!cookingOrderEntities.isEmpty()) {
+                    Long mainImgId = 0L;
+                    Long[] C_orderImgId = new Long[fileEntity.size()];
+                    for(int i=0; i<fileEntity.size(); i++) {
+                        String fileRealName = fileEntity.get(i).getFileRealName();
+                        String compareFileName =fileRealName.substring(fileRealName.lastIndexOf(".") - 2, fileRealName.lastIndexOf("."));
+                        if(fileRealName.charAt(0) =='M') {
+                            mainImgId = fileEntity.get(i).getId();
+                        } else if (fileRealName.charAt(0) == 'C') {
+                            C_orderImgId[Integer.parseInt(compareFileName)-1]=fileEntity.get(i).getId();
+                        }
+                    }
+
+                    for (int i = 0; i < cookingOrderEntities.size(); i++) {
+                        Map<String, Object> C_orderAndImg = new HashMap<>();
+                        C_orderAndImg.put("contentsNo", cookingOrderEntities.get(i).getContentsNo());
+                        C_orderAndImg.put("contents", cookingOrderEntities.get(i).getContents());
+                        C_orderAndImg.put("imgId", C_orderImgId[i]);
+
+                        cookingDataWithFileInfo.add(C_orderAndImg);
+                    }
+
+                    //System.out.println("CookingOrder Data : " +cookingDataWithFileInfo);
+                    result.put("mainImgId", mainImgId);
+                    result.put("cookingOrder", cookingDataWithFileInfo);
+                }
+                recipes.add(result);
+            });
+        });
+        return recipes;
+    }
 
     @Override
     public RecipeEntity getById(Long id){
@@ -67,163 +118,100 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findByContentsId(contentsId);
     }
 
-    @Transactional
-    @CrossOrigin
-    public Map<String, Object> write(HttpServletRequest req, @RequestBody RecipeRequest request) {
-
-        ContentsEntity entity = contentsRepository.save(request.getContentsEntity());
-
-        System.out.println("entity: "+ entity);
-
-        RecipeEntity recipeEntity = new RecipeEntity();
-        recipeEntity.setContentsEntity(new ContentsEntity());
-        recipeEntity.getContentsEntity().setId(entity.getId());
-        recipeEntity.setPeriod(request.getPeriod());
-        recipeEntity.setQuantity(request.getQuantity());
-        recipeEntity.setTimeTakenId(request.getTimeTakenId());
-        recipeEntity.setOpen(request.getOpen());
-
-        System.out.println("clipLink : "+request.getClipLink());
-
-        recipeEntity.setClipLink(request.getClipLink());
-        recipeEntity.setYoutubeLink(request.getYoutubeLink());
-
-        RecipeEntity resultRecipe = recipeRepository.save(recipeEntity);
-
-        request.getRecipeIngredientMapEntities().stream().forEach(item -> {
-            item.setRecipeId(resultRecipe.getId());
-            recipeIngredientMapRepository.save(item);
-        });
-
-        request.getTipEntities().stream().forEach(item -> {
-            item.setRecipeId(resultRecipe.getId());
-            tipRepository.save(item);
-        });
-
-        request.getCookingOrderEntities().stream().forEach(item -> {
-            item.setRecipeId(resultRecipe.getId());
-            cookingOrderRepository.save(item);
-        });
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("contentsId", entity.getId());
-        result.put("recipeId", resultRecipe.getId());
-
-        return result;
-    }
-
-    @Override
-    public String updateOpen(Long id) {
-        Optional<RecipeEntity> recipeEntity = recipeRepository.findById(id);
-
-        if (recipeEntity.isPresent()) {
-            if (recipeEntity.get().getOpen()) {
-                recipeEntity.get().setOpen(false);
-            } else {
-                recipeEntity.get().setOpen(true);
-            }
-            recipeRepository.save(recipeEntity.get());
-            return "Success to update open";
-        }
-        return "Fail to update open";
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> getDetailById(Long id) {
-        RecipeEntity recipeEntity = recipeRepository.getById(id);
+        Optional <RecipeEntity> recipeEntity = recipeRepository.findById(id);
         Map<String, Object> result = new HashMap<>();
 
-        /** Recipe 기본정보 **/
-        Long contentsId = recipeEntity.getContentsEntity().getId();
-        result.put("contentsId", contentsId);
-        result.put("writer", recipeEntity.getContentsEntity().getWriter());
+        if(recipeEntity.isPresent()) {
+            RecipeEntity recipe = recipeEntity.get();
 
-        // user table id대신 snsid를 보여줘야할 경우 사용할 코드
-        //result.put("writer", UserManager.getUser().getSnsId());
+            /** Recipe 기본정보 **/
+            Long contentsId = recipeEntity.get().getContentsId();
 
-        result.put("title", recipeEntity.getContentsEntity().getTitle());
-        result.put("subTitle", recipeEntity.getContentsEntity().getSubTitle());
-        result.put("period", recipeEntity.getPeriod());
-        result.put("quantity", recipeEntity.getQuantity());
-        result.put("timeTaken", recipeEntity.getTimeTakenId());
-        result.put("open", recipeEntity.getOpen());
-        if(!recipeEntity.getClipLink().isEmpty()) {
-            result.put("clipLink", recipeEntity.getClipLink());
-        }
-        if(!recipeEntity.getYoutubeLink().isEmpty()) {
-            result.put("youtubeLink", recipeEntity.getYoutubeLink());
-        }
+            result.put("contentsId", contentsId);
+            result.put("writer", recipe.getContentsEntity().getWriter());
 
-        /**  Tip **/
-        List<TipEntity> tipEntities = recipeEntity.getTipEntities();
+            // user table id대신 snsid를 보여줘야할 경우 사용할 코드
+            //result.put("writer", UserManager.getUser().getSnsId());
 
-        List<Map<String, Object>> Tips = new ArrayList<Map<String, Object>>();
-        if(!tipEntities.isEmpty()) {
-            Map<String, Object> tip = new HashMap<>();
-            for (int i = 0; i < tipEntities.size(); i++) {
-                tip.put("orderNum", tipEntities.get(i).getOrderNum());
-                tip.put("text", tipEntities.get(i).getText());
+            result.put("title", recipe.getContentsEntity().getTitle());
+            result.put("subTitle", recipe.getContentsEntity().getSubTitle());
+            result.put("period", recipe.getPeriod());
+            result.put("quantity", recipe.getQuantity());
+            result.put("timeTaken", recipe.getTimeTakenId());
 
-                System.out.println(tip);
-                Tips.add(tip);
-            }
-        }
-        result.put("tips", Tips);
+            /** ingredients with key and volume **/
+            List<RecipeIngredientMapEntity> recipeIngredientMapEntities = recipe.getRecipeIngredientMapEntities();
+            List<Map<String, Object>> ingredients = new ArrayList<Map<String, Object>>();
+            if (!recipeIngredientMapEntities.isEmpty()) {
+                for (int i = 0; i < recipeIngredientMapEntities.size(); i++) {
+                    Map<String, Object> ingredientData = new HashMap<>();
+                    Long ingredientId = recipeIngredientMapEntities.get(i).getIngredientId();
+                    Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
+                    ingredientData.put("key", ingredientEntity.get().getKey());
+                    ingredientData.put("volume", recipeIngredientMapEntities.get(i).getVolume());
 
-        /** cooking order & images **/
-        List <CookingOrderEntity> cookingOrderEntities = recipeEntity.getCookingOrderEntities();
-        List <FileEntity> fileEntity=fileRepository.findByContentsId(contentsId);
-
-        if(!cookingOrderEntities.isEmpty()) {
-            List <Map<String, Object>> cookingDataWithFileInfo = new ArrayList<Map<String, Object>>();
-            Long mainImgId = 0L;
-            Long[] C_orderImgId = new Long[fileEntity.size()];
-            for(int i=0; i<fileEntity.size(); i++) {
-                String fileRealName = fileEntity.get(i).getFileRealName();
-                String compareFileName =fileRealName.substring(fileRealName.lastIndexOf(".") - 2, fileRealName.lastIndexOf("."));
-                if(fileRealName.charAt(0) =='M') {
-                    mainImgId = fileEntity.get(i).getId();
-                } else if (fileRealName.charAt(0) == 'C') {// && Integer.parseInt(compareFileName) == i) {
-//                    System.out.println(fileEntity.get(i).getFileRealName());
-                    C_orderImgId[Integer.parseInt(compareFileName)-1]=fileEntity.get(i).getId();
-                    //System.out.println(fileRealName + " : " + Integer.parseInt(compareFileName));
+                    ingredients.add(ingredientData);
                 }
+
+                result.put("ingredients", ingredients);
             }
 
-            for (int i = 0; i < cookingOrderEntities.size(); i++) {
-                Map<String, Object> C_orderAndImg = new HashMap<>();
-                C_orderAndImg.put("contentsNo", cookingOrderEntities.get(i).getContentsNo());
-                C_orderAndImg.put("contents", cookingOrderEntities.get(i).getContents());
-                C_orderAndImg.put("imgId", C_orderImgId[i]);
+            /** cooking order & images **/
+            List<CookingOrderEntity> cookingOrderEntities = recipe.getCookingOrderEntities();
+            List<FileEntity> fileEntity = fileRepository.findByContentsId(contentsId);
 
-                cookingDataWithFileInfo.add(C_orderAndImg);
+            if (!cookingOrderEntities.isEmpty()) {
+                List<Map<String, Object>> cookingDataWithFileInfo = new ArrayList<Map<String, Object>>();
+                Long mainImgId = 0L;
+                Long[] C_orderImgId = new Long[fileEntity.size()];
+                for (int i = 0; i < fileEntity.size(); i++) {
+                    String fileRealName = fileEntity.get(i).getFileRealName();
+                    String compareFileName = fileRealName.substring(fileRealName.lastIndexOf(".") - 2, fileRealName.lastIndexOf("."));
+                    if (fileRealName.charAt(0) == 'M') {
+                        mainImgId = fileEntity.get(i).getId();
+                    } else if (fileRealName.charAt(0) == 'C') {
+                        C_orderImgId[Integer.parseInt(compareFileName) - 1] = fileEntity.get(i).getId();
+                    }
+                }
+
+                for (int i = 0; i < cookingOrderEntities.size(); i++) {
+                    Map<String, Object> C_orderAndImg = new HashMap<>();
+                    C_orderAndImg.put("contentsNo", cookingOrderEntities.get(i).getContentsNo());
+                    C_orderAndImg.put("contents", cookingOrderEntities.get(i).getContents());
+                    C_orderAndImg.put("imgId", C_orderImgId[i]);
+
+                    cookingDataWithFileInfo.add(C_orderAndImg);
+                }
+
+                result.put("mainImgId", mainImgId);
+                result.put("cookingOrder", cookingDataWithFileInfo);
             }
 
-            //System.out.println("CookingOrder Data : " +cookingDataWithFileInfo);
-            result.put("mainImgId", mainImgId);
-            result.put("cookingOrder", cookingDataWithFileInfo);
-        }
+            /**  Tip **/
+            List<TipEntity> tipEntities = recipe.getTipEntities();
+            if (tipEntities != null && !tipEntities.isEmpty()) {
+                List<Map<String, Object>> Tips = new ArrayList<Map<String, Object>>();
+                for (int i = 0; i < tipEntities.size(); i++) {
+                    Map<String, Object> tip = new HashMap<>();
+                    tip.put("orderNum", tipEntities.get(i).getOrderNum());
+                    tip.put("text", tipEntities.get(i).getText());
 
-        /** ingredients with key and volume **/
-        List <RecipeIngredientMapEntity> recipeIngredientMapEntities = recipeEntity.getRecipeIngredientMapEntities();
-        List <Map<String, Object>> ingredients = new ArrayList<Map<String, Object>>();
-        if(!recipeIngredientMapEntities.isEmpty()) {
-            for(int i=0;i<recipeIngredientMapEntities.size();i++) {
-                Map<String, Object> ingredientData = new HashMap<>();
-                Long ingredientId = recipeIngredientMapEntities.get(i).getIngredientId();
-//                System.out.println("ing_id : "+ingredientId);
-                Optional <IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
-//                System.out.println(ingredientEntity.get().getKey());
-                ingredientData.put("key", ingredientEntity.get().getKey());
-                ingredientData.put("volume", recipeIngredientMapEntities.get(i).getVolume());
-
-//                System.out.println(ingredientData);
-                ingredients.add(ingredientData);
+                    Tips.add(tip);
+                }
+                result.put("tips", Tips);
             }
 
-//            System.out.println("Ing Data : "+ingredients);
-            result.put("ingredients", ingredients);
+            if (recipe.getClipLink() != null && !recipe.getClipLink().isEmpty()) {
+                result.put("clipLink", recipe.getClipLink());
+            }
+            if (recipe.getClipLink() != null && !recipe.getYoutubeLink().isEmpty()) {
+                result.put("youtubeLink", recipe.getYoutubeLink());
+            }
+
+            result.put("open", recipe.getOpen());
         }
 
         return result;

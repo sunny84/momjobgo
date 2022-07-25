@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
@@ -55,5 +56,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
             nativeQuery = true)
     List<Map<String, Object>> findByFilter(Pageable pageable, @Param("userId") Long userId, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt);
     List<RecipeEntity> findByContentsId(Long contentsId);
+
+    Optional<RecipeEntity> findById(Long id);
 }
 

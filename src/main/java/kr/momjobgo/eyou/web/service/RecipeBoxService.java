@@ -3,6 +3,7 @@ package kr.momjobgo.eyou.web.service;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RecipeBoxService {
     List<RecipeBoxEntity> joinRecipe();
@@ -22,6 +23,8 @@ public interface RecipeBoxService {
     List<RecipeBoxEntity> findByNameContains(String name);
     RecipeBoxEntity findByIsDefault();
 
-    List<RecipeBoxEntity> findByUserId(Long id);
+    List<RecipeBoxEntity> findByUserId();
+    List<Map<String, Object>> getReceipeBoxList();
+
 }
 
