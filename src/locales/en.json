@@ -9,7 +9,9 @@
         "viewRecipe" : "View Recipe",
         "recipeBox" : "Recipe Box",
         "RecipeFilter" : "Filter",
-        "subscribeRecipe" : "Subscribe Recipe"
+        "subscribeRecipe" : "Subscribe Recipe",
+        "myBaby" : "For my baby",
+        "whatRecipe" : "What kind of food would you like to cook?"
     },
 
     "description" : {

@@ -8,7 +8,9 @@ header .logo    {width:76px; height:33px;background:url(../images/logo.png) no-r
 header .wrap_right_icon             {float:right; margin-top: -30px;}
 header .wrap_right_icon .icon_alarm {width:45px; height:33px;background:url(../images/icon_alram.png) no-repeat ;text-indent: -99999px;display: inline-block;} 
 header .wrap_right_icon .icon_custom {width:30px; height:33px;background:url(../images/iocn-custom.png) no-repeat ;text-indent: -99999px;display: inline-block;} 
-main                { width: calc(100% - 20px); overflow-y:auto; padding-bottom: 50px;padding-left: 10px; padding-right: 10px;}
+/* infinite-loading 적용 안되어 수정함 */
+/* main                { width: calc(100% - 20px); overflow-y:auto; padding-bottom: 50px;padding-left: 10px; padding-right: 10px;} */
+main                { width: calc(100% - 20px); padding-bottom: 50px;padding-left: 10px; padding-right: 10px;}
 main h1             { font-size: 22px; font-weight: bold !important;  line-height: 1.2em; letter-spacing: -0.03em; text-align: left;padding: 20px 0 10px 10px;}
 main .wrap_subsc    {position:relative; margin:5px 0 10px 10px; display: inline-block; font-size: 16px; width:100%;height:30px;}
 main .wrap_subsc .title { position: absolute; left:0; background-color: #028870; text-align: center; color: #fff; font-weight: 700; border-radius:14px; width:90px; height:28px;  display: inline-block; z-index: 10; } 
@@ -34,7 +36,7 @@ main .wrap_slide_pic .contents .text .wrap_info .chat   { background: url(../ima
 main .wrap_slide_pic .wrap_dot {padding: 5px 0;}
 main .wrap_slide_pic span  {cursor: pointer;}
 
-
+/* 레시피 리스트 2열로 정렬되도록 수정 */
 main .wrap_contents { margin: 0 auto; text-align: center; display: grid; grid-template-columns: repeat(2, 49%); grid-gap: 10px;}
 main .wrap_contents .contents2 { margin: 0 auto; padding-bottom: 10px; position: relative; }
 /* main .wrap_contents .contents2:last-child   { margin-right: 0;} */

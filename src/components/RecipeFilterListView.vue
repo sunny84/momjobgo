@@ -24,7 +24,7 @@
     </div>
     <div>
       <infinite-loading @infinite="infiniteHandler">
-        <div slot="no-more"></div>
+        <div slot="no-more"><br/></div>
       </infinite-loading>
     </div>
   </div>
