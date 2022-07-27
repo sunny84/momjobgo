@@ -15,7 +15,7 @@
             <router-link :to="'/recipedetail/'+recipe.recipeId">
             <p>n/m</p>
             <img 
-              :src="recipe.mainImg?`http://localhost:8090/file/download?fileId=${recipe.mainImg}`:mainPicture"
+              :src="recipe.mainImg?`http://localhost:8090/file/download/thumbnail?fileId=${recipe.mainImg}`:mainPicture"
               width="200px" 
               height="150px" 
               @error="setEmptyImg"
@@ -28,7 +28,7 @@
                 <router-link :to="'/recipedetail/'+recipe.recipeId">
                   <p>{{ order.contentsNo }}/{{ recipe.cookingOrder.length }}</p>
                   <img 
-                    :src="order.imgId?`http://localhost:8090/file/download?fileId=${order.imgId}`:mainPicture" 
+                    :src="order.imgId?`http://localhost:8090/file/download/thumbnail?fileId=${order.imgId}`:mainPicture" 
                     width="200px" 
                     height="150px" 
                     @error="setEmptyImg"

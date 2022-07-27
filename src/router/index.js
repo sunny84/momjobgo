@@ -49,6 +49,11 @@ const routes = [
     component: LoginView
   },
   {
+    path : '/login/:nextUrl',
+    name: 'login',
+    component: LoginView
+  },
+  {
     path : '/recipelist',
     name: 'recipelist',
     component: RecipeListView

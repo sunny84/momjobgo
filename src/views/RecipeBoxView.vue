@@ -108,8 +108,9 @@
                 </table>
 
                 <div class="moveBox" v-if="moveStep===0">
-                    <button @click="moveRecipe">{{$t("button.move")}}</button>&nbsp;
-                    <button @click="deleteRecipe">{{$t("button.delete")}}</button>
+                    <button @click="callMoveRecipe">{{$t("button.move")}}</button>&nbsp;
+                    <button @click="callDeleteRecipe">{{$t("button.delete")}}</button>
+                    <!-- <button @click="deleteRecipe">{{$t("button.delete")}}</button> -->
                 </div>
                 <div class="moveBox" v-if="moveStep===1">
                     <div class="moveBoxHeader">
@@ -121,18 +122,18 @@
                         </ul>
                     </div>
                     <div class="moveBoxBody">
-                        <ul v-for="(recipe, index) in recipeBoxes" :key="index">
-                            <li @click="moveRecipeBox(recipe.id)">
-                                <button v-on:click="deleteBoxId(recipe.id)">X</button>
+                        <ul v-for="(box, index) in recipeBoxes" :key="index">
+                            <li @click="callMoveRecipeBox(box.id)">
+                                <button v-on:click="callDeleteBox(box.id)">X</button>
                                 <p>
-                                    <img :src="recipe.file" width="200px" height="150px" @error="setEmptyImg">
+                                    <img :src="box.recipe?box.recipe[0].mainImgId:''" width="200px" height="150px" @error="setEmptyImg">
                                 </p>
-                                {{recipe.name}}
+                                {{box.name}}
                             </li>
                         </ul>
                     </div>
                     <div class="moveBoxFooter">
-                        <button @click="cancelMove">{{$t("button.cancel")}}</button>
+                        <button @click="cancel">{{$t("button.cancel")}}</button>
                     </div>
                 </div>
             </div>
@@ -146,8 +147,8 @@
                     </form>
                 </fieldset>
                 <label id="result-label" hidden for="result"></label><br/>
-                <button @click="cancel">{{$t("button.cancel")}}</button> |
-                <button @click="done">{{$t("button.done")}}</button>
+                <button @click="cancel">{{$t("button.cancel")}}</button>
+                <!-- <button @click="done">{{$t("button.done")}}</button> -->
             </div>
         <!--FOOTER-->
         </div>
@@ -186,7 +187,7 @@ export default {
             step=2 레시피 박스 편집 화면
             step=3 새 레시피 박스 입력 화면
         */
-        step : 2,
+        step : 1,
         /* 
             moveStep=0 레시피 박스 편집 화면
             moveStep=1 레시시 박스 편집 > 이동 화면
@@ -195,9 +196,12 @@ export default {
         recipeList : [],
         mainPicture : '',
         checkedRecipeIds : [],
-        boxName: '기본박스',
-        boxId: 0,
+        tempMap : {},
+        boxName : '기본박스',
+        boxId : 0,
         newBox : "",
+        edit : '',
+        tempBoxId : [],
     }),
     created() {
         this.boxId = this.$route.params.boxId;
@@ -246,7 +250,7 @@ export default {
                         recipeId: obj.recipeId,
                         contentsId: obj.contentsId,
                         fileId: obj.fileId,
-                        file: obj.fileId?`http://localhost:8090/file/download?fileId=${obj.fileId}`:this.mainPicture,
+                        file: obj.fileId?`http://localhost:8090/file/download/thumbnail?fileId=${obj.fileId}`:this.mainPicture,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
@@ -259,27 +263,27 @@ export default {
         },
         selectRecipeBox(id) {
             console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
-            this.getRecipeBoxById(id)
-            this.getRecipeRecipeBoxList(id);
+            location.href=`/recipebox/${id}`;
         },
-        moveRecipeBox(id) {
-            console.log(`moveRecipeBox: ${id}`);
+        moveRecipeBox() {
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
-                console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);
-                const response = await this.$api(
-                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
-                "post",
-                {
-                    recipe: item,
-                    to: id
-                }
-                );
-                if (response.status === this.HTTP_OK) {
-                    console.log("moveRecipeBox:", response.data);
-                }
+                this.tempBoxId.forEach(async (id, index, arr) => {     
+                // console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);           
+                    const response = await this.$api(
+                    `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                    "post",
+                    {
+                        recipe: item,
+                        to: id
+                    }
+                    );
+                    if (response.status === this.HTTP_OK) {
+                        console.log("moveRecipeBox:", response.data);
+                    }
+                });
             });
             //this.getRecipeBoxById(this.boxId)
-            this.getRecipeRecipeBoxList(this.boxId);
+            //this.getRecipeRecipeBoxList(this.boxId);
         },
         addNewBoxPage() {
             console.log("addNewBoxPage step=2")
@@ -317,24 +321,18 @@ export default {
             }
             this.initialize();
         },
-        async deleteBoxId(id) {
-            console.log("deleteBoxId: "+id);
-            const response = await this.$api(
-            `http://localhost:8090/api/recipebox/${id}`,
-            "delete"
-            );
-            if (response.status === this.HTTP_OK) {
-                console.log(response.data);
-            }
+        async deleteBoxId() {
+            this.tempBoxId.forEach( async(id, index, arr) => {
+                console.log("deleteBoxId: "+id);
+                const response = await this.$api(
+                `http://localhost:8090/api/recipebox/${id}`,
+                "delete"
+                );
+                if (response.status === this.HTTP_OK) {
+                    console.log(response.data);
+                }
+            })
             this.initialize();
-        },
-        callEdit() {
-            console.log("Edit");
-            this.step = 2
-        },
-        moveRecipe() {
-            console.log("Move")
-            this.moveStep = 1
         },
         deleteRecipe() {
             console.log("Delete")            
@@ -352,22 +350,99 @@ export default {
             });
             this.getRecipeRecipeBoxList(this.boxId);
         },
+        callEdit() {
+            console.log("Edit");
+            this.step = 2
+        },
+        callMoveRecipe() {
+            console.log("Move")
+            this.moveStep = 1
+        },
+        callMoveRecipeBox(id){
+            if(this.checkedRecipeIds.length == 0) return
+            this.tempBoxId.push(id);
+            this.tempMap = new Map();
+            this.recipeList.forEach((recipe, index, arr) => {
+                this.tempMap.set(index, recipe);
+            });
+            this.checkedRecipeIds.forEach((recipeId, index, arr) => {
+                this.recipeList.forEach((recipe, index, arr) => {
+                    if(recipeId == recipe.recipeId){
+                        this.$delete(arr, index)
+                    }
+                });
+            });
+            this.edit = 'move';
+        },
+        callDeleteBox(id){
+            this.tempBoxId.push(id);
+            this.tempMap = new Map();
+            this.recipeBoxes.forEach((box, index, arr) => {
+                this.tempMap.set(index, box);
+            });
+            this.recipeBoxes.forEach((box, index, arr) => {
+                if(id == box.id){
+                    this.$delete(arr, index)
+                }
+            });
+            this.edit = 'deleteBox';
+        },
+        callDeleteRecipe(){
+            this.tempMap = new Map();
+            this.recipeList.forEach((recipe, index, arr) => {
+                this.tempMap.set(index, recipe);
+            });
+            // view 화면에서 숨기기
+            this.checkedRecipeIds.forEach((recipeId, index, arr) => {
+                this.recipeList.forEach((recipe, index, arr) => {
+                    if(recipeId == recipe.recipeId){
+                        this.$delete(arr, index)
+                    }
+                });
+            });
+            this.edit = 'deleteRecipe';
+
+        },
         cancel() {
             console.log("cancel")
+            if(this.edit == "move"){
+                this.checkedRecipeIds = [];
+                this.recipeList = [];
+                for(let i=0;i<this.tempMap.size;i++){
+                    this.recipeList.push(this.tempMap.get(i))
+                };
+            }
+            if(this.edit == "deleteBox"){
+                this.recipeBoxes = [];
+                for(let i=0;i<this.tempMap.size;i++){
+                    this.recipeBoxes.push(this.tempMap.get(i))
+                };
+            }
+            if(this.edit == "deleteRecipe"){
+                this.checkedRecipeIds = [];
+                this.recipeList = [];
+                for(let i=0;i<this.tempMap.size;i++){
+                    this.recipeList.push(this.tempMap.get(i))
+                };
+            }
             this.step = 1
             this.moveStep = 0
             this.initialize();
         },
         done() {
             console.log("done")
+            if(this.edit == "move"){
+                this.moveRecipeBox()
+            }
+            if(this.edit == "deleteBox"){
+                this.deleteBoxId()
+            }
+            if(this.edit == "deleteRecipe"){
+                this.deleteRecipe()
+            }
             this.step = 1
             this.moveStep = 0
-            this.initialize();
-        },
-        cancelMove() {
-            console.log("cancelMove")
-            this.step = 1
-            this.moveStep = 0
+            //this.initialize();
         },
     },
     components: {

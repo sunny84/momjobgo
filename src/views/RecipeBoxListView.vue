@@ -20,7 +20,7 @@
                   <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
                     <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
                       <p><img
-                        :src="r.mainImgId?`http://localhost:8090/file/download?fileId=${r.mainImgId}`:mainPicture"
+                        :src="r.mainImgId?`http://localhost:8090/file/download/thumbnail?fileId=${r.mainImgId}`:mainPicture"
                         width="200px" 
                         height="150px" 
                         @error="setEmptyImg"
@@ -75,6 +75,10 @@ export default {
 
   created() {
     this.initialize();
+  },
+  
+  mounted() {
+    this.$checkToken('recipeboxlist');
   },
 
   components: {

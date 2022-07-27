@@ -161,7 +161,6 @@
 
 <script>
 import emptyImg from "@/assets/emptyImg.png";
-import axios from "axios";
 
 export default {
   name: "RecipeWriteView",
@@ -185,6 +184,10 @@ export default {
 
   created() {
     this.callIngredientCategory();
+  },
+
+  mounted() {
+    this.$checkToken("write");
   },
   methods: {
     initWriteRecipeProcess() {
@@ -234,7 +237,8 @@ export default {
           !this.checkTitles() ||
           !this.checkMainImage() ||
           !this.checkIngredients() ||
-          !this.checkCookingOrder()
+          !this.checkCookingOrder() ||
+          !this.checkMovieUrl()
         ) {
           return;
         }
@@ -381,6 +385,25 @@ export default {
         return true;
       }
     },
+    checkMovieUrl() {
+      if (
+        this.clipUrl.trim() != "" &&
+        this.clipUrl.indexOf("youtube.com/") < 0 &&
+        this.clipUrl.indexOf("youtu.be/")
+      ) {
+        alert("클립 영상은 유투브 영상만 허용됩니다. 올바른 주소를 입력해주세요");
+        return false;
+      }
+      if (
+        this.youtubeUrl.trim() != "" &&
+        this.youtubeUrl.indexOf("youtube.com/") < 0 &&
+        this.youtubeUrl.indexOf("youtu.be/")
+      ) {
+        alert("영상은 유투브 영상만 허용됩니다. 올바른 주소를 입력해주세요");
+        return false;
+      }
+      return true;
+    },
     calibMainImg() {
       URL.revokeObjectURL(this.mainPicture);
     },
@@ -506,8 +529,8 @@ export default {
       const resContents = await this.$api(
         "http://localhost:8090/api/recipe/write",
         "post",
-        "",
-        allParams
+        allParams,
+        ""
       );
       if (resContents.status == this.HTTP_OK) {
         const contentsId = resContents.data.contentsId;
