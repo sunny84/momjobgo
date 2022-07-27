@@ -37,4 +37,7 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "enable")
     private String enable;
 
+    @Column(name = "nickname")
+    private String nickname;
+
 }
