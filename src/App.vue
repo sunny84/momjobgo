@@ -9,7 +9,7 @@
       <router-link to="/recipeboxlist">{{ $t("title.recipeBox") }}</router-link> |
       <router-link to="/login">login</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/filter">{{ $t("title.RecipeFilter") }}</router-link> |
+      <!-- <router-link to="/filter">{{ $t("title.RecipeFilter") }}</router-link> | -->
       <router-link to="/recipelist">RecipeList</router-link>
     </nav>
     <div>
@@ -24,6 +24,8 @@
 
 <script>
 import i18n from "@/i18n";
+import '@/assets/css/common.css';
+import '@/assets/css/eu.css';
 import { mapGetters, mapActions } from "vuex";
 
 export default {

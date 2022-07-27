@@ -1,58 +1,51 @@
 <template>
-    <div>
-        <h4>우리아기,</h4>
-        <h4>어떤 요리가 좋을까요?</h4>
-        <div>
-          <button @click="search">필터</button>
-          <button>최신순</button>
-          <button>별점순</button>
-          <button>후기순</button>
-          <button>재료명순</button>
-        </div>  
-        <div>
-          <div v-for="(recipe, i) in recipeList" :key="i">
-            <span>{{recipe.title}}</span><br/>
-            <span>{{recipe.sub_title}}</span>
-            <div>
-              <span>{{$t(`option.timeTaken[${recipe.time_taken_id}]`)}}</span>&nbsp;
-              <span>{{recipe.score}}</span>&nbsp;
-              <span>0</span>
-            </div>
+  <div>
+    <main>
+      <div class="wrap">
+        <h1><span class="color-orange">우리아기,</span> 
+          <br>어떤 요리가 좋을까요?</h1>
+        <SubscribeListView></SubscribeListView>
+        <div class="wrap_filter">
+          <div class="wrap_filter_menu">
+            <ul class="fl">
+              <li class="title"><router-link to="/filter">필터</router-link></li>
+              <li class="menu" :class="{ on : sort == 0 }" @click="setSort(0)">최신순</li>
+              <li class="menu" :class="{ on : sort == 1 }" @click="setSort(1)">별점순</li>
+              <li class="menu">후기순</li>
+              <li class="menu">재료명순</li>
+            </ul>
+            <ul class="fr">
+              <li class="view n1">모아보기</li>
+              <li class="view n2">크게보기</li>
+            </ul>
           </div>
-        </div>     
-    </div>
+        </div>
+        <FilterListView :key="sort"></FilterListView>
+      </div>
+    </main>
+  </div>
 </template>
 
 <script>
+import SubscribeListView from "../components/RecipeSubscribeListView.vue";
+import FilterListView from "../components/RecipeFilterListView.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name : "RecipeListView",
   data: ()=>({
-    page : 0,
-    recipeList : [],
   }),
 
-  created() {
-    this.initialize();
+  components: {
+    SubscribeListView,
+    FilterListView,
+  },
+
+  computed : {  
+    ...mapGetters('filter', ['sort'])
   },
 
   methods: {
-    initialize() {
-      this.callRecipeFilter();
-    },
-
-    search(){
-      this.callRecipeFilter();
-    },
-
-    async callRecipeFilter() {
-      const params = `page=${this.page}`
-
-      const response = await this.$api(`http://localhost:8090/Recipe/api/filter?`+params, `get`);
-
-      if (response.status === this.HTTP_OK) {
-        this.recipeList = response.data;
-      }
-    },
+    ...mapActions('filter', ['setSort']),
   },
 }
 </script>
