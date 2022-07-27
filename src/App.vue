@@ -22,6 +22,9 @@
 
 <script>
 import i18n from "@/i18n";
+import '@/assets/css/common.css';
+import '@/assets/css/eu.css';
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   methods: {

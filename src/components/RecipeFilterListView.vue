@@ -1,25 +1,31 @@
 <template>
-  <div class="filterList">
+  <div class="wrap_contents">
     <div v-for="(recipe, $index) in recipeList" :key="$index">
-        <div v-if="recipe.file_id!=null">
-          <img :src="getImgURL(recipe.file_id)" width="200px" height="150px" @error="setEmptyImg" />
+      <div class="contents2" >
+        <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`) }}</div>
+        <div v-if="recipe.subscribe!=null" class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
+        <div v-else class="bookmark"><img src="@/assets/images/bul_bookmark2.png"></div>
+        <ul class="wrap_faces">
+          <div class="good facebg"></div>
+          <div class="number">60</div>
+        </ul><!--wrap_faces-->
+        <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+        <img v-else class="pic" src="@/assets/emptyImg.png">
+        <div class="text">
+          <div class="title">{{recipe.title}}</div>
+          <div class="longtext">{{recipe.sub_title}}</div>
+          <div class="wrap_info">
+            <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
+            <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
+            <span class="bullet chat">187 </span>
+          </div>
         </div>
-      <div v-else style="width:200px; height:150px; background-color:#EEEEEE;" >
-        이미지 없음        
-      </div>
-      <span v-if="recipe.subscribe!=null">구독중</span>
-      <!-- <span v-else>구독아님</span> -->
-      <br/>
-      <span>{{recipe.title}}</span><br/>
-      <span>{{recipe.sub_title}}</span>
-      <div>
-        <span>{{$t(`option.timeTaken[${recipe.time_taken_id}]`)}}</span>&nbsp;
-        <span>{{recipe.score}}</span>&nbsp;
-        <span>0</span>
       </div>
     </div>
     <div>
-      <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+      <infinite-loading @infinite="infiniteHandler">
+        <div slot="no-more"></div>
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -47,7 +53,7 @@ export default {
   methods: {
 
     getImgURL(id) {
-      const url = 'http://localhost:8090/file/download?fileId=' + id;
+      const url = 'http://localhost:8090/file/download/thumbnail?fileId=' + id;
       console.log(url);
       return url
     },
@@ -94,10 +100,10 @@ export default {
 </script>
 
 <style>
-	.filterList {
+	/* .filterList {
 		display: grid;
-		grid-template-columns: repeat(2, 200px);
-		/* grid-auto-rows: 65px; */
+		grid-template-columns: repeat(2, 80%);
+		grid-auto-rows: 65px;
 		grid-gap: 20px;
-	}
+	} */
 </style>
