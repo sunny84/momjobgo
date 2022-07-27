@@ -8,10 +8,10 @@
         <div class="wrap_filter_menu">
           <ul class="fl">
             <li class="title"><router-link to="/filter">{{$t(`title.RecipeFilter`)}}</router-link></li>
-            <li class="menu" :class="{ on : sort == 0 }" @click="setSort(0)">최신순</li>
-            <li class="menu" :class="{ on : sort == 1 }" @click="setSort(1)">별점순</li>
-            <li class="menu">후기순</li>
-            <li class="menu">재료명순</li>
+            <li class="menu" :class="{ on : sort == 0 }" @click="setSort(0)">{{$t(`orderBy.newest`)}}</li>
+            <li class="menu" :class="{ on : sort == 1 }" @click="setSort(1)">{{$t(`orderBy.topRated`)}}</li>
+            <li class="menu">{{$t(`orderBy.mostRated`)}}</li>
+            <li class="menu">{{$t(`orderBy.ingredients`)}}</li>
           </ul>
           <ul class="fr">
             <li class="view n1">모아보기</li>

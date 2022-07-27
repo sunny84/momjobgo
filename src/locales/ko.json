@@ -31,6 +31,13 @@
         "allList" : "전체보기"
     },
 
+    "orderBy" : {
+        "newest" : "최신순",
+        "topRated" : "별점순",
+        "mostRated" : "후기순",
+        "ingredients" : "재료명순"
+    },
+
     "content" : {
         "step" : "단계",
         "quantity" : "분량",
