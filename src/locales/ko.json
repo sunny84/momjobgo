@@ -8,7 +8,8 @@
         "previewRecipe" : "레시피 미리보기",
         "viewRecipe" : "레시피 상세보기",
         "recipeBox" : "레시피 박스",
-        "RecipeFilter" : "필터"
+        "RecipeFilter" : "필터",
+        "subscribeRecipe" : "구독레시피"
     },
 
     "description" : {
@@ -24,7 +25,8 @@
     "menu" : {
         "myRecipe": "My 레시피",
         "savedRecipe" : "담은 레시피",
-        "historyRecipe" : "오늘 본 레시피"
+        "historyRecipe" : "오늘 본 레시피",
+        "allList" : "전체보기"
     },
 
     "content" : {
@@ -58,7 +60,9 @@
 
     "option" : {
         "period" : ["초기(미음)", "중기(죽)", "후기(진밥)"],
-        "timeTaken" : ["15분이내", "15분", "30분", "60분", "60분 이상"]
+        "period_s" : ["초기", "중기", "후기"],
+        "timeTaken" : ["15분이내", "15분", "30분", "60분", "60분 이상"],
+        "timeTaken_s" : ["15분-", "15분", "30분", "60분", "60분+"]
     },
 
     "ing_category" : {

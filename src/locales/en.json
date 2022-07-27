@@ -8,7 +8,8 @@
         "previewRecipe" : "Preview Recipe",
         "viewRecipe" : "View Recipe",
         "recipeBox" : "Recipe Box",
-        "RecipeFilter" : "Filter"
+        "RecipeFilter" : "Filter",
+        "subscribeRecipe" : "Subscribe Recipe"
     },
 
     "description" : {
@@ -24,7 +25,8 @@
     "menu" : {
         "myRecipe": "My Recipe",
         "savedRecipe" : "Saved Recipe",
-        "historyRecipe" : "History Recipe"
+        "historyRecipe" : "History Recipe",
+        "allList" : "All"
     },
 
     "content" : {
@@ -58,7 +60,9 @@
 
     "option" : {
         "period" : ["begining(thin rice gruel)", "middle(Porridge)", "latter(soft boiled rice)"],
-        "timeTaken" : ["within 15 min", "15 min", "30 min", "60 min", "over 60 min"]
+        "period_s" : ["begining", "middle", "latter"],
+        "timeTaken" : ["within 15 min", "15 min", "30 min", "60 min", "over 60 min"],
+        "timeTaken_s" : ["15M-", "15M", "30M", "60M", "60M+"]
     },
 
     "ing_category" : {

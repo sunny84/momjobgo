@@ -1,26 +1,51 @@
 <template>
   <div class="SubscribeList">
-    <hooper :autoPlay="true" :playSpeed="2000" id="hooper">
-      <slide v-for="(recipe, $index) in recipeList" :key="$index" class="slide">
-        <div v-if="recipe.file_id!=null">
-          <img :src="getImgURL(recipe.file_id)" width="200px" height="150px" @error="setEmptyImg" />
-        </div>
-        <div v-else style="width:200px; height:150px; background-color:#EEEEEE;" >
-          이미지 없음 {{$index}}    
-        </div>
-        <span>{{recipe.title}}</span>
-        <div>
-          <span>{{$t(`option.timeTaken[${recipe.time_taken_id}]`)}}</span>&nbsp;
-          <span>{{recipe.score}}</span>&nbsp;
-          <span>0</span>
-        </div>
+    <div class="wrap_subsc">
+      <ul>
+        <li class="title">{{ $t(`title.subscribeRecipe`) }}</li>
+        <li class="menu n1" :class="{ on : period == 0 }" @click="setPeriod(0)">{{ $t(`option.period_s[0]`) }}</li>
+        <li class="menu n2" :class="{ on : period == 1 }" @click="setPeriod(1)">{{ $t(`option.period_s[1]`) }}</li>
+        <li class="menu n3" :class="{ on : period == 2 }" @click="setPeriod(2)">{{ $t(`option.period_s[2]`) }}</li>
+        <li class="n4">{{ $t(`menu.allList`) }} </li>
+      </ul>
+    </div><!--end.wrap_subsc-->
+
+    <hooper id="hooper">
+        <slide v-for="(recipe, $index) in recipeList" :key="$index" class="slide">
+          <div class="wrap_slide_pic">
+            <div class="contents">
+              <div class="squre">{{ $t(`option.period_s[${recipe.period}]`) }}</div>
+              <div class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
+              <div class="wrap_faces" style="position: absolute;left:8px; top:40px;">
+                <ul class="fl">
+                  <div class="good facebg"></div>
+                  <div class="number">609</div>
+                </ul>
+                <ul class="fl">
+                  <div class="bad facebg"></div>
+                  <div class="number">609</div>
+                </ul>  
+              </div>
+              <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+              <img v-else class="pic" src="@/assets/emptyImg.png">
+              <div class="text">
+                <div class="title">{{recipe.title}}</div>
+                <div class="wrap_info">
+                  <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
+                  <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
+                  <span class="bullet chat">187</span>
+                </div>
+              </div><!--text-->
+            </div><!--contents-->
+          </div>
       </slide>
+      <hooper-pagination slot="hooper-addons"></hooper-pagination>
     </hooper>
   </div>
 </template>
 
 <script>
-import { Hooper, Slide } from 'hooper';
+import { Hooper, Slide, Pagination as HooperPagination } from 'hooper';
 import 'hooper/dist/hooper.css';
 import emptyImg from "@/assets/emptyImg.png";
 
@@ -34,6 +59,7 @@ export default {
   components: {
     Hooper,
     Slide,
+    HooperPagination,
   },
 
   created() {
@@ -46,7 +72,7 @@ export default {
     },
 
     getImgURL(id) {
-      const url = 'http://localhost:8090/file/download?fileId=' + id;
+      const url = 'http://localhost:8090/file/download/thumbnai?fileId=' + id;
       console.log(url);
       return url
     },
@@ -55,9 +81,14 @@ export default {
       e.target.src = emptyImg;
     },
 
+    setPeriod(period) {
+      this.period = period;
+      this.callSubscribeList();
+    },
+
     async callSubscribeList(){
       let params = `period=${this.period}`;
-      const response = await this.$api(`http://localhost:8090/api/reciperecipebox/subscribe`, `get`);
+      const response = await this.$api(`http://localhost:8090/api/reciperecipebox/subscribe?` + params, `get`);
       if (response.status === this.HTTP_OK) {
         this.recipeList = response.data;
       }
@@ -68,10 +99,11 @@ export default {
 
 <style>
 
-/* #hooper {
-  height: 10vh;
+ #hooper {
+  height: 100%;
+  padding:0 0 20px 0;
 }
-.slide {
+/*.slide {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   font-size: 4rem;
   line-height: 10vh;

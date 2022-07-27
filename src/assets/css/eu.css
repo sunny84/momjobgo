@@ -1,0 +1,174 @@
+@charset "utf-8";
+/* CSS Document */
+html,body {height: 100%;}
+body 		    {background-color: #fff; overflow-x:hidden;  }
+.wrap 	        {position:relative; margin: 0 auto;min-width: 360px; max-width:700px; }
+header          {padding: 10px 10px 0 20px;}
+header .logo    {width:76px; height:33px;background:url(../images/logo.png) no-repeat ; text-indent: -99999px; }
+header .wrap_right_icon             {float:right; margin-top: -30px;}
+header .wrap_right_icon .icon_alarm {width:45px; height:33px;background:url(../images/icon_alram.png) no-repeat ;text-indent: -99999px;display: inline-block;} 
+header .wrap_right_icon .icon_custom {width:30px; height:33px;background:url(../images/iocn-custom.png) no-repeat ;text-indent: -99999px;display: inline-block;} 
+main                { width: calc(100% - 20px); overflow-y:auto; padding-bottom: 50px;padding-left: 10px; padding-right: 10px;}
+main h1             { font-size: 22px; font-weight: bold !important;  line-height: 1.2em; letter-spacing: -0.03em; text-align: left;padding: 20px 0 10px 10px;}
+main .wrap_subsc    {position:relative; margin:5px 0 10px 10px; display: inline-block; font-size: 16px; width:100%;height:30px;}
+main .wrap_subsc .title { position: absolute; left:0; background-color: #028870; text-align: center; color: #fff; font-weight: 700; border-radius:14px; width:90px; height:28px;  display: inline-block; z-index: 10; } 
+main .wrap_subsc .menu  { position: absolute; background-color: #fff; text-align: center; color: #B7B7B7; font-weight: normal; border: #B7B7B7 solid 1px; border-radius:14px; width:90px; height:26px; padding-right:15px; display: inline-block; text-align: right; cursor: pointer;} 
+main .wrap_subsc .menu.on   { color: #FF9519;border: #FF9519 solid 1px;font-weight: 700;} 
+main .wrap_subsc .menu:hover { border: #FF9519 solid 1px; color: #FF9519; } 
+main .wrap_subsc .menu.n1   { left:40px; z-index: 9;} 
+main .wrap_subsc .menu.n2   { left:95px;z-index: 8;} 
+main .wrap_subsc .menu.n3   { left:150px;z-index: 7;} 
+main .wrap_subsc .n4        { position: absolute; right:20px; width:80px; height:28px; cursor: pointer;background: url(../images/bul_right.png) right 5px no-repeat; display: inline-block; padding: 0 10px 0 0; text-align: right;font-size: 14px;}
+
+main .wrap_slide_pic { margin: 0 auto; text-align: center;}
+main .wrap_slide_pic .contents       {position: relative; margin: 0 auto; width: 85%; box-shadow: 2px 4px 6px 0 #ccc; border-radius: 10px; border: 1px #ccc solid;padding-bottom: 10px;}
+main .wrap_slide_pic .contents .pic  {border-radius: 10px 10px 0 0; width: 100%;}
+main .wrap_slide_pic .contents .text {text-align: left;}
+main .wrap_slide_pic .contents .text .title             {font-size:18px; font-weight: 700; color:#3a3a3a; padding: 5px 10px 0 15px;}
+main .wrap_slide_pic .contents .text .wrap_info         {display: inline-block; padding:0 0 0px 15px; }
+main .wrap_slide_pic .contents .text .wrap_info .bullet { padding-left: 20px;min-width:60px;margin-right: 20px;}
+main .wrap_slide_pic .contents .text .wrap_info .clock  { background: url(../images/clock.png) 0 2px no-repeat; }
+main .wrap_slide_pic .contents .text .wrap_info .star   { background: url(../images/bul_star.png) 0 2px  no-repeat;}
+main .wrap_slide_pic .contents .text .wrap_info .chat   { background: url(../images/bul_chat.png) 0 2px  no-repeat;}
+
+main .wrap_slide_pic .wrap_dot {padding: 5px 0;}
+main .wrap_slide_pic span  {cursor: pointer;}
+
+
+main .wrap_contents { margin: 0 auto; text-align: center; display: grid; grid-template-columns: repeat(2, 49%); grid-gap: 10px;}
+main .wrap_contents .contents2 { margin: 0 auto; padding-bottom: 10px; position: relative; }
+/* main .wrap_contents .contents2:last-child   { margin-right: 0;} */
+main .wrap_contents .contents2 .pic         {border-radius: 10px; width: 100%; height: 100%;}
+main .wrap_contents .contents2 .text        {text-align: left; font-size: 14px;}
+main .wrap_contents .contents2 .text .title {font-size:14px; font-weight: 700; color:#3a3a3a; padding: 5px 10px 0 0;}
+main .wrap_contents .contents2 .text .longtext  {font-size:12px; color:#666666; padding: 5px 10px 0 0; letter-spacing: -1px; height:40px;}
+main .wrap_contents .contents2 .text .wrap_info {display: inline-block;font-size: 12px; }
+main .wrap_contents .contents2 .text .wrap_info .bullet {padding-left: 20px;overflow: hidden; margin-right: 5px;padding-bottom: 3px;}
+main .wrap_contents .contents2 .text .wrap_info .clock  { background: url(../images/clock.png) 0 2px no-repeat;}
+main .wrap_contents .contents2 .text .wrap_info .star   { background: url(../images/bul_star.png) 0 2px  no-repeat;}
+main .wrap_contents .contents2 .text .wrap_info .chat   { background: url(../images/bul_chat.png) 0 2px  no-repeat;}
+
+main .wrap_filter {position:relative; clear: both; margin: 10px auto; font-size: 14px; overflow: hidden; padding:0 5px;}
+main .wrap_filter .wrap_filter_menu             {overflow: hidden;}
+main .wrap_filter .wrap_filter_menu .title      { color: #B7B7B7;display: inline-block; overflow: hidden; background:url(../images/bul_filter.png) no-repeat; padding-left:25px; padding-bottom: 2px; margin-right: 5px;}
+main .wrap_filter .wrap_filter_menu .menu       {letter-spacing: -1px;cursor: pointer; border: #fff solid 1px;font-weight: normal; display: inline-block; overflow: hidden; padding: 0 4px; margin: 0 1px 0 0;} 
+main .wrap_filter .wrap_filter_menu .menu:hover,
+main .wrap_filter .wrap_filter_menu .menu.on { border: #028870 solid 1px; color: #028870;border-radius:14px; } 
+dot
+main .wrap_filter .wrap_filter_menu .fr          {display: inline-block; margin-bottom: -3px;}
+main .wrap_filter .wrap_filter_menu .fr .view    { cursor: pointer;display: inline-block;text-indent: -99999px; width: 21px;height: 21px;}
+main .wrap_filter .wrap_filter_menu .fr .view.n1 { background: url(../images/icon_sview.png) no-repeat; }
+main .wrap_filter .wrap_filter_menu .fr .view.n2 { background: url(../images/icon_bview.png) no-repeat; }
+
+main .wrap_filter .wrap_contents { clear: both; overflow: hidden;} 
+
+main .squre                 {position: absolute;left:8px; top:5px;  width: 30px; height: 26px; background-color: rgba( 255, 255, 255, 0.5 );letter-spacing: -1px; border-radius: 5px;padding-top: 4px; font-size: 12px; font-weight: 700; color: #028870;}
+main .squre2                {position: absolute;right:8px; top:40px;width: 30px; height: 26px; background-color: rgba( 255, 255, 255, 0.5 );letter-spacing: -1px; border-radius: 5px;padding-top: 4px; font-size: 12px; font-weight: 700; color: #028870;}
+main .bookmark              {position: absolute;right:8px; top:5px; width: 30px; height: 26px;background-color: rgba( 255, 255, 255, 0.5 ); border-radius: 5px;}
+main .wrap_faces            {position: absolute;left:8px; top:5px;}       
+main .wrap_faces .good      {background: url(../images/baby-good.png) no-repeat;}
+main .wrap_faces .bad       {background: url(../images/baby-bad.png) no-repeat;}
+main .wrap_faces .facebg    {width: 30px; height:42px ;  display: inline-block;}
+main .wrap_faces .number    {background: rgba(2, 136, 112, 0.4); padding-top: 20px; padding-bottom: 3px; border-radius: 20px; width:26px; margin-top: -40px; margin-left: 2px; color: #fff; font-size: 12px;}
+
+footer { position: fixed; margin:0 auto; max-width: 700px; background-color: #fff; bottom:0; width: 100%; display:inline-block; overflow: hidden; box-shadow:-1px -3px 9px 0 #ccc}
+footer h2 { text-indent: -99999px;line-height: 0;}
+footer .wrap_indicater {height:60px;margin: 0 auto; padding: 10px 0 0 0; text-align: center;}
+footer .wrap_indicater .menu{width:24%;height:60px;font-size: 10px; font-weight: 700; color: #028870; display: inline-block;text-align: center; padding-top: 32px;}
+footer .wrap_indicater .menu:hover,footer .wrap_indicater .menu.on{color: #FF9519;}
+footer .wrap_indicater .n01{ background: url(../images/f_home_inactive.png) center 0 no-repeat;}
+footer .wrap_indicater .n02{ background: url(../images/f_search_inactive.png) center 0 no-repeat;}
+footer .wrap_indicater .n03{ background: url(../images/f_box_inactive.png) center 0 no-repeat;}
+footer .wrap_indicater .n04{ background: url(../images/f_mypage_inactive.png) center 0 no-repeat;}
+footer .wrap_indicater .n01:hover, footer .wrap_indicater .n01.on{ background: url(../images/f_home_active.png) center 0 no-repeat;}
+footer .wrap_indicater .n02:hover, footer .wrap_indicater .n02.on{ background: url(../images/f_search_active.png) center 0 no-repeat;}
+footer .wrap_indicater .n03:hover, footer .wrap_indicater .n03.on{ background: url(../images/f_box_active.png) center 0 no-repeat;}
+footer .wrap_indicater .n04:hover, footer .wrap_indicater .n04.on{ background: url(../images/f_mypage_active.png) center 0 no-repeat;}
+
+
+
+
+
+
+
+
+
+
+
+body{
+	-ms-overflow-style:none; /* IE and Edge */
+    scrollbar-width:none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+	display:none /* Chrome , Safari , Opera */
+}
+
+
+
+
+
+
+
+
+
+
+
+/* noto-sans-kr-regular - latin_korean */
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/noto-sans-kr-v21-latin_korean-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/noto-sans-kr-v21-latin_korean-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/noto-sans-kr-v21-latin_korean-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/noto-sans-kr-v21-latin_korean-regular.woff') format('woff'), /* Modern Browsers */
+       /* url('../fonts/noto-sans-kr-v21-latin_korean-regular.ttf') format('truetype'), Safari, Android, iOS */
+       url('../fonts/noto-sans-kr-v21-latin_korean-regular.svg#NotoSansKR') format('svg'); /* Legacy iOS */
+}
+
+/* 여백 초기화 */
+* {margin: 0; padding: 0;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,button,label {
+    margin: 0;
+    padding: 0;
+	font-family: 'Noto Sans KR', sans-serif!important;
+}
+
+/* 폰트 초기화 */
+body,button,input,select,table,textarea {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333333;
+}
+
+/* 링크 초기화 */
+a { 
+    color: #4053FF;
+    text-decoration: none
+}
+
+/* 목록 초기화 */
+ol,
+ul {
+    list-style: none
+}
+
+/* 스타일 초기화 */
+strong {
+    font-weight: normal;
+}
+em {
+    font-style: normal;
+}
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+.menu-right a{
+	color:#333;
+	font-size:16px;
+}
+

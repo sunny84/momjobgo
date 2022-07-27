@@ -24,7 +24,7 @@ export default {
           Authorization: `Bearer ${store.getters["user/token"]}`,
           ...headers
         },
-        headers : newHeaders,
+        // headers : newHeaders,
         method: method,
         url,
         data: body,
