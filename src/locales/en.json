@@ -31,6 +31,13 @@
         "allList" : "All"
     },
 
+    "orderBy" : {
+        "newest" : "Newest",
+        "topRated" : "Top rated",
+        "mostRated" : "Most rated",
+        "ingredients" : "Ingredients"
+    },
+
     "content" : {
         "step" : "Step",
         "quantity" : "Qunatity",
