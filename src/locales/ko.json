@@ -9,7 +9,9 @@
         "viewRecipe" : "레시피 상세보기",
         "recipeBox" : "레시피 박스",
         "RecipeFilter" : "필터",
-        "subscribeRecipe" : "구독레시피"
+        "subscribeRecipe" : "구독레시피",
+        "myBaby" : "우리 아기",
+        "whatRecipe" : "어떤 요리가 좋을까요?"
     },
 
     "description" : {
