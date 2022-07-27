@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "title": "없음",
+    "key": "none",
+    "ingredientEntities": [
+      {
+        "id": 2,
+        "name": "찹쌀",
+        "key": "GLUTINOUS_RICE",
+        "categoryKey": 1
+      },
+      {
+        "id": 3,
+        "name": "완두콩",
+        "key": "PEA",
+        "categoryKey": 1
+      },
+      {
+        "id": 4,
+        "name": "옥수수",
+        "key": "CORN",
+        "categoryKey": 1
+      },
+      {
+        "id": 5,
+        "name": "브로콜리",
+        "key": "BROCCOLI",
+        "categoryKey": 1
+      },
+      {
+        "id": 6,
+        "name": "배추",
+        "key": "CHINESE_CABBAGE",
+        "categoryKey": 1
+      },
+      {
+        "id": 7,
+        "name": "무",
+        "key": "WHITE_RADISH",
+        "categoryKey": 1
+      },
+      {
+        "id": 8,
+        "name": "파프리카",
+        "key": "PAPRIKA",
+        "categoryKey": 1
+      },
+      {
+        "id": 9,
+        "name": "애호박",
+        "key": "GREEN_PUMPKIN",
+        "categoryKey": 1
+      },
+      {
+        "id": 10,
+        "name": "근대",
+        "key": "LEAF_BEET",
+        "categoryKey": 1
+      },
+      {
+        "id": 11,
+        "name": "아욱",
+        "key": "CURLED_MALLOW",
+        "categoryKey": 1
+      },
+      {
+        "id": 12,
+        "name": "버섯",
+        "key": "MUSHROOM",
+        "categoryKey": 1
+      },
+      {
+        "id": 13,
+        "name": "가지",
+        "key": "EGGPLANT",
+        "categoryKey": 1
+      },
+      {
+        "id": 14,
+        "name": "오이",
+        "key": "CUCUMBER",
+        "categoryKey": 1
+      },
+      {
+        "id": 15,
+        "name": "청경채",
+        "key": "PAK_CHOI",
+        "categoryKey": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "서류",
+    "key": "rootAndTuberCrops",
+    "ingredientEntities": [
+      {
+        "id": 16,
+        "name": "단호박",
+        "key": "SWEET_PUMPKIN",
+        "categoryKey": 2
+      },
+      {
+        "id": 17,
+        "name": "감자",
+        "key": "POTATO",
+        "categoryKey": 2
+      },
+      {
+        "id": 18,
+        "name": "고구마",
+        "key": "SWEET_POTATO",
+        "categoryKey": 2
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "철분흡수 방해(중기6개월~부터 권장)",
+    "key": "blockIronAbsorption",
+    "ingredientEntities": [
+      {
+        "id": 19,
+        "name": "시금치",
+        "key": "SPINACH",
+        "categoryKey": 3
+      },
+      {
+        "id": 20,
+        "name": "당근",
+        "key": "CARROT",
+        "categoryKey": 3
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "과일류",
+    "key": "fruits",
+    "ingredientEntities": [
+      {
+        "id": 21,
+        "name": "사과",
+        "key": "APPLE",
+        "categoryKey": 4
+      },
+      {
+        "id": 22,
+        "name": "배",
+        "key": "PEAR",
+        "categoryKey": 4
+      },
+      {
+        "id": 23,
+        "name": "바나나",
+        "key": "BANANA",
+        "categoryKey": 4
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "동물성 단백질",
+    "key": "animalProtein",
+    "ingredientEntities": [
+      {
+        "id": 24,
+        "name": "쇠고기",
+        "key": "BEEF",
+        "categoryKey": 5
+      },
+      {
+        "id": 25,
+        "name": "닭살",
+        "key": "CHICKEN",
+        "categoryKey": 5
+      },
+      {
+        "id": 26,
+        "name": "흰살생선",
+        "key": "WHITE_FISH",
+        "categoryKey": 5
+      },
+      {
+        "id": 27,
+        "name": "달걀노른자",
+        "key": "YOLK",
+        "categoryKey": 5
+      },
+      {
+        "id": 28,
+        "name": "두부",
+        "key": "TOFU",
+        "categoryKey": 5
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "필수",
+    "key": "essential",
+    "ingredientEntities": [
+      {
+        "id": 1,
+        "name": "물",
+        "key": "WATER",
+        "categoryKey": 6
+      }
+    ]
+  }
+]
