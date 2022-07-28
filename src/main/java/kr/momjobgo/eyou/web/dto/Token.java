@@ -17,6 +17,7 @@ public class Token {
         @NotBlank(message = "id"+ StaticMessage.Validator.NOT_BLANK)
         @NotNull(message = "id"+ StaticMessage.Validator.NOT_NULL)
         private String snsId;
+        private String nickname;
     }
 
     @Data
