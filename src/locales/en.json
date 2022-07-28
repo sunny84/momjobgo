@@ -70,7 +70,7 @@
 
     "option" : {
         "period" : ["begining(thin rice gruel)", "middle(Porridge)", "latter(soft boiled rice)"],
-        "period_s" : ["begining", "middle", "latter"],
+        "period_s" : [["begining","thin rice gruel"], ["middle","Porridge"], ["latter","soft boiled rice"]],
         "timeTaken" : ["within 15 min", "15 min", "30 min", "60 min", "over 60 min"],
         "timeTaken_s" : ["15M-", "15M", "30M", "60M", "60M+"]
     },
@@ -82,6 +82,15 @@
         "fruits" : "fruits",
         "animalProtein" : "animal protein",
         "essential" : "essential"
+    },
+
+    "ing_category2" : {
+        "none" : ["select ingredient", ""],
+        "rootAndTuberCrops" : ["root and tuber crops", ""],
+        "blockIronAbsorption" : ["block iron absorption", "recommend after 6 months"],
+        "fruits" : ["fruits", ""],
+        "animalProtein" : ["animal protein", ""],
+        "essential" : ["essential", ""]
     },
 
     "ingredient" : {

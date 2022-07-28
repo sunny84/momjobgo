@@ -1,8 +1,8 @@
 <template>
-  <div class="wrap_contents">
+  <div class="wrap_list">
     <div v-for="(recipe, $index) in recipeList" :key="$index">
-      <div class="contents2" >
-        <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`) }}</div>
+      <div class="contents1">
+        <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
         <div v-if="recipe.subscribe!=null" class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
         <div v-else class="bookmark"><img src="@/assets/images/bul_bookmark2.png"></div>
         <ul class="wrap_faces">
@@ -102,7 +102,7 @@ export default {
 <style>
 	/* .filterList {
 		display: grid;
-		grid-template-columns: repeat(2, 80%);
+		grid-template-columns: repeat(2, 48%);
 		grid-auto-rows: 65px;
 		grid-gap: 20px;
 	} */
