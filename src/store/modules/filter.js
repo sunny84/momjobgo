@@ -7,7 +7,7 @@
 
   state : {
     period: -1,
-    timeTaken: -1,
+    timeTaken: 4,
     ingredientIds: [],
     sort: 0,
   },
@@ -33,21 +33,11 @@
   mutations : {
 
     setPeriod(state, period){
-      if(state.period == period){
-        state.period = -1;
-      }else{
-        state.period = period;
-      }
-      // console.log(state.period);
+      state.period = period;
     },
 
     setTimeTaken(state, timeTaken){
-      if(state.timeTaken == timeTaken){
-        state.timeTaken = -1;
-      }else{
-        state.timeTaken = timeTaken;
-      }
-      // console.log(state.timeTaken);
+      state.timeTaken = timeTaken;
     },
 
     setIngredientIds(state, ingredientIds){
