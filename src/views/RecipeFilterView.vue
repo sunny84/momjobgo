@@ -15,7 +15,7 @@
           :range="slider.range"
           :lineHeight="10"
           :processStyle="{ backgroundColor: '#028870' }">
-          <template slot="tooltip" slot-scope="tooltip">
+          <template slot="tooltip">
             <span class="circle" style="position:absolute ;left:0;top:14px;"></span>
           </template>
         </VueSlideBar>
