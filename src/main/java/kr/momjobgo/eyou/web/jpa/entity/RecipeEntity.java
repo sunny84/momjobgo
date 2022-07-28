@@ -1,13 +1,14 @@
 package kr.momjobgo.eyou.web.jpa.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity(name = "RECIPE")
+@DynamicInsert
 public class RecipeEntity {
 
     @Id
@@ -15,20 +16,28 @@ public class RecipeEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "contents_id")
-    private String contentsId;
+    @Column(name = "contents_id", insertable = false, updatable = false)
+    private Long contentsId;
+
+    @OneToOne
+    @JoinColumn(name = "contents_id")
+    private ContentsEntity contentsEntity;
+
+    @OneToMany
+    @JoinColumn(name = "recipe_id")
+    private List<RecipeIngredientMapEntity> recipeIngredientMapEntities;
 
     @Column(name = "period")
-    private String period;
+    private Long period;
 
     @Column(name = "quantity")
-    private String quantity;
+    private Long quantity;
 
     @Column(name = "time_taken_id")
-    private String timeTakenId;
+    private Long timeTakenId;
 
     @Column(name = "open")
-    private String open;
+    private Boolean open;
 
     @Column(name = "clip_link")
     private String clipLink;
@@ -36,11 +45,14 @@ public class RecipeEntity {
     @Column(name = "youtube_link")
     private String youtubeLink;
 
-    @OneToMany
-    @JoinTable(name = "RECIPE_INGREDIENT_MAP",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-    )
-    private List<IngredientEntity> ingredientEntities = new ArrayList<>();
+//    @Column(name = "subscribe")
+//    private Long subscribe;
 
+    @OneToMany
+    @JoinColumn(name = "recipe_id")
+    private List<TipEntity> tipEntities;
+
+    @OneToMany
+    @JoinColumn(name = "recipe_id")
+    private List<CookingOrderEntity> cookingOrderEntities;
 }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -43,7 +44,27 @@ public class FileController {
     ) throws IOException {
         Optional<FileEntity> optional = fileRepository.findById(fileId);
         if(optional.isPresent()){
-            fileService.download(request, response, optional.get());
+            fileService.download(request, response, optional.get(), false);
+        } else {
+            PrintWriter pw = response.getWriter();
+            pw.println("FILE IS NOT EXIST");
+        }
+    }
+
+    @GetMapping("/download/thumbnail")
+    public void downloadThumbNail(
+            HttpServletRequest request, HttpServletResponse response, @RequestParam Long fileId
+    ) throws IOException {
+        Optional<FileEntity> optional = fileRepository.findById(fileId);
+        if(optional.isPresent()){
+            FileEntity fileEntity = optional.get();
+
+            if(fileEntity.getContentType().contains("image")){
+                fileService.download(request, response, fileEntity, true);
+            } else {
+                PrintWriter pw = response.getWriter();
+                pw.println("FILE IS NOT IMAGE");
+            }
         } else {
             PrintWriter pw = response.getWriter();
             pw.println("FILE IS NOT EXIST");

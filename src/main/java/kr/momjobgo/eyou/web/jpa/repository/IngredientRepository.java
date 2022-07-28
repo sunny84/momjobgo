@@ -6,10 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IngredientRepository extends JpaRepository<IngredientEntity, Long> {
+    IngredientEntity findCategoryKeyById(Long id);
 
-//    List<IngredientEntity> findByName(String name);
-//
-//    List<IngredientEntity> findByNameContains(String name);
-
+    IngredientEntity findNameById(Long id);
 
 }

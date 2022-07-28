@@ -9,14 +9,13 @@ import java.util.List;
 @Entity(name = "INGREDIENT_CATEGORY")
 @Data
 public class IngredientCategoryEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "title")
-    private String name;
+    private String title;
 
     @Column(name = "key")
     private String key;
