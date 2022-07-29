@@ -53,7 +53,7 @@ export default {
   methods: {
 
     getImgURL(id) {
-      const url = 'http://localhost:8090/file/download/thumbnail?fileId=' + id;
+      const url = `${this.$API_SERVER}/file/download/thumbnail?fileId=` + id;
       console.log(url);
       return url
     },
@@ -75,7 +75,7 @@ export default {
       }
       if(this.sort == 1) params += '&sort=1';
       console.log(params);
-      const response = await this.$api(`http://localhost:8090/api/Recipe/filter?`+params, `get`);
+      const response = await this.$api(`${this.$API_SERVER}/api/Recipe/filter?`+params, `get`);
       if (response.status === this.HTTP_OK) {
         if(response.data.length){
           // console.log(response.data);

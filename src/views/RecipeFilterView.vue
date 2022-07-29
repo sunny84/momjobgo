@@ -98,7 +98,7 @@ export default {
     },
 
     async callIngredientCategory() {
-      const response = await this.$api("http://localhost:8090/Ingredient/join/category", "get");
+      const response = await this.$api(`${this.$API_SERVER}/Ingredient/join/category`, "get");
 
       if (response.status === this.HTTP_OK) {
         this.ing_data = response.data;

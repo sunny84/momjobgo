@@ -212,7 +212,7 @@ export default {
       }
     },
     async callIngredientCategory() {
-      await this.$api("http://localhost:8090/Ingredient/join/category", "get").then(
+      await this.$api(`${this.$API_SERVER}/Ingredient/join/category`, "get").then(
         (res) => {
           if (res.status === this.HTTP_OK) {
             this.ing_data = res.data;
@@ -527,7 +527,7 @@ export default {
       const allParams = this.makeParams();
 
       const resContents = await this.$api(
-        "http://localhost:8090/api/recipe/write",
+        `${this.$API_SERVER}/api/recipe/write`,
         "post",
         allParams,
         ""
@@ -542,7 +542,7 @@ export default {
 
         // upload files
         const resFiles = await this.$api(
-          "http://localhost:8090/file/upload",
+          `${this.$API_SERVER}/file/upload`,
           "post",
           { contentsId: contentsId },
           formData,
