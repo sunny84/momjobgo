@@ -36,7 +36,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("user", ["setsnsId", "setToken", "setNickname", "setProfile_img"]),
+    ...mapActions("user", ["setSnsId", "setToken", "setNickname", "setProfile_img"]),
 
     loginWithKakao() {
       //로그인
@@ -52,41 +52,40 @@ export default {
             success: function (response) {
               console.log(response); //카카오 계정 정보
               // console.log("response.id:"+response.id);
-              const KsnsId = "K" + response.id; //snsId에 K를 붙여서 카카오로 로그인한ID로 설정해줌
+              const snsId = "K" + response.id; //snsId에 K를 붙여서 카카오로 로그인한ID로 설정해줌
               const nickname = response.properties.nickname; //카카오 닉네임
               const profile_img = response.properties.profile_image; //카카오 프로필이미지
-              // console.log("KsnsId:"+KsnsId);
-              // console.log("nickname:"+nickname);
-              // console.log("profile_img:"+profile_img);
 
-              //kakao 닉네임,프로필사진,이메일정보 vuex저장
+              // kakao Id, 닉네임,프로필사진 vuex저장
+              _this.setSnsId(snsId);
               _this.setNickname(nickname);
               _this.setProfile_img(profile_img);
 
+              console.log("snsId:"+snsId);
+              console.log("nickname:"+nickname);
+              console.log("profile_img:"+profile_img);
+
               this.data = {
                 //backend로 전송될 POST 데이터
-                snsId: KsnsId,
+                snsId: snsId,
+                nickname:nickname
               };
               axios
                 .post(`${_this.$API_SERVER}/user/login`, this.data)
                 .then((response) => {
                   console.log("response: ", response);
-                  // console.log("response.data ",response.data)
-                  // console.log("response", response);
 
                   if (response?.status === _this.HTTP_OK) {
                     const token = response.data.token;
                     // console.log("this (in)", this);
                     console.log("token: " + token);
                     _this.setToken(token);
-                    // location.href='/';
-                    // location.href=this.basePath;
 
-                    // if( !_this.hasToken){ //token 값 확인
-                    //   console.log("token is alive")
-                    //   console.log("token: "+_this.token)
+                    // if( _this.hasToken){ //token 값 확인
+                    //   console.log("token is alive");
+                    //   console.log("hastoken: "+_this.token);
                     // }
-
+                    
                     // 로그인 성공 후 next url로 이동
                     _this.$router.push("/" + _this.nextUrl);
                   }

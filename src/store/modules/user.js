@@ -8,7 +8,7 @@ export default {
     namespaced : true,
 
     state : {
-        token : sessionStorage.getItem('access-token'),
+        token : '',
         user : {
             snsId : ''
         },
@@ -46,10 +46,9 @@ export default {
 
         setToken(state, token){
             state.token = token;
-            sessionStorage.setItem('access-token', token);
         },
 
-        setsnsId(state, snsId){
+        setSnsId(state, snsId){
             state.user.snsId = snsId;
         },
 
@@ -64,12 +63,11 @@ export default {
 
     actions : {
 
-        setsnsId({commit}, snsId){
-            commit('setsnsId', snsId);
+        setSnsId({commit}, snsId){
+            commit('setSnsId', snsId);
         },
         
         setToken({commit}, token){
-            //console.log("token", token);
             commit('setToken', token);
         },
 
