@@ -48,7 +48,7 @@ jobs:
           SOURCE: build/libs
           # Target directory
           TARGET: /home/mjg/deploy_dir
-      - name: executing remote ssh commands using password
+      - name: executing remote ssh commands using SSH key
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
