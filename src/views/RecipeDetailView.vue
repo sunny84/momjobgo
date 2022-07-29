@@ -10,7 +10,7 @@
     <!--대표이미지 -->
     <p>
       <img
-        :src="`http://localhost:8090/file/download?fileId=${recipe_data.mainImgId}`"
+        :src="`${$API_SERVER}/file/download?fileId=${recipe_data.mainImgId}`"
         width="200"
         height="150"
       />
@@ -45,7 +45,7 @@
       <p>{{ order.contentsNo }} : {{ order.contents }}</p>
       <p>
         <img
-          :src="`http://localhost:8090/file/download?fileId=${order.imgId}`"
+          :src="`${$API_SERVER}/file/download?fileId=${order.imgId}`"
           width="200"
           height="150"
         />
@@ -101,7 +101,7 @@ export default {
   methods: {
     async getRecipeById(id) {
       const response = await this.$api(
-        "http://localhost:8090/Recipe/detail=" + id,
+        `${this.$API_SERVER}/Recipe/detail=${id}`,
         "get"
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
@@ -111,7 +111,7 @@ export default {
     },
     async updateOpen() {
       await this.$api(
-        "http://localhost:8090/api/Recipe/updateOpen=" + this.recipeId,
+        `${this.$API_SERVER}/api/Recipe/updateOpen=${this.recipeId}`,
         "get"
       ).then((res) => {
         if (res.status === this.HTTP_OK) {

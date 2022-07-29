@@ -7,8 +7,8 @@ export default {
   data: () => ({
     ...Code,
   }),
-  
-  computed : {
+
+  computed: {
     ...mapGetters("user", ["hasToken"]),
   },
 
@@ -27,12 +27,12 @@ export default {
       return axios({
         headers: {
           Authorization: `Bearer ${store.getters["user/token"]}`,
-          ...headers
+          ...headers,
         },
         method: method,
         url,
         data: body,
-        params : params,
+        params: params,
       }).catch((e) => {
         if (
           e.response.status === this.HTTP_UNAUTHORIZED &&
@@ -52,11 +52,12 @@ export default {
         return e.response;
       });
     },
+
     $checkToken(nextUrl) {
       // 현재 토근이 있는지 확인
-      if(!this.hasToken) {
+      if (!this.hasToken) {
         // 토큰이 없을 때 로그인 페이지로 이동
-        this.$router.push({path : "/login/"+nextUrl });
+        this.$router.push({ path: "/login/" + nextUrl });
       }
     },
   },

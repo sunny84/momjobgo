@@ -72,7 +72,7 @@ export default {
     },
 
     getImgURL(id) {
-      const url = 'http://localhost:8090/file/download/thumbnai?fileId=' + id;
+      const url = `${this.$API_SERVER}/file/download/thumbnai?fileId=${id}`;
       console.log(url);
       return url
     },
@@ -88,7 +88,7 @@ export default {
 
     async callSubscribeList(){
       let params = `period=${this.period}`;
-      const response = await this.$api(`http://localhost:8090/api/reciperecipebox/subscribe?` + params, `get`);
+      const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/subscribe?${params}`, `get`);
       if (response.status === this.HTTP_OK) {
         this.recipeList = response.data;
       }

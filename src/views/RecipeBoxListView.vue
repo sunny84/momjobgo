@@ -20,7 +20,7 @@
                   <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
                     <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
                       <p><img
-                        :src="r.mainImgId?`http://localhost:8090/file/download/thumbnail?fileId=${r.mainImgId}`:mainPicture"
+                        :src="r.mainImgId?`${$API_SERVER}/file/download/thumbnail?fileId=${r.mainImgId}`:mainPicture"
                         width="200px" 
                         height="150px" 
                         @error="setEmptyImg"
@@ -92,7 +92,7 @@ export default {
 
     async getRecipeBoxAll() {      
       const response = await this.$api(
-        `http://localhost:8090/api/recipebox/mine`,
+        `${this.$API_SERVER}/api/recipebox/mine`,
         "get"
       );
       if (response.status === this.HTTP_OK) {
@@ -110,7 +110,7 @@ export default {
         console.log("addNewBox : "+name);
         this.boxName = name;
         const response = await this.$api(
-          `http://localhost:8090/api/recipebox/${name}`,
+          `${this.$API_SERVER}/api/recipebox/${name}`,
           "post"
         );
         if (response.status === this.HTTP_OK) {
@@ -124,7 +124,7 @@ export default {
     },
     async getFileId(id){
         const response = await this.$api(
-          `http://localhost:8090/file?contentsId=${id}`,
+          `${this.$API_SERVER}/file?contentsId=${id}`,
           "get"
         );
         if (response.status === this.HTTP_OK) {

@@ -15,7 +15,7 @@
             <router-link :to="'/recipedetail/'+recipe.recipeId">
             <p>n/m</p>
             <img 
-              :src="recipe.mainImg?`http://localhost:8090/file/download/thumbnail?fileId=${recipe.mainImg}`:mainPicture"
+              :src="recipe.mainImg?`${$API_SERVER}/file/download/thumbnail?fileId=${recipe.mainImg}`:mainPicture"
               width="200px" 
               height="150px" 
               @error="setEmptyImg"
@@ -28,7 +28,7 @@
                 <router-link :to="'/recipedetail/'+recipe.recipeId">
                   <p>{{ order.contentsNo }}/{{ recipe.cookingOrder.length }}</p>
                   <img 
-                    :src="order.imgId?`http://localhost:8090/file/download/thumbnail?fileId=${order.imgId}`:mainPicture" 
+                    :src="order.imgId?`${$API_SERVER}/file/download/thumbnail?fileId=${order.imgId}`:mainPicture" 
                     width="200px" 
                     height="150px" 
                     @error="setEmptyImg"
@@ -80,7 +80,7 @@ export default {
       },
       async getDefaultBoxId() {
         const response = await this.$api(
-        `http://localhost:8090/api/recipebox/default`,
+        `${this.$API_SERVER}/api/recipebox/default`,
         "get"
         );
         if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
@@ -89,7 +89,7 @@ export default {
         if(response.data.isNaN){
           // create Default Box
           const response = await this.$api(
-          `http://localhost:8090/api/recipebox/default`,
+          `${this.$API_SERVER}/api/recipebox/default`,
           "post",
           {}
           );
@@ -101,7 +101,7 @@ export default {
       async getMyRecipeList() {
           this.list = [];
           const response = await this.$api(
-          `http://localhost:8090/api/Recipe/mine`,
+          `${this.$API_SERVER}/api/Recipe/mine`,
           "get",
           );            
           if (response.status === this.HTTP_OK) {
@@ -123,7 +123,7 @@ export default {
         }
         // 기본박스에 저장
         const response = await this.$api(
-        `http://localhost:8090/api/reciperecipebox?box=${this.defaultRecipeBox.id}&recipe=${recipeId}`,
+        `${this.$API_SERVER}/api/reciperecipebox?box=${this.defaultRecipeBox.id}&recipe=${recipeId}`,
         "post"
         );
         if (response.status === this.HTTP_OK) {
@@ -142,7 +142,7 @@ export default {
       async updateRecipeBox(name) {
         console.log("updateRecipeBox : "+name);
         const response = await this.$api(
-        `http://localhost:8090/api/recipebox/${this.defaultRecipeBox.id}`,
+        `${this.$API_SERVER}/api/recipebox/${this.defaultRecipeBox.id}`,
         "patch",
         {name: name}
         );
