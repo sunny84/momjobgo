@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ThumbnailMaker {
 
-    public static void imageMaker(File imageFile, String imgFormat, String targetPath) throws IOException {
+    public static void makeThumbnail(File imageFile, String imgFormat, String targetPath) throws IOException {
 
         int newWidth = 300;                                  // 변경 할 넓이
         int newHeight = 200;                                 // 변경 할 높이

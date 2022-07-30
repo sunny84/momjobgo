@@ -8,6 +8,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.HttpAuthenticationScheme;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -22,9 +23,10 @@ import java.util.List;
 public class SwaggerConfigV3 {
     @Bean
     public Docket api() {
+
         return new Docket(DocumentationType.OAS_30)
                 .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
+                .securitySchemes(Arrays.asList(schemes()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("kr.momjobgo.eyou"))
                 .paths(PathSelectors.any())
@@ -44,8 +46,8 @@ public class SwaggerConfigV3 {
         return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
     }
 
-    private ApiKey apiKey() {
-        return new ApiKey("Authorization", "Authorization", "header");
+    private HttpAuthenticationScheme schemes() {
+        return HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("Authorization").build();
     }
 }
 

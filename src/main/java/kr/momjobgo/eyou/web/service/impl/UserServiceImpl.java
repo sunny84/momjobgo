@@ -31,8 +31,6 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserEntity> entity = userRepository.findBySnsId(request.getSnsId());
 
-        System.out.println("entity : " + entity);
-
         String token = null;
 
         if(entity.isPresent()){
@@ -40,6 +38,7 @@ public class UserServiceImpl implements UserService {
         } else {
             UserEntity newUser = new UserEntity();
             newUser.setSnsId(request.getSnsId());
+            newUser.setNickname(request.getNickname());
             token = JwtTokenProvider.generateToken(userRepository.save(newUser));
         }
 

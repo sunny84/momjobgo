@@ -83,7 +83,7 @@ public class FileService {
 
                         System.out.println(">>>>>>>> imgFormat : "+ imgFormat);
 
-                        ThumbnailMaker.imageMaker(file, imgFormat, FIX_PATH + filePath + File.separator + THUMBNAIL_PATH + File.separator + saveFileName);
+                        ThumbnailMaker.makeThumbnail(file, imgFormat, FIX_PATH + filePath + File.separator + THUMBNAIL_PATH + File.separator + saveFileName);
                     }
 
                 } catch (IllegalStateException e) {
