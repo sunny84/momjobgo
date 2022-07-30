@@ -32,11 +32,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters("user", ["snsId", "token", "nickname", "profile_img"]),
+    ...mapGetters("user", ["id","snsId", "token", "nickname", "profile_img"]),
   },
 
   methods: {
-    ...mapActions("user", ["setSnsId", "setToken", "setNickname", "setProfile_img"]),
+    ...mapActions("user", ["setId","setSnsId", "setToken", "setNickname", "setProfile_img"]),
 
     loginWithKakao() {
       //로그인
@@ -61,10 +61,6 @@ export default {
               _this.setNickname(nickname);
               _this.setProfile_img(profile_img);
 
-              // console.log("snsId:"+snsId);
-              // console.log("nickname:"+nickname);
-              // console.log("profile_img:"+profile_img);
-
               this.data = {
                 //backend로 전송될 POST 데이터
                 snsId: snsId,
@@ -78,8 +74,10 @@ export default {
                   if (response?.status === _this.HTTP_OK) {
                     const token = response.data.token;
                     // console.log("this (in)", this);
-                    console.log("token: " + token);
                     _this.setToken(token);
+
+                    const id = response.data.id;
+                    _this.setId(id);
 
                     // if( _this.hasToken){ //token 값 확인
                     //   console.log("token is alive");
