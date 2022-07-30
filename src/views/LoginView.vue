@@ -61,9 +61,9 @@ export default {
               _this.setNickname(nickname);
               _this.setProfile_img(profile_img);
 
-              console.log("snsId:"+snsId);
-              console.log("nickname:"+nickname);
-              console.log("profile_img:"+profile_img);
+              // console.log("snsId:"+snsId);
+              // console.log("nickname:"+nickname);
+              // console.log("profile_img:"+profile_img);
 
               this.data = {
                 //backend로 전송될 POST 데이터
