@@ -161,6 +161,7 @@
 
 <script>
 import emptyImg from "@/assets/emptyImg.png";
+import { mapGetters } from "vuex";
 
 export default {
   name: "RecipeWriteView",
@@ -181,6 +182,10 @@ export default {
     youtubeUrl: "",
     clipUrl: "",
   }),
+
+  computed: {
+    ...mapGetters("user", ["id"]),
+  },
 
   created() {
     this.callIngredientCategory();
@@ -389,7 +394,7 @@ export default {
       if (
         this.clipUrl.trim() != "" &&
         this.clipUrl.indexOf("youtube.com/") < 0 &&
-        this.clipUrl.indexOf("youtu.be/")
+        this.clipUrl.indexOf("youtu.be/") < 0
       ) {
         alert("클립 영상은 유투브 영상만 허용됩니다. 올바른 주소를 입력해주세요");
         return false;
@@ -397,7 +402,7 @@ export default {
       if (
         this.youtubeUrl.trim() != "" &&
         this.youtubeUrl.indexOf("youtube.com/") < 0 &&
-        this.youtubeUrl.indexOf("youtu.be/")
+        this.youtubeUrl.indexOf("youtu.be/") < 0
       ) {
         alert("영상은 유투브 영상만 허용됩니다. 올바른 주소를 입력해주세요");
         return false;
@@ -471,7 +476,7 @@ export default {
         // for content table
         contentsEntity: {
           category: 0, // content category id for recipe
-          writer: 1, // id of user table
+          writer: this.id, // id of user table
           title: this.title,
           subTitle: this.subTitle,
         },
@@ -504,12 +509,6 @@ export default {
       for (let i = 0; i < this.cookingOrder.length; i++) {
         // change file name
         var filename = this.cookingOrder[i].fileData.name;
-        console.log(
-          "C" +
-            filename.substring(0, filename.lastIndexOf(".")) +
-            String(i + 1).padStart(2, 0) +
-            filename.substring(filename.lastIndexOf("."), filename.length)
-        );
 
         formData.append(
           "file",
@@ -526,19 +525,16 @@ export default {
 
       const allParams = this.makeParams();
 
+      // Insert new recipe
       const resContents = await this.$api(
-        `${this.$API_SERVER}/api/recipe/write`,
+        `${this.$API_SERVER}/api/Recipe/write`,
         "post",
-        allParams,
-        ""
+        "",
+        allParams
       );
       if (resContents.status == this.HTTP_OK) {
         const contentsId = resContents.data.contentsId;
         const recipeId = resContents.data.recipeId;
-
-        console.log(
-          "[write result] contestId : " + contentsId + ", recipeId : " + recipeId
-        );
 
         // upload files
         const resFiles = await this.$api(

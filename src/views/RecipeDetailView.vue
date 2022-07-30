@@ -5,7 +5,13 @@
     <h4 v-else>{{ $t("title.previewRecipe") }}</h4>
 
     <!-- 작성자 정보 -->
-    <p>{{ recipe_data.writer }}</p>
+    <p>
+      {{
+        recipe_data.writer.nickname
+          ? recipe_data.writer.nickname
+          : recipe_data.writer.snsId.substr(0, 5) + "..."
+      }}
+    </p>
 
     <!--대표이미지 -->
     <p>
@@ -65,20 +71,20 @@
           - 정상 : iframe으로  display
           - 비정상 : broken movive image로 display -->
     <div v-if="recipe_data.clipLink">
-      clip url이 삽입될 예정
-      <!-- <iframe id="clip" width="200" height="150" :src="recipe_data.clipLink"></iframe> -->
+      <iframe id="clip" width="200" height="150" :src="recipe_data.clipLink"></iframe>
+      <!-- {{ recipe_data.clipLink }} -->
     </div>
 
     <!-- youtube link -->
     <div v-if="recipe_data.youtubeLink">
-      <a :href="recipe_data.youtubeLink">Youtube Full 영상보기</a>
+      <a :href="recipe_data.youtubeLink" target="_blank">Youtube Full 영상보기</a>
     </div>
 
     <!-- 이용후기 -->
     <!-- 구현이 된다면.... -->
 
     <!-- 밀어서 공개하기 -->
-    <div v-if="recipe_data.open === false">
+    <div v-if="recipe_data.open === false && recipe_data.writer.id === this.id">
       {{ $t("description.publishRecipe") }}<br />
       <button @click="updateOpen">{{ $t("button.slideAndPublish") }}</button>
     </div>
@@ -86,6 +92,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "RecipeDetailView",
   data: () => ({
@@ -93,7 +101,11 @@ export default {
     recipe_data: [],
   }),
 
-  created() {
+  computed: {
+    ...mapGetters("user", ["id"]),
+  },
+
+  mounted() {
     this.recipeId = this.$route.params.recipeId;
     this.getRecipeById(this.recipeId);
   },
