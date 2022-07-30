@@ -10,6 +10,9 @@ export default {
     state : {
         token : '',
         user : {
+            id : ''
+        },
+        user : {
             snsId : ''
         },
         user : {
@@ -21,6 +24,10 @@ export default {
     },
 
     getters : {
+        id(state){
+            return state.user.id;
+        },
+
         snsId(state){
             return state.user.snsId;
         },
@@ -44,6 +51,10 @@ export default {
 
     mutations : {
 
+        setId(state, id){
+            state.user.id = id;
+        },
+
         setToken(state, token){
             state.token = token;
         },
@@ -62,6 +73,10 @@ export default {
     },
 
     actions : {
+
+        setId({commit}, id){
+            commit('setId', id);
+        },
 
         setSnsId({commit}, snsId){
             commit('setSnsId', snsId);
