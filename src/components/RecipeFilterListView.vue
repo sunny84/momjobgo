@@ -1,8 +1,8 @@
 <template>
-  <div class="wrap_contents">
+  <div class="wrap_list">
     <div v-for="(recipe, $index) in recipeList" :key="$index">
-      <div class="contents2" >
-        <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`) }}</div>
+      <div class="contents1">
+        <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
         <div v-if="recipe.subscribe!=null" class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
         <div v-else class="bookmark"><img src="@/assets/images/bul_bookmark2.png"></div>
         <ul class="wrap_faces">
@@ -53,7 +53,7 @@ export default {
   methods: {
 
     getImgURL(id) {
-      const url = 'http://localhost:8090/file/download/thumbnail?fileId=' + id;
+      const url = `${this.$API_SERVER}/file/download/thumbnail?fileId=` + id;
       console.log(url);
       return url
     },
@@ -75,7 +75,7 @@ export default {
       }
       if(this.sort == 1) params += '&sort=1';
       console.log(params);
-      const response = await this.$api(`http://localhost:8090/api/Recipe/filter?`+params, `get`);
+      const response = await this.$api(`${this.$API_SERVER}/api/Recipe/filter?`+params, `get`);
       if (response.status === this.HTTP_OK) {
         if(response.data.length){
           // console.log(response.data);
@@ -102,7 +102,7 @@ export default {
 <style>
 	/* .filterList {
 		display: grid;
-		grid-template-columns: repeat(2, 80%);
+		grid-template-columns: repeat(2, 48%);
 		grid-auto-rows: 65px;
 		grid-gap: 20px;
 	} */

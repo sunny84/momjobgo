@@ -68,7 +68,7 @@ export default {
                 snsId: KsnsId,
               };
               axios
-                .post("http://localhost:8090/user/login", this.data)
+                .post(`${_this.$API_SERVER}/user/login`, this.data)
                 .then((response) => {
                   console.log("response: ", response);
                   // console.log("response.data ",response.data)

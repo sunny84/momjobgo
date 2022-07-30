@@ -3,9 +3,9 @@
     <div class="wrap_subsc">
       <ul>
         <li class="title">{{ $t(`title.subscribeRecipe`) }}</li>
-        <li class="menu n1" :class="{ on : period == 0 }" @click="setPeriod(0)">{{ $t(`option.period_s[0]`) }}</li>
-        <li class="menu n2" :class="{ on : period == 1 }" @click="setPeriod(1)">{{ $t(`option.period_s[1]`) }}</li>
-        <li class="menu n3" :class="{ on : period == 2 }" @click="setPeriod(2)">{{ $t(`option.period_s[2]`) }}</li>
+        <li class="menu n1" :class="{ on : period == 0 }" @click="setPeriod(0)">{{ $t(`option.period_s[0]`)[0] }}</li>
+        <li class="menu n2" :class="{ on : period == 1 }" @click="setPeriod(1)">{{ $t(`option.period_s[1]`)[0] }}</li>
+        <li class="menu n3" :class="{ on : period == 2 }" @click="setPeriod(2)">{{ $t(`option.period_s[2]`)[0] }}</li>
         <li class="n4">{{ $t(`menu.allList`) }} </li>
       </ul>
     </div><!--end.wrap_subsc-->
@@ -14,7 +14,7 @@
         <slide v-for="(recipe, $index) in recipeList" :key="$index" class="slide">
           <div class="wrap_slide_pic">
             <div class="contents">
-              <div class="squre">{{ $t(`option.period_s[${recipe.period}]`) }}</div>
+              <div class="squre">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
               <div class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
               <div class="wrap_faces" style="position: absolute;left:8px; top:40px;">
                 <ul class="fl">
@@ -72,7 +72,7 @@ export default {
     },
 
     getImgURL(id) {
-      const url = 'http://localhost:8090/file/download/thumbnai?fileId=' + id;
+      const url = `${this.$API_SERVER}/file/download/thumbnai?fileId=${id}`;
       console.log(url);
       return url
     },
@@ -88,7 +88,7 @@ export default {
 
     async callSubscribeList(){
       let params = `period=${this.period}`;
-      const response = await this.$api(`http://localhost:8090/api/reciperecipebox/subscribe?` + params, `get`);
+      const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/subscribe?${params}`, `get`);
       if (response.status === this.HTTP_OK) {
         this.recipeList = response.data;
       }

@@ -3,10 +3,12 @@
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/write">{{ $t("title.writeRecipe") }}</router-link> |
-      <router-link to="/recipedetail/26">{{ $t("title.viewRecipe") }}</router-link> |
-      <router-link to="/recipeboxlist">{{ $t("title.recipeBox") }}</router-link> |
-      <router-link to="/login">login</router-link> |
-      <router-link to="/about">About</router-link> |
+      <router-link to="/recipedetail/26">{{
+        $t("title.viewRecipe")
+      }}</router-link>
+      |
+      <router-link to="/recipeboxlist">{{ $t("title.recipeBox") }}</router-link>
+      | <router-link to="/login">login</router-link> |
       <!-- <router-link to="/filter">{{ $t("title.RecipeFilter") }}</router-link> | -->
       <router-link to="/recipelist">RecipeList</router-link>
     </nav>
@@ -31,9 +33,8 @@
 
 <script>
 import i18n from "@/i18n";
-import '@/assets/css/common.css';
-import '@/assets/css/eu.css';
-import { mapGetters, mapActions } from "vuex";
+import "@/assets/css/common.css";
+import "@/assets/css/eu.css";
 
 export default {
   methods: {

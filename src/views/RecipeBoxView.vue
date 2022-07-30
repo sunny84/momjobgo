@@ -215,7 +215,7 @@ export default {
         },
         async getRecipeBoxList() {            
             const response = await this.$api(
-            `http://localhost:8090/api/recipebox/mine`,
+            `${this.$API_SERVER}/api/recipebox/mine`,
             "get"
             );
             if (response.status === this.HTTP_OK) {
@@ -224,7 +224,7 @@ export default {
         },
         async getRecipeBoxById(id) {
             const response = await this.$api(
-            `http://localhost:8090/api/recipebox/${id}`,
+            `${this.$API_SERVER}/api/recipebox/${id}`,
             "get"
             );
             if (response.status === this.HTTP_OK) {
@@ -234,7 +234,7 @@ export default {
         async getRecipeRecipeBoxList(id) {
             this.recipeList = [];
             const response = await this.$api(
-            `http://localhost:8090/api/reciperecipebox/recipe`,
+            `${this.$API_SERVER}/api/reciperecipebox/recipe`,
             "get",
             {box: id}
             );            
@@ -250,7 +250,7 @@ export default {
                         recipeId: obj.recipeId,
                         contentsId: obj.contentsId,
                         fileId: obj.fileId,
-                        file: obj.fileId?`http://localhost:8090/file/download/thumbnail?fileId=${obj.fileId}`:this.mainPicture,
+                        file: obj.fileId?`${this.$API_SERVER}/file/download/thumbnail?fileId=${obj.fileId}`:this.mainPicture,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
@@ -270,7 +270,7 @@ export default {
                 this.tempBoxId.forEach(async (id, index, arr) => {     
                 // console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);           
                     const response = await this.$api(
-                    `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                    `${this.$API_SERVER}/api/reciperecipebox/${this.selectedRecipeBox.id}`,
                     "post",
                     {
                         recipe: item,
@@ -313,7 +313,7 @@ export default {
             console.log("addNewBox : "+name);
             this.boxName = name;
             const response = await this.$api(
-            `http://localhost:8090/api/recipebox/${name}`,
+            `${this.$API_SERVER}/api/recipebox/${name}`,
             "post"
             );
             if (response.status === this.HTTP_OK) {
@@ -325,7 +325,7 @@ export default {
             this.tempBoxId.forEach( async(id, index, arr) => {
                 console.log("deleteBoxId: "+id);
                 const response = await this.$api(
-                `http://localhost:8090/api/recipebox/${id}`,
+                `${this.$API_SERVER}/api/recipebox/${id}`,
                 "delete"
                 );
                 if (response.status === this.HTTP_OK) {
@@ -340,7 +340,7 @@ export default {
             this.checkedRecipeIds.forEach(async (item, index, arr) => {
                 console.log(`${this.selectedRecipeBox.id}?recipe=${item}`);
                 const response = await this.$api(
-                `http://localhost:8090/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                `${this.$API_SERVER}/api/reciperecipebox/${this.selectedRecipeBox.id}`,
                 "delete",
                 { recipe: item }
                 );
