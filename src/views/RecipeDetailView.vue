@@ -7,7 +7,7 @@
     <!-- 작성자 정보 -->
     <p>
       {{
-        recipe_data.writer.nickname
+        recipe_data.writer.nickname !== null
           ? recipe_data.writer.nickname
           : recipe_data.writer.snsId.substr(0, 5) + "..."
       }}
@@ -39,7 +39,7 @@
     </p>
     <p>
       <span v-for="(ing, idx) in recipe_data.ingredients" :key="idx">
-        <span>{{ $t("ingredient." + ing.key) }} : {{ ing.volume }} </span>
+        <span> {{ $t("ingredient." + ing.key) }} : {{ ing.volume }} </span>
         <span v-if="ing.key !== 'WATER'">g</span>
         <span v-else>ml</span><br v-if="idx % 2 === 1"
       /></span>
@@ -105,7 +105,7 @@ export default {
     ...mapGetters("user", ["id"]),
   },
 
-  mounted() {
+  created() {
     this.recipeId = this.$route.params.recipeId;
     this.getRecipeById(this.recipeId);
   },
@@ -113,7 +113,7 @@ export default {
   methods: {
     async getRecipeById(id) {
       const response = await this.$api(
-        `${this.$API_SERVER}/Recipe/detail=${id}`,
+        `${this.$API_SERVER}/Recipe/detail/${id}`,
         "get"
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
@@ -123,8 +123,8 @@ export default {
     },
     async updateOpen() {
       await this.$api(
-        `${this.$API_SERVER}/api/Recipe/updateOpen=${this.recipeId}`,
-        "get"
+        `${this.$API_SERVER}/api/Recipe/updateOpen/${this.recipeId}`,
+        "patch"
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
           console.log("레시피 공개 완료");
