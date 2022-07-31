@@ -17,9 +17,9 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build_and_deploy:
+    if: github.repository == 'jnhk123'
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
