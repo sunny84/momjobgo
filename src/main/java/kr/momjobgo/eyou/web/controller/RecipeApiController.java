@@ -30,8 +30,8 @@ public class RecipeApiController {
         return ResponseEntity.ok().body(recipeApiService.write(req, request));
     }
 
-    @PatchMapping("/updateOpen={id}")
-    public ResponseEntity<?> updateOpen(Long id) {
+    @PatchMapping("/updateOpen/{id}")
+    public ResponseEntity<?> updateOpen(@PathVariable Long id) {
         return ResponseEntity.ok().body(recipeApiService.updateOpen(id));
     }
 }

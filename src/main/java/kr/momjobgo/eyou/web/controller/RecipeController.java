@@ -47,7 +47,7 @@ public class RecipeController {
     @GetMapping("/contents={contentsId}")
     public ResponseEntity<?> getByContentsId(@PathVariable Long contentsId) { return ResponseEntity.ok().body( recipeService.getByContentsId(contentsId) ); }
     
-    @GetMapping("/detail={id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<?> getDetailById(@PathVariable Long id) {
         if(!recipeService.getDetailById(id).isEmpty())
             return ResponseEntity.ok().body(recipeService.getDetailById(id));
