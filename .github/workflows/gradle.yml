@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build_and_deploy:
     if: github.repository == 'jnhk123/eyou'
     runs-on: ubuntu-latest
     steps:
