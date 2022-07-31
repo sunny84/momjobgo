@@ -18,9 +18,8 @@ permissions:
 
 jobs:
   build:
+    if: github.repository == 'jnhk123/eyou'
     runs-on: ubuntu-latest
-    if: github.repository == jnhk123/eyou
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
