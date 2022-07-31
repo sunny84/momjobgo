@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   build_and_deploy:
-    if: github.repository == 'jnhk123'
+    if: github.repository == 'jnhk123/eyou'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
