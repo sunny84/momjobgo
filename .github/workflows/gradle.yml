@@ -9,10 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: ["jnhk123/master"]
-    
+    branches: ["master"]
   pull_request:
-    branches: ["jnhk123/master"]
+    branches: ["master"]
 
 permissions:
   contents: read
@@ -20,6 +19,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.repository == 'jnhk123/eyou'
 
     steps:
       - uses: actions/checkout@v3
