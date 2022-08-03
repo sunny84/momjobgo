@@ -38,6 +38,10 @@ export default {
     FilterListView,
   },
 
+  mounted() {
+    this.$checkToken("recipelist");
+  },
+
   computed : {  
     ...mapGetters('filter', ['sort'])
   },
