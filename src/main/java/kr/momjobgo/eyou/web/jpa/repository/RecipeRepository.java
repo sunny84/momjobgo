@@ -50,9 +50,9 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 //            "ORDER BY COUNT(DISTINCT rim.ingredient_id) DESC, " +
             "ORDER BY (CASE WHEN :IdsCnt = 0 THEN 0=0 " +
                             "ELSE COUNT(DISTINCT rim.ingredient_id) END) DESC, " +
-                "(CASE " +
-                    "WHEN :sort IS NULL THEN c.updated_at " +
-                    "ELSE AVG(s.score) END) DESC",
+                "(CASE WHEN :sort = 1 THEN AVG(s.score) " +
+                        "ELSE 0=0 END) DESC, " +
+                "c.updated_at DESC",
             nativeQuery = true)
     List<Map<String, Object>> findByFilter(Pageable pageable, @Param("userId") Long userId, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt);
     List<RecipeEntity> findByContentsId(Long contentsId);
