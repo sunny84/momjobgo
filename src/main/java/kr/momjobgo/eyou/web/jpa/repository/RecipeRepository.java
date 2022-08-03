@@ -44,7 +44,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
             "LEFT JOIN RECIPE_INGREDIENT_MAP rim ON rim.recipe_id = r.id " +
             "WHERE r.open = true " +
                 "AND (:period IS NULL OR r.period = :period) " +
-                "AND (:timeTakenId IS NULL OR r.time_taken_id = :timeTakenId) " +
+                "AND (:timeTakenId IS NULL OR r.time_taken_id <= :timeTakenId) " +
                 "AND (:IdsCnt = 0 OR rim.ingredient_id IN (:Ids)) " +
             "GROUP BY r.id " +
 //            "ORDER BY COUNT(DISTINCT rim.ingredient_id) DESC, " +
