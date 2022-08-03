@@ -16,6 +16,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     UserRepository userRepository;
     ScoreRepository scoreRepository;
     TimeTakenRepository timeTakenRepository;
+    FileRepository fileRepository;
 
     public RecipeRecipeBoxServiceImpl(
             RecipeRecipeBoxRepository recipeRecipeBoxRepository,
@@ -23,13 +24,15 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             RecipeRepository recipeRepository,
             UserRepository userRepository,
             ScoreRepository scoreRepository,
-            TimeTakenRepository timeTakenRepository) {
+            TimeTakenRepository timeTakenRepository,
+            FileRepository fileRepository) {
                 this.recipeRecipeBoxRepository = recipeRecipeBoxRepository;
                 this.recipeBoxRepository = recipeBoxRepository;
                 this.recipeRepository = recipeRepository;
                 this.userRepository = userRepository;
                 this.scoreRepository = scoreRepository;
                 this.timeTakenRepository = timeTakenRepository;
+                this.fileRepository = fileRepository;
             }
     @Override
     public List<RecipeRecipeBoxEntity> getAll() { return recipeRecipeBoxRepository.findAll(); }
@@ -62,9 +65,9 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
         List recipes = new ArrayList<>();
         List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, UserManager.getUser().getId());
         if(!recipeRecipeBoxEntity.isEmpty()){
-            recipeRecipeBoxEntity.forEach(item -> {
+            recipeRecipeBoxEntity.forEach(rrb -> {
                 Map<String, Object> recipe = new HashMap<>();
-                Optional<RecipeEntity> recipeEntity = recipeRepository.findById(item.getRecipe().getId());
+                Optional<RecipeEntity> recipeEntity = recipeRepository.findById(rrb.getRecipe().getId());
                 if(recipeEntity.isPresent()){
                     recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
                     recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
@@ -78,6 +81,13 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                     }
                     recipe.put("period", recipeEntity.get().getPeriod());
                     recipe.put("recipeId", recipeEntity.get().getId());
+                    recipe.put("contentsId", recipeEntity.get().getContentsId());
+                    List<FileEntity> fileEntity = fileRepository.findByContentsId(recipeEntity.get().getContentsId());
+                    fileEntity.forEach(file -> {
+                        if(file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
+                            recipe.put("fileId", file.getId());
+                        }
+                    });
                 }
                 recipes.add(recipe);
             });
@@ -97,17 +107,16 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     }
 
     @Override
-    public List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndRecipeIdAndUserId(Long boxId, Long recipeId, Long userId) {
-        return recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(boxId, recipeId, userId);
-    }
-
-    @Override
     public RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId) {
         Long userId = UserManager.getUser().getId();
-        List<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(boxId, recipeId, userId);
-        if(findRecipeBox.isEmpty()){
-            RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
+        Optional<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(boxId, recipeId, userId);
 
+        if(findRecipeBox.isPresent()) {
+            System.out.println("이미 존재합니다.");
+            return findRecipeBox.get();
+        }
+        else{
+            RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
             RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
             recipeBoxEntity.setId(boxId);
             RecipeEntity recipeEntity = new RecipeEntity();
@@ -120,20 +129,51 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             recipeRecipeBoxEntity.setUser(userEntity);
             return recipeRecipeBoxRepository.save(recipeRecipeBoxEntity);
         }
-        else{
-//            System.out.println("이미 존재합니다.");
-            return findRecipeBox.get(0);
+    }
+
+    @Override
+    public RecipeRecipeBoxEntity moveRecipeBox(Long fromBoxId, Long recipeId, Long toBoxId) {
+        Long userId = UserManager.getUser().getId();
+        Optional<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(fromBoxId, recipeId, userId);
+        if(findRecipeBox.isPresent()){
+            recipeRecipeBoxRepository.deleteById(findRecipeBox.get().getId());
         }
+
+        RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
+        RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
+        recipeBoxEntity.setId(toBoxId);
+        RecipeEntity recipeEntity = new RecipeEntity();
+        recipeEntity.setId(recipeId);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+
+        recipeRecipeBoxEntity.setRecipeBox(recipeBoxEntity);
+        recipeRecipeBoxEntity.setRecipe(recipeEntity);
+        recipeRecipeBoxEntity.setUser(userEntity);
+        return recipeRecipeBoxRepository.save(recipeRecipeBoxEntity);
     }
 
     @Override
     public String deleteRecipeRecipeBox(Long id) {
         if(recipeRecipeBoxRepository.findById(id).isPresent()) {
             recipeRecipeBoxRepository.deleteById(id);
-            return "삭제성공";
+            return "Success to delete ID";
         }
         else {
-            return "아이디가 존재하지 않음";
+            return "Fail to delete(Not exist ID)";
+        }
+    }
+
+    @Override
+    public Object deleteRecipe(Long id, Long recipeId) {
+        Long userId = UserManager.getUser().getId();
+        Optional<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(id, recipeId, userId);
+        if(findRecipeBox.isPresent()) {
+            recipeRecipeBoxRepository.deleteById(findRecipeBox.get().getId());
+            return "Success to delete recipe";
+        }
+        else {
+            return "Fail to delete(Not exist recipe)";
         }
     }
 

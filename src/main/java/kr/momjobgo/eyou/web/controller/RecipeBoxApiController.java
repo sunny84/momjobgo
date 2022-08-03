@@ -1,21 +1,16 @@
 package kr.momjobgo.eyou.web.controller;
 
-import kr.momjobgo.eyou.config.security.UserManager;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/recipebox")
-public class RecipeBoxController {
+public class RecipeBoxApiController {
     private final RecipeBoxService recipeBoxService;
 
-    public RecipeBoxController(RecipeBoxService recipeBoxService) { this.recipeBoxService = recipeBoxService; }
+    public RecipeBoxApiController(RecipeBoxService recipeBoxService) { this.recipeBoxService = recipeBoxService; }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAll() {
@@ -23,8 +18,8 @@ public class RecipeBoxController {
     }
 
     @GetMapping("/mine")
-    public ResponseEntity<?> getByUser() {
-        return ResponseEntity.ok().body( recipeBoxService.findByUserId(UserManager.getUser().getId()) );
+    public ResponseEntity<?> getReceipeBoxList() {
+        return ResponseEntity.ok().body( recipeBoxService.getReceipeBoxList() );
     }
 
     @GetMapping("/{id}")

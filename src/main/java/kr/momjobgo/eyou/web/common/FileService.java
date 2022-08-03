@@ -30,6 +30,8 @@ public class FileService {
 
     private final String FIX_PATH;
 
+    private final static String THUMBNAIL_PATH = "thumb_nail";
+
     public List<FileEntity> upload(HttpServletRequest req) {
 
         List<FileEntity> returnFileList = new ArrayList<>();
@@ -72,6 +74,18 @@ public class FileService {
                         file.mkdirs();
                     }
                     mf.transferTo(file);
+
+                    if(contentType.contains("image")){
+
+                        int dotIdx = saveFileName.lastIndexOf(".");
+
+                        String imgFormat = saveFileName.substring(dotIdx + 1);
+
+                        System.out.println(">>>>>>>> imgFormat : "+ imgFormat);
+
+                        ThumbnailMaker.makeThumbnail(file, imgFormat, FIX_PATH + filePath + File.separator + THUMBNAIL_PATH + File.separator + saveFileName);
+                    }
+
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -83,11 +97,19 @@ public class FileService {
         return returnFileList;
     }
 
-    public void download(HttpServletRequest request, HttpServletResponse response, FileEntity fileInfo) {
+    public void download(HttpServletRequest request, HttpServletResponse response, FileEntity fileInfo, boolean isThumbnail) {
 
         try {
 
-            File file = new File(FIX_PATH + fileInfo.getPath() + File.separator + fileInfo.getFileSaveName());
+            String filePath = null;
+
+            if(isThumbnail){
+                filePath = FIX_PATH + fileInfo.getPath() + File.separator + THUMBNAIL_PATH + File.separator + fileInfo.getFileSaveName();
+            } else {
+                filePath = FIX_PATH + fileInfo.getPath() + File.separator + fileInfo.getFileSaveName();
+            }
+
+            File file = new File(filePath);
 
             String user_agent = request.getHeader("User-Agent");
             String fileName = encodingFileNameForBrowser(user_agent, file.getName());

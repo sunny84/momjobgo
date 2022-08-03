@@ -1,17 +1,16 @@
 package kr.momjobgo.eyou.web.controller;
 
 import kr.momjobgo.eyou.config.security.UserManager;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeRecipeBoxEntity;
 import kr.momjobgo.eyou.web.service.RecipeRecipeBoxService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reciperecipebox")
-public class RecipeRecipeBoxController {
+public class RecipeRecipeBoxApiController {
     private final RecipeRecipeBoxService recipeRecipeBoxService;
 
-    public RecipeRecipeBoxController(RecipeRecipeBoxService recipeRecipeBoxService) { this.recipeRecipeBoxService = recipeRecipeBoxService; }
+    public RecipeRecipeBoxApiController(RecipeRecipeBoxService recipeRecipeBoxService) { this.recipeRecipeBoxService = recipeRecipeBoxService; }
 
     @GetMapping("/all")
     public ResponseEntity<?> getAll() {
@@ -46,5 +45,23 @@ public class RecipeRecipeBoxController {
 //        Long userId = UserManager.getUser().getId();
 //        System.out.println("===> user ID : "+ userId);
         return ResponseEntity.ok().body( recipeRecipeBoxService.getSubscribeList(1L, period) );
+    ) {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.insertRecipeBox(boxId, recipeId) );
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<?> moveRecipeBox(
+            @PathVariable Long id,
+            @RequestParam(value = "recipe", required = false) Long recipeId,
+            @RequestParam(value = "to", required = false) Long toBoxId
+    ) {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.moveRecipeBox(id, recipeId, toBoxId) );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRecipe(
+            @PathVariable Long id,
+            @RequestParam(value = "recipe", required = false) Long recipeId) {
+        return ResponseEntity.ok().body(recipeRecipeBoxService.deleteRecipe(id, recipeId));
     }
 }
