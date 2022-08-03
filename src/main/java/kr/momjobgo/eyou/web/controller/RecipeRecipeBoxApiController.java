@@ -37,8 +37,14 @@ public class RecipeRecipeBoxApiController {
     public ResponseEntity<?> insertRecipeBox(
             @RequestParam(value = "box", required = false) Long boxId,
             @RequestParam(value = "recipe", required = false) Long recipeId
-    ) {
-        return ResponseEntity.ok().body( recipeRecipeBoxService.insertRecipeBox(boxId, recipeId) );
+    ) { return ResponseEntity.ok().body( recipeRecipeBoxService.insertRecipeBox(boxId, recipeId) ); }
+
+    @GetMapping("/subscribe")
+    public ResponseEntity<?> getSubscribeList(
+            @RequestParam(value = "period", required = false) Long period) {
+//        Long userId = UserManager.getUser().getId();
+//        System.out.println("===> user ID : "+ userId);
+        return ResponseEntity.ok().body(recipeRecipeBoxService.getSubscribeList(1L, period));
     }
 
     @PostMapping("/{id}")

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface RecipeService {
-    List<Map<String, Object>> findByFilter(Pageable pageable, Long sort, Long period, Long timeTakenId, List<Long> Ids);
+    List<Map<String, Object>> findByFilter(Pageable pageable, Long userId, Long sort, Long period, Long timeTakenId, List<Long> Ids);
     List<RecipeEntity> getAll();
 
     List<Map<String, Object>> findByWriter();

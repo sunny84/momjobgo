@@ -176,4 +176,9 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             return "Fail to delete(Not exist recipe)";
         }
     }
+
+    @Override
+    public List<Map<String, Object>> getSubscribeList(Long userId, Long period) {
+        return recipeRecipeBoxRepository.getSubscribeList(userId, period);
+    }
 }

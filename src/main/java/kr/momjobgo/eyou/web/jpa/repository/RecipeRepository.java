@@ -12,42 +12,47 @@ import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
-//    @Query("SELECT r FROM RECIPE r " +
-//            "LEFT JOIN FETCH SCORE s ON r.id = s.recipeId " +
-////            "LEFT JOIN FETCH RECIPE_RECIPEBOX_MAP rrm ON r.id = rrm.recipe " +
+//    @Query(value = "SELECT f.id file_id, rrm.recipe_id subscribe, AVG(s.score) score, r.id, r.period, r.time_taken_id, c.title, c.sub_title FROM RECIPE r " +
+//            "INNER JOIN CONTENTS c ON r.contents_id = c.id " +
+//            "LEFT JOIN SCORE s ON r.id = s.recipe_id " +
+//            "LEFT JOIN (SELECT recipe_id FROM RECIPE_RECIPEBOX_MAP " +
+//                        "WHERE user_id = :userId " +
+//                        "GROUP BY recipe_id) rrm ON r.id = rrm.recipe_id " +
+//            "LEFT JOIN (SELECT id, contents_id FROM FILE " +
+//                        "WHERE file_real_name LIKE BINARY 'M%') f ON f.contents_id = r.contents_id " +
 //            "WHERE r.open = true " +
-////                "AND (:userId IS NULL OR rrm.user = :userId) " +
 //                "AND (:period IS NULL OR r.period = :period) " +
-//                "AND (:timeTakenId IS NULL OR r.timeTakenId = :timeTakenId) " +
+//                "AND (:timeTakenId IS NULL OR r.time_taken_id = :timeTakenId) " +
 //                "AND (:IdsCnt = :v OR r.id IN ( " +
-//                    "SELECT m.recipeId FROM RECIPE_INGREDIENT_MAP m " +
-//                    "WHERE m.ingredientId IN (:Ids) " +
-//                    "GROUP BY m.recipeId " +
-//                    "HAVING COUNT(DISTINCT m.ingredientId) = :IdsCnt)) " +
+//                    "SELECT recipe_id FROM RECIPE_INGREDIENT_MAP " +
+//                    "WHERE ingredient_id IN (:Ids) " +
+//                    "GROUP BY recipe_id " +
+//                    "HAVING COUNT(DISTINCT ingredient_id) = :IdsCnt)) " +
 //            "GROUP BY r.id " +
 //            "ORDER BY (CASE " +
-//                        "WHEN :sort IS NULL THEN r.contentsEntity.updatedAt " +
-//                        "ELSE AVG(s.score) END) DESC")
-    @Query(value = "SELECT rrm.recipe_id subscribe, AVG(s.score) score, r.id, r.period, r.time_taken_id, c.title, c.sub_title FROM RECIPE r " +
+//                        "WHEN :sort IS NULL THEN c.updated_at " +
+//                        "ELSE AVG(s.score) END) DESC",
+//        nativeQuery = true)
+    @Query(value = "SELECT f.id file_id, rrm.recipe_id subscribe, AVG(s.score) score, r.id, r.period, r.time_taken_id, c.title, c.sub_title FROM RECIPE r " +
             "INNER JOIN CONTENTS c ON r.contents_id = c.id " +
             "LEFT JOIN SCORE s ON r.id = s.recipe_id " +
             "LEFT JOIN (SELECT recipe_id FROM RECIPE_RECIPEBOX_MAP " +
-//                        "WHERE user_id = :userId " +
+                        "WHERE user_id = :userId " +
                         "GROUP BY recipe_id) rrm ON r.id = rrm.recipe_id " +
+            "LEFT JOIN (SELECT id, contents_id FROM FILE " +
+                        "WHERE file_real_name LIKE BINARY 'M%') f ON f.contents_id = r.contents_id " +
+            "LEFT JOIN RECIPE_INGREDIENT_MAP rim ON rim.recipe_id = r.id " +
             "WHERE r.open = true " +
                 "AND (:period IS NULL OR r.period = :period) " +
                 "AND (:timeTakenId IS NULL OR r.time_taken_id = :timeTakenId) " +
-                "AND (:IdsCnt = :v OR r.id IN ( " +
-                    "SELECT recipe_id FROM RECIPE_INGREDIENT_MAP " +
-                    "WHERE ingredient_id IN (:Ids) " +
-                    "GROUP BY recipe_id " +
-                    "HAVING COUNT(DISTINCT ingredient_id) = :IdsCnt)) " +
+                "AND (:IdsCnt = :v OR rim.ingredient_id IN (:Ids)) " +
             "GROUP BY r.id " +
-            "ORDER BY (CASE " +
-                        "WHEN :sort IS NULL THEN c.updated_at " +
-                        "ELSE AVG(s.score) END) DESC",
-        nativeQuery = true)
-    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
+            "ORDER BY COUNT(DISTINCT rim.ingredient_id) DESC, " +
+                "(CASE " +
+                    "WHEN :sort IS NULL THEN c.updated_at " +
+                    "ELSE AVG(s.score) END) DESC",
+            nativeQuery = true)
+    List<Map<String, Object>> findByFilter(Pageable pageable, @Param("userId") Long userId, @Param("sort") Long sort, @Param("period") Long period, @Param("timeTakenId") Long timeTakenId, @Param("Ids") List<Long> Ids, @Param("IdsCnt") Long IdsCnt, @Param("v") Long v);
     List<RecipeEntity> findByContentsId(Long contentsId);
 
     Optional<RecipeEntity> findById(Long id);

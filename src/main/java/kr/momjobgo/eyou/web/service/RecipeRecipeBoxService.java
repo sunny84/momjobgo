@@ -17,5 +17,7 @@ public interface RecipeRecipeBoxService {
     RecipeRecipeBoxEntity insertRecipeBox(Long boxId, Long recipeId);
     RecipeRecipeBoxEntity moveRecipeBox(Long fromBoxId, Long recipeId, Long toBoxId);
     String deleteRecipeRecipeBox(Long id);
+
+    List<Map<String, Object>> getSubscribeList(Long userId, Long period);
     Object deleteRecipe(Long id, Long recipeId);
 }

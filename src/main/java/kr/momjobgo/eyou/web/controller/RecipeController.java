@@ -1,5 +1,7 @@
 package kr.momjobgo.eyou.web.controller;
 
+import kr.momjobgo.eyou.config.security.UserManager;
+import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +33,9 @@ public class RecipeController {
                         Ids.add(Long.parseLong(arr[i]));
                     }
                 }
-//                Long userId = UserManager.getUser().getId();
-//                System.out.println("===> user ID : "+ userId);
-                return ResponseEntity.ok().body( recipeService.findByFilter(PageRequest.of(page, 10), sort, period, timeTakenId, Ids) );
+                Long userId = UserManager.getUser().getId();
+                System.out.println("===> user ID : "+ userId);
+                return ResponseEntity.ok().body( recipeService.findByFilter(PageRequest.of(page, 2), userId, sort, period, timeTakenId, Ids) );
             }
 
     @GetMapping("")
