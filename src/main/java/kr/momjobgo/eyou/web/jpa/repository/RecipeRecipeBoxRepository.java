@@ -29,7 +29,8 @@ public interface RecipeRecipeBoxRepository extends JpaRepository<RecipeRecipeBox
             "WHERE rrm.user_id = :userId " +
             "AND r.open  = true " +
             "AND (:period IS NULL OR r.period = :period) " +
-            "GROUP BY rrm.recipe_id ",
+            "GROUP BY rrm.recipe_id " +
+            "LIMIT 5",
             nativeQuery = true)
     List<Map<String, Object>> getSubscribeList(@Param("userId") Long userId, @Param("period") Long period);
 }

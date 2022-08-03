@@ -42,9 +42,9 @@ public class RecipeRecipeBoxApiController {
     @GetMapping("/subscribe")
     public ResponseEntity<?> getSubscribeList(
             @RequestParam(value = "period", required = false) Long period) {
-//        Long userId = UserManager.getUser().getId();
+        Long userId = UserManager.getUser().getId();
 //        System.out.println("===> user ID : "+ userId);
-        return ResponseEntity.ok().body(recipeRecipeBoxService.getSubscribeList(1L, period));
+        return ResponseEntity.ok().body(recipeRecipeBoxService.getSubscribeList(userId, period));
     }
 
     @PostMapping("/{id}")
