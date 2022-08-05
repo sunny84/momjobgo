@@ -1,11 +1,11 @@
 package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.config.security.UserManager;
+import kr.momjobgo.eyou.web.common.GetDateTime;
 import kr.momjobgo.eyou.web.jpa.entity.*;
 import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeRecipeBoxService;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -17,6 +17,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     ScoreRepository scoreRepository;
     TimeTakenRepository timeTakenRepository;
     FileRepository fileRepository;
+    GetDateTime getDateTime;
 
     public RecipeRecipeBoxServiceImpl(
             RecipeRecipeBoxRepository recipeRecipeBoxRepository,
@@ -25,7 +26,8 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             UserRepository userRepository,
             ScoreRepository scoreRepository,
             TimeTakenRepository timeTakenRepository,
-            FileRepository fileRepository) {
+            FileRepository fileRepository,
+            GetDateTime getDateTime) {
                 this.recipeRecipeBoxRepository = recipeRecipeBoxRepository;
                 this.recipeBoxRepository = recipeBoxRepository;
                 this.recipeRepository = recipeRepository;
@@ -33,6 +35,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                 this.scoreRepository = scoreRepository;
                 this.timeTakenRepository = timeTakenRepository;
                 this.fileRepository = fileRepository;
+                this.getDateTime = getDateTime;
             }
     @Override
     public List<RecipeRecipeBoxEntity> getAll() { return recipeRecipeBoxRepository.findAll(); }
@@ -62,10 +65,6 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
 
     @Override
     public List<Map<String, Object>> findByRecipeContents(Long boxId) {
-        // 어제 시간 구하기
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        Date dateObj = cal.getTime();
         List recipes = new ArrayList<>();
         List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, UserManager.getUser().getId());
         if(!recipeRecipeBoxEntity.isEmpty()){
@@ -75,7 +74,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                 if(recipeEntity.isPresent()){
                     recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
                     recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
-                    recipe.put("new", recipeEntity.get().getContentsEntity().getCreatedAt().after(dateObj)); // 어제 이후 시간이면 true
+                    recipe.put("new", recipeEntity.get().getContentsEntity().getCreatedAt().after(this.getDateTime.yesterday())); // 어제 이후 시간이면 true
                     Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipeEntity.get().getId());
                     if(scoreEntity.isPresent()){
                         recipe.put("score", scoreEntity.get().getScore());
