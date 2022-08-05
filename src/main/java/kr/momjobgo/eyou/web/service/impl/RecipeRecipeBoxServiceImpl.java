@@ -62,6 +62,10 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
 
     @Override
     public List<Map<String, Object>> findByRecipeContents(Long boxId) {
+        // 어제 시간 구하기
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        Date dateObj = cal.getTime();
         List recipes = new ArrayList<>();
         List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, UserManager.getUser().getId());
         if(!recipeRecipeBoxEntity.isEmpty()){
@@ -71,6 +75,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                 if(recipeEntity.isPresent()){
                     recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
                     recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
+                    recipe.put("new", recipeEntity.get().getContentsEntity().getCreatedAt().after(dateObj)); // 어제 이후 시간이면 true
                     Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipeEntity.get().getId());
                     if(scoreEntity.isPresent()){
                         recipe.put("score", scoreEntity.get().getScore());
