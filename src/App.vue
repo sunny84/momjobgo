@@ -9,15 +9,16 @@
     {{ msg }}{{ isActive }}
   </h1> -->
   <MyBtn>Apple</MyBtn>
-  <MyBtn large color="green"><span style="color:yellow">Banana</span></MyBtn>
-  
+  <MyBtn large color="green"><span style="color:yellow">Banana</span></MyBtn>  
   <!-- <h1>{{ reversedMesage }}</h1> -->
+  <CheckBox/>
  </div>
 </template>
 
 <script>
 import Fruits from './components/Fruits.vue'
 import MyBtn from './components/MyBtn.vue'
+import CheckBox from './components/CheckBox.vue'
 export default {
   data() {
     return {
@@ -66,7 +67,8 @@ export default {
   },
   components: {
     Fruits,
-    MyBtn
+    MyBtn,
+    CheckBox
 }
 }
 </script>
