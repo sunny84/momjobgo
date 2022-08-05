@@ -37,8 +37,8 @@
             <div class="squre3 fl">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
             <div class="title fl">{{recipe.title}}</div>
             <div class="longtext fl">{{recipe.sub_title}}</div>
-            <div v-if="recipe.subscribe!=null" class="bookmark1 fr"><img src="@/assets/images/bul_bookmark.png"></div>
-            <div v-else class="bookmark1 fr"><img src="@/assets/images/bul_bookmark2.png"></div>
+            <div v-if="recipe.subscribe!=null" class="bookmark1 fr"></div>
+            <div v-else class="bookmark2 fr"></div>
             <div class="wrap_info fr">
               <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
               <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
