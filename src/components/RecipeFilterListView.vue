@@ -1,23 +1,49 @@
 <template>
-  <div class="wrap_list">
-    <div v-for="(recipe, $index) in recipeList" :key="$index">
-      <div class="contents1">
-        <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
-        <div v-if="recipe.subscribe!=null" class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
-        <div v-else class="bookmark"><img src="@/assets/images/bul_bookmark2.png"></div>
-        <ul class="wrap_faces">
-          <div class="good facebg"></div>
-          <div class="number">60</div>
-        </ul><!--wrap_faces-->
-        <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
-        <img v-else class="pic" src="@/assets/emptyImg.png">
-        <div class="text">
-          <div class="title">{{recipe.title}}</div>
-          <div class="longtext">{{recipe.sub_title}}</div>
-          <div class="wrap_info">
-            <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
-            <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
-            <span class="bullet chat">187 </span>
+  <div>
+    <div v-if="listView == 0" class="wrap_list">
+      <div v-for="(recipe, $index) in recipeList" :key="$index">
+        <div class="contents1">
+          <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
+          <div v-if="recipe.subscribe!=null" class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
+          <div v-else class="bookmark"><img src="@/assets/images/bul_bookmark2.png"></div>
+          <ul class="wrap_faces">
+            <div class="good facebg"></div>
+            <div class="number">60</div>
+          </ul><!--wrap_faces-->
+          <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+          <img v-else class="pic" src="@/assets/emptyImg.png">
+          <div class="text">
+            <div class="title">{{recipe.title}}</div>
+            <div class="longtext">{{recipe.sub_title}}</div>
+            <div class="wrap_info">
+              <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
+              <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
+              <span class="bullet chat">187 </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="wrap_contents">    
+      <div v-for="(recipe, $index) in recipeList" :key="$index">
+        <div class="contents1">
+          <ul class="wrap_faces">
+            <div class="good facebg"></div>
+            <div class="number">60</div>
+          </ul><!--wrap_faces-->
+          <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+          <img v-else class="pic" src="@/assets/emptyImg.png">
+          <div class="text">
+            <div class="squre3 fl">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
+            <div class="title fl">{{recipe.title}}</div>
+            <div class="longtext fl">{{recipe.sub_title}}</div>
+            <div v-if="recipe.subscribe!=null" class="bookmark1 fr"><img src="@/assets/images/bul_bookmark.png"></div>
+            <div v-else class="bookmark1 fr"><img src="@/assets/images/bul_bookmark2.png"></div>
+            <div class="wrap_info fr">
+              <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
+              <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
+              <span class="bullet chat">187 </span>
+            </div>
           </div>
         </div>
       </div>
@@ -43,7 +69,7 @@ export default {
   }),
 
   computed : {  
-    ...mapGetters('filter', ['period', 'timeTaken', 'ingredientIds', 'sort'])
+    ...mapGetters('filter', ['period', 'timeTaken', 'ingredientIds', 'sort', 'listView'])
   },
 
   components: {

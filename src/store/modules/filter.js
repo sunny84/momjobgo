@@ -10,6 +10,7 @@
     timeTaken: 4,
     ingredientIds: [],
     sort: 0,
+    listView: 0,
   },
 
   getters : {
@@ -27,6 +28,10 @@
 
     sort(state){
       return state.sort;
+    },
+
+    listView(state){
+      return state.listView;
     }
   },
 
@@ -47,6 +52,10 @@
     setSort(state, sort){
       state.sort = sort;
     },
+
+    setListView(state, listView){
+      state.listView = listView;
+    }
   },
 
   actions : {
@@ -66,5 +75,9 @@
     setSort({commit}, sort){
       commit('setSort', sort);
     },
+
+    setListView({commit}, listView){
+      commit('setListView', listView);
+    }
   }
 }

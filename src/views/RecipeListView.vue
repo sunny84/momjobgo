@@ -14,8 +14,8 @@
             <li class="menu">{{$t(`orderBy.ingredients`)}}</li>
           </ul>
           <ul class="fr">
-            <li class="view n1">모아보기</li>
-            <li class="view n2">크게보기</li>
+            <li class="view n1" :class="{ on : listView == 0 }" @click="setListView(0)">모아보기</li>
+            <li class="view n2" :class="{ on : listView == 1 }" @click="setListView(1)">크게보기</li>
           </ul>
         </div>
       </div>
@@ -38,12 +38,16 @@ export default {
     FilterListView,
   },
 
+  mounted() {
+    this.$checkToken("recipelist");
+  },
+
   computed : {  
-    ...mapGetters('filter', ['sort'])
+    ...mapGetters('filter', ['sort', 'listView'])
   },
 
   methods: {
-    ...mapActions('filter', ['setSort']),
+    ...mapActions('filter', ['setSort', 'setListView']),
   },
 }
 </script>
