@@ -87,6 +87,7 @@
                             <router-link :to="'/recipedetail/'+recipe.recipeId">
                             {{recipe.title}} <br/>
                             {{recipe.subTitle}} <br/>
+                            <span v-if="recipe.new">New</span>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
                                 <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}} {{recipe.recipeId}} {{recipe.boxId}}</li>
                             </ul>
@@ -247,6 +248,7 @@ export default {
                     this.recipeList.push({
                         title: obj.title,
                         subTitle: obj.subTitle,
+                        new: obj.new,
                         score: obj.score,
                         timeTaken: obj.timeTaken,
                         period: obj.period,
