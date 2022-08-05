@@ -7,6 +7,8 @@ import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
 import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
 import org.springframework.stereotype.Service;
+import java.util.Calendar;
+import java.util.Date;
 
 import java.util.*;
 
@@ -139,6 +141,10 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
 
     @Override
     public List<Map<String, Object>> getReceipeBoxList() {
+        // 어제 시간 구하기
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        Date dateObj = cal.getTime();
         List recipeBoxList = new ArrayList<>();
         List<RecipeBoxEntity> recipeBoxes = recipeBoxRepository.findByUserId(UserManager.getUser().getId());
 
@@ -159,6 +165,7 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
             recipeBoxMap.put("id", recipeBox.getId());
             recipeBoxMap.put("name", recipeBox.getName());
             recipeBoxMap.put("isDefault", recipeBox.getIsDefault());
+            recipeBoxMap.put("new", recipeBox.getCreatedAt().after(dateObj)); // 어제 이후 시간이면 true
 
             List<RecipeEntity> recipes = recipeBox.getRecipeEntities();
             List recipeList = new ArrayList<>();
