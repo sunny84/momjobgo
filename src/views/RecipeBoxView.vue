@@ -67,6 +67,8 @@
             </div>
             <div class="contents" v-if="step===2">
                 {{$t("content.all")}} {{ recipeList.length }}
+                <input type="checkbox" value="all" v-model="allSelected" />
+                <label for="all">{{$t("content.selectAll")}}</label>
                 <button @click="cancel">{{$t("button.cancel")}}</button>&nbsp;
                 <button @click="done">{{$t("button.done")}}</button>
                 <table>
@@ -196,6 +198,7 @@ export default {
         recipeList : [],
         mainPicture : '',
         checkedRecipeIds : [],
+        recipeIds : [],
         tempMap : {},
         boxName : '기본박스',
         boxId : 0,
@@ -458,6 +461,18 @@ export default {
         //     console.log("computed:isOverview");
         //     return window.innerWidth >= this.swiper.virtualSize
         // }
+        allSelected: {
+            get: function() {
+                this.recipeIds = []
+                this.recipeList.slice(0,5).forEach((recipe) => {
+                    this.recipeIds.push(recipe.recipeId)
+                })
+                return this.recipeIds.length === this.checkedRecipeIds.length;
+            },
+            set: function(e) {
+                this.checkedRecipeIds = e ? this.recipeIds : [];
+            }
+        }
     },
     mounted () {
         console.log("mounted");

@@ -57,7 +57,8 @@
         "youtubeView" : "Youtube Full 영상 보기",
         "all" : "전체",
         "moveBox" : "박스 이동",
-        "myRecipe" : "나의 레시피"
+        "myRecipe" : "나의 레시피",
+        "selectAll" : "전체선택"
     },
 
     "content_description" : {
