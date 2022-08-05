@@ -57,7 +57,8 @@
         "youtubeView" : "View Youtube",
         "all" : "All",
         "moveBox" : "Go to Box",
-        "myRecipe" : "My Recipe"
+        "myRecipe" : "My Recipe",
+        "selectAll" : "Select All"
     },
     
     "content_description" : {
