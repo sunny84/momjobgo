@@ -28,6 +28,7 @@
                     </li>
                   </ul>
                   {{box.name}} {{box.recipe.length}}<br/>
+                  <span v-if="box.new">New</span>
                 </li>
                 <li v-else><!-- 레시피가 없는 박스 -->
                   <p><img
@@ -37,6 +38,7 @@
                     @error="setEmptyImg"
                   /></p>
                   {{box.name}} 0<br/>
+                  <span v-if="box.new">New</span>
                   </li>
               </ul>
             </router-link>
