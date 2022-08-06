@@ -72,7 +72,7 @@ export default {
     },
 
     getImgURL(id) {
-      const url = `${this.$API_SERVER}/file/download/thumbnai?fileId=${id}`;
+      const url = `${this.$API_SERVER}/file/download/thumbnail?fileId=` + id;
       console.log(url);
       return url
     },
