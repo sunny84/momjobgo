@@ -12,6 +12,7 @@
           : recipe_data.writer.snsId.substr(0, 5) + "..."
       }}
     </p>
+    <p>{{ recipe_data.writer.recipeCount }} recipes</p>
 
     <!--대표이미지 -->
     <p>
