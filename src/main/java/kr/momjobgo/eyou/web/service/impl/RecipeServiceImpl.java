@@ -8,8 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
-import static java.lang.Integer.parseInt;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -147,6 +146,18 @@ public class RecipeServiceImpl implements RecipeService {
             user.put("snsId", userEntity.getSnsId());
             user.put("email", userEntity.getEmail());
             user.put("nickname", userEntity.getNickname());
+
+            // recipe count written by writer
+            Long category = Long.valueOf(1);  // 1 is the number of content category for recipe
+            List <ContentsEntity> contentsEntityList=contentsRepository.findByWriterAndCategory(userEntity.getId(), category);
+            AtomicInteger recipeCount = new AtomicInteger();
+            contentsEntityList.forEach(contents -> {
+                if(recipeRepository.findByContentsId(contents.getId()).get(0).getOpen()!= false) {
+                    recipeCount.getAndIncrement();
+                }
+            });
+
+            user.put("recipeCount", recipeCount);
             result.put("writer", user);
 
 

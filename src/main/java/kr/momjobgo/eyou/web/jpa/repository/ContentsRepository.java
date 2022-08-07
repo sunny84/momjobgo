@@ -17,4 +17,6 @@ public interface ContentsRepository extends JpaRepository<ContentsEntity, Long> 
             "INNER JOIN RECIPE r ON r.contents_id = c.id " +
             "WHERE r.id = :recipeId", nativeQuery = true)
     Map<String, String> getContentsByRecipeId(@Param("recipeId") Long recipeId);
+
+    List<ContentsEntity> findByWriterAndCategory(Long writer, Long category);
 }
