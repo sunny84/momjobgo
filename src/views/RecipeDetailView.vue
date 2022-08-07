@@ -128,6 +128,7 @@ export default {
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
           console.log("레시피 공개 완료");
+          this.$router.push("/recipedetail/" + recipeId);
         }
       });
     },
