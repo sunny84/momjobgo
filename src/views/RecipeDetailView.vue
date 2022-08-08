@@ -12,6 +12,7 @@
           : recipe_data.writer.snsId.substr(0, 5) + "..."
       }}
     </p>
+    <p>{{ recipe_data.writer.recipeCount }} recipes</p>
 
     <!--대표이미지 -->
     <p>
@@ -128,6 +129,7 @@ export default {
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
           console.log("레시피 공개 완료");
+          this.$router.push("/recipedetail/" + recipeId);
         }
       });
     },
