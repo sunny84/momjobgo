@@ -40,4 +40,7 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "profile_img")
+    private String profile_img;
+
 }
