@@ -18,6 +18,7 @@ public class Token {
         @NotNull(message = "id"+ StaticMessage.Validator.NOT_NULL)
         private String snsId;
         private String nickname;
+        private String profile_img;
     }
 
     @Data

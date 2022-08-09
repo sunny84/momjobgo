@@ -8,6 +8,7 @@ import kr.momjobgo.eyou.web.jpa.repository.UserRepository;
 import kr.momjobgo.eyou.web.service.UserService;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +36,17 @@ public class UserServiceImpl implements UserService {
 
         if(entity.isPresent()){
             tokenResponse.setToken(JwtTokenProvider.generateToken(entity.get()));
+            UserEntity newUser1 = new UserEntity();
+            newUser1.setNickname(request.getNickname());
+            newUser1.setProfile_img(request.getProfile_img());
+            userRepository.save(newUser1.builder().profile_img(newUser1.getProfile_img()).id(entity.get().getId())
+                                .snsId(entity.get().getSnsId()).email(entity.get().getEmail()).nickname(newUser1.getNickname())
+                                .phone(entity.get().getPhone()).enable(entity.get().getEnable()).build());
         } else {
             UserEntity newUser = new UserEntity();
             newUser.setSnsId(request.getSnsId());
             newUser.setNickname(request.getNickname());
+            newUser.setProfile_img(request.getProfile_img());
             tokenResponse.setToken(JwtTokenProvider.generateToken(userRepository.save(newUser)));
         }
 
