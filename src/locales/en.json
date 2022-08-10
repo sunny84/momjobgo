@@ -5,9 +5,13 @@
 
     "title" : {
         "writeRecipe" : "Write Recipe",
+        "previewRecipe" : "Preview Recipe",
         "viewRecipe" : "View Recipe",
         "recipeBox" : "Recipe Box",
-        "RecipeFilter" : "Filter"
+        "RecipeFilter" : "Filter",
+        "subscribeRecipe" : "Subscribe Recipe",
+        "myBaby" : "For my baby",
+        "whatRecipe" : "What kind of food would you like to cook?"
     },
 
     "description" : {
@@ -23,7 +27,15 @@
     "menu" : {
         "myRecipe": "My Recipe",
         "savedRecipe" : "Saved Recipe",
-        "historyRecipe" : "History Recipe"
+        "historyRecipe" : "History Recipe",
+        "allList" : "All"
+    },
+
+    "orderBy" : {
+        "newest" : "Newest",
+        "topRated" : "Top rated",
+        "mostRated" : "Most rated",
+        "ingredients" : "Ingredients"
     },
 
     "content" : {
@@ -35,6 +47,7 @@
         "title" : "Title",
         "mainPicture" : "Presentative Picture",
         "listOfIngredient" : "Ingredients",
+        "measuringUnit" : "measure unit",
         "cookingOrder" : "Cooking order",
         "tip" : "Tip",
         "movieClipUrl" : "Movie clip link",
@@ -43,9 +56,10 @@
         "youtubeView" : "View Youtube",
         "all" : "All",
         "moveBox" : "Go to Box",
-        "myRecipe" : "My Recipe"
+        "myRecipe" : "My Recipe",
+        "selectAll" : "Select All"
     },
-
+    
     "content_description" : {
         "title" : "Enter title with chosen ingredient",
         "subTitle" : "A word for this special recipe! ex) The delicious reason!",
@@ -71,6 +85,15 @@
         "fruits" : "fruits",
         "animalProtein" : "animal protein",
         "essential" : "essential"
+    },
+
+    "ing_category2" : {
+        "none" : ["select ingredient", ""],
+        "rootAndTuberCrops" : ["root and tuber crops", ""],
+        "blockIronAbsorption" : ["block iron absorption", "recommend after 6 months"],
+        "fruits" : ["fruits", ""],
+        "animalProtein" : ["animal protein", ""],
+        "essential" : ["essential", ""]
     },
 
     "ingredient" : {

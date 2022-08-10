@@ -4,42 +4,58 @@
     <h4>{{ $t("title.recipeBox") }}</h4>
     <div class="menu">
         <ul>
-            <li><a href="/myrecipe">{{ $t("menu.myRecipe") }}</a></li>
-            <li><a href="/recipebox">{{ $t("menu.savedRecipe") }}</a></li>
-            <li><a href="#">{{ $t("menu.historyRecipe") }}</a></li>
+            <li><router-link :to="'/myrecipe'">{{ $t("menu.myRecipe") }}</router-link></li>
+            <li><router-link :to="'/recipeboxlist'">{{ $t("menu.savedRecipe") }}</router-link></li>
+            <li><router-link :to="'#'">{{ $t("menu.historyRecipe") }}</router-link></li>
         </ul>
     </div>
     <!--CONTENT-->
     <div class="contents">        
         <button @click="callEdit">{{$t("button.edit")}}</button>
-        <tr v-for="(item, index) in recipeBoxes" :key="index">
-          <td v-if="item.isDefault == true">
-            <a :href="item.name" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-              <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              {{item.name}} {{item.recipeEntities.length}}<br/>
-            </a>
-          </td>
-        </tr>
-        <tr v-for="(item, index) in recipeBoxes" :key="index">
-          <td v-if="item.isDefault == false">
-            <a :href="item.name" target="_blank"> <!--TODO: a herf="레시피 박스 상세 페이지로 이동"-->
-              <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              {{item.name}} {{item.recipeEntities.length}}<br/>
-            </a>
+        <tr v-for="(box, index) in recipeBoxes" :key="index">
+          <td>
+            <router-link :to="'/recipebox/'+box.id">
+              <ul>
+                <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
+                  <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
+                    <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
+                      <p><img
+                        :src="r.mainImgId?`${$API_SERVER}/file/download/thumbnail?fileId=${r.mainImgId}`:mainPicture"
+                        width="200px" 
+                        height="150px" 
+                        @error="setEmptyImg"
+                      /></p>
+                    </li>
+                  </ul>
+                  {{box.name}} {{box.recipe.length}}<br/>
+                  <span v-if="box.new">New</span>
+                </li>
+                <li v-else><!-- 레시피가 없는 박스 -->
+                  <p><img
+                    :src="mainPicture" 
+                    width="200px" 
+                    height="150px" 
+                    @error="setEmptyImg"
+                  /></p>
+                  {{box.name}} 0<br/>
+                  <span v-if="box.new">New</span>
+                  </li>
+              </ul>
+            </router-link>
           </td>
         </tr>
         <tr>          
           <td>
-            <a href="#" target="_blank"> <!-- TODO: add new box -->
-              <p>
-                <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-              </p>
-              <br/>
-            </a>
+            <confirm-input
+              :text="'+ '+$t('button.addNewBox')"
+              :title="$t('button.addNewBox')"
+              :value="boxName"
+              :callback="text => addNewBox(text)"
+            />
+            <p>
+              <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
+            </p>
+            <br/>
           </td>
         </tr>
     </div>
@@ -48,46 +64,94 @@
 </template>
 
 <script>
-import axios from "axios"
 import emptyImg from '@/assets/emptyImg.png'
+import ConfirmInput from 'vue-confirm-input'
 
 export default {
   name : "RecipeBoxListView",
   data: ()=>({
     recipeBoxes : [],
-    mainPicture : ''
+    mainPicture : '',
+    boxName: '기본박스',
   }),
 
   created() {
     this.initialize();
   },
+  
+  mounted() {
+    this.$checkToken('recipeboxlist');
+  },
+
+  components: {
+      ConfirmInput
+  },
 
   methods: {
     initialize() {
-      this.callRecipeBox();
+      this.getRecipeBoxAll();
     },
 
-    async callRecipeBox() {
-      await axios.get(`http://localhost:8090/recipebox/all`, {
-      }).then(response=>{
+    async getRecipeBoxAll() {      
+      const response = await this.$api(
+        `${this.$API_SERVER}/api/recipebox/mine`,
+        "get"
+      );
+      if (response.status === this.HTTP_OK) {
         this.recipeBoxes = response.data;
-        console.log("contents:", response.data);
-      }).catch(error=>{
-        console.error(error);
-      })
+        console.log(this.recipeBoxes);
+      }
     },
+
     callEdit() {
       console.log("Edit");
+      // TODO : 폴더 편집 - 폴더명 변경, 삭제, 폴더 새로 만들기 기능
     },
-    addNewBox() {
-      console.log("addNewBox");
+
+    async addNewBox(name) {
+        console.log("addNewBox : "+name);
+        this.boxName = name;
+        const response = await this.$api(
+          `${this.$API_SERVER}/api/recipebox/${name}`,
+          "post"
+        );
+        if (response.status === this.HTTP_OK) {
+            this.selectedRecipeBox = response.data;
+        }
+        this.initialize();
     },
+
     setEmptyImg(e) {
       e.target.src=emptyImg;
     },
+    async getFileId(id){
+        const response = await this.$api(
+          `${this.$API_SERVER}/file?contentsId=${id}`,
+          "get"
+        );
+        if (response.status === this.HTTP_OK) {
+            console.log(response.data);
+        }
+    }
   },
 }
 </script>
 
-<style>
+<style scoped>
+button
+{
+    background: inherit ; 
+    border:none; 
+    box-shadow:none; 
+    border-radius:0; 
+    padding:0; 
+    overflow:visible; 
+    cursor:pointer
+}
+ul {
+    list-style: none;
+}
+li {
+    float: left;
+}
 </style>

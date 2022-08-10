@@ -5,9 +5,13 @@
 
     "title" : {
         "writeRecipe" : "레시피 작성하기",
+        "previewRecipe" : "레시피 미리보기",
         "viewRecipe" : "레시피 상세보기",
         "recipeBox" : "레시피 박스",
-        "RecipeFilter" : "필터"
+        "RecipeFilter" : "필터",
+        "subscribeRecipe" : "구독레시피",
+        "myBaby" : "우리 아기",
+        "whatRecipe" : "어떤 요리가 좋을까요?"
     },
 
     "description" : {
@@ -23,7 +27,15 @@
     "menu" : {
         "myRecipe": "My 레시피",
         "savedRecipe" : "담은 레시피",
-        "historyRecipe" : "오늘 본 레시피"
+        "historyRecipe" : "오늘 본 레시피",
+        "allList" : "전체보기"
+    },
+
+    "orderBy" : {
+        "newest" : "최신순",
+        "topRated" : "별점순",
+        "mostRated" : "후기순",
+        "ingredients" : "재료명순"
     },
 
     "content" : {
@@ -35,6 +47,7 @@
         "title" : "제목",
         "mainPicture" : "대표사진",
         "listOfIngredient" : "재료소개",
+        "measuringUnit" : "계량단위",
         "cookingOrder" : "조리순서",
         "tip" : "Tip",
         "movieClipUrl" : "클립 영상 링크",
@@ -43,7 +56,8 @@
         "youtubeView" : "Youtube Full 영상 보기",
         "all" : "전체",
         "moveBox" : "박스 이동",
-        "myRecipe" : "나의 레시피"
+        "myRecipe" : "나의 레시피",
+        "selectAll" : "전체선택"
     },
 
     "content_description" : {
@@ -71,6 +85,15 @@
         "fruits" : "과일류",
         "animalProtein" : "동물성 단백질", 
         "essential" : "필수"
+    },
+
+    "ing_category2" : {
+        "none" : ["식재료 선택", ""],
+        "rootAndTuberCrops" : ["서류", "구황작물"],
+        "blockIronAbsorption" : ["철분흡수 방해", "중기6개월~부터 권장"],
+        "fruits" : ["과일류", ""],
+        "animalProtein" : ["동물성 단백질", ""], 
+        "essential" : ["필수",""]
     },
 
     "ingredient" : {

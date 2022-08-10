@@ -146,7 +146,7 @@
       <p v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
         <button @click="goUp(ord_idx)">↑</button>
         <button @click="goDown(ord_idx)">↓</button>
-        <span>{{ order.contents_no }}</span>
+        <span>{{ order.contentsNo }}</span>
         <textarea width="140px" height="50" v-model="order.contents"></textarea>
          <img
           :src="cookingOrderPic[ord_idx]"
@@ -159,7 +159,7 @@
           :id="`cookingPicture${ord_idx}`"
           type="file"
           accept="image/*"
-          @change="uploadOrderImg(ord_idx, order, $event)"
+          @change="uploadOrderImg(order, $event)"
           class="pickpicture"
         /><label :for="`cookingPicture${ord_idx}`">+</label>
       </p> -->
@@ -235,7 +235,6 @@
 </template>
 
 <script>
-import ing_data from "@/assets/ingredients.json";
 import emptyImg from "@/assets/emptyImg.png";
 import VueSlideBar from "vue-slide-bar";
 import { mapGetters } from "vuex";
@@ -243,7 +242,8 @@ import { mapGetters } from "vuex";
 export default {
   name: "RecipeWriteView",
   data: () => ({
-    ing_data,
+    // for real
+    ing_data: [], // for real code
     step: 0, // 레시피 작성 과정 단계
     period: 0, // 이유 시기
     quantity: 1, // 몇 회분
@@ -338,7 +338,7 @@ export default {
       if (arrow > 0 && this.step === 0 && !this.checkQuantity()) {
         return;
       } else if (arrow > 0 && this.step === 1) {
-        this.selectedIngredients.push({ id: 1, key: "WATER", volume: "" });
+        this.selectedIngredients.push({ ingredientId: 1, key: "WATER", volume: "" });
       } else if (arrow < 0 && this.step === 2) {
         this.selectedIngredients.pop();
       } else if (arrow > 0 && this.step === 2) {
@@ -346,7 +346,8 @@ export default {
           !this.checkTitles() ||
           !this.checkMainImage() ||
           !this.checkIngredients() ||
-          !this.checkCookingOrder()
+          !this.checkCookingOrder() ||
+          !this.checkMovieUrl()
         ) {
           return;
         }
@@ -385,21 +386,21 @@ export default {
       let files = e.target.files;
       if (this.checkFileType(files[0].type, "image/")) {
         this.mainPicture = URL.createObjectURL(files[0]);
-        this.mainPicFilename = files[0].name;
+        this.mainImg = files[0];
+        //console.log(this.mainImg);
       } else {
         alert("이미지 파일을 선택하셔야 합니다");
         this.setEmptyImg(e);
       }
     },
-    uploadOrderImg(ord_idx, targetOrder, e) {
+    uploadOrderImg(targetOrder, e) {
       let files = e.target.files;
 
       console.log(targetOrder);
       if (this.checkFileType(files[0].type, "image/")) {
         // Have to use wrapping method for array due to detecting changed array of VUE
-        // this.cookingOrderPic.splice(ord_idx, 1, URL.createObjectURL(files[0]));
         targetOrder.imgUrl = URL.createObjectURL(files[0]);
-        targetOrder.filename = files[0].name;
+        targetOrder.fileData = files[0];
       } else {
         alert("이미지 파일을 선택하셔야 합니다");
         this.setEmptyImg(e);
@@ -407,40 +408,42 @@ export default {
     },
     addOrder() {
       this.cookingOrder.push({
-        contents_no: this.cookingOrder.length + 1,
-        filename: "",
+        contentsNo: this.cookingOrder.length + 1,
         contents: "",
         imgUrl: "",
+        fileData: "",
       });
+
+      this.fileCnt++;
     },
     sortByContentId() {
       this.cookingOrder.sort(function (a, b) {
-        return a.contents_no - b.contents_no;
+        return a.contentsNo - b.contentsNo;
       });
     },
     goDown(idx) {
       // go down for cooking order
       if (idx < this.cookingOrder.length - 1) {
-        this.cookingOrder[idx].contents_no = idx + 2;
-        this.cookingOrder[idx + 1].contents_no = idx + 1;
+        this.cookingOrder[idx].contentsNo = idx + 2;
+        this.cookingOrder[idx + 1].contentsNo = idx + 1;
       }
       this.sortByContentId();
     },
     goUp(idx) {
       // go up for cooking order
       if (idx > 0) {
-        this.cookingOrder[idx].contents_no = idx;
-        this.cookingOrder[idx - 1].contents_no = idx + 1;
+        this.cookingOrder[idx].contentsNo = idx;
+        this.cookingOrder[idx - 1].contentsNo = idx + 1;
       }
       this.sortByContentId();
     },
     addTip() {
       if (this.Tips.length < 5) {
-        this.Tips.push("");
+        this.Tips.push({ orderNum: this.Tips.length + 1, text: "" });
       }
     },
     updateTip(idx, e) {
-      this.Tips.splice(idx, 1, e.target.value);
+      this.Tips[idx].text = e.target.value;
     },
     checkQuantity() {
       if (this.quantity >= 1) {
@@ -467,8 +470,7 @@ export default {
       }
     },
     checkMainImage() {
-      // console.log(this.mainPicFilename);
-      if (this.mainPicFilename.trim().length !== 0) {
+      if (this.mainImg !== 0 && this.mainImg.name.length !== 0) {
         return true;
       } else {
         alert("대표사진을 입력하세요");
@@ -485,17 +487,16 @@ export default {
       return true;
     },
     checkCookingOrder() {
-      // first cooking order should be existed]
-      //console.log(this.cookingOrder.length);
+      // first cooking order should be existed
       if (this.cookingOrder.length > 1) {
         for (let i = 0; i < this.cookingOrder.length; i++) {
           if (
             !(
-              (this.cookingOrder[i].filename.length !== 0) ^
+              (this.cookingOrder[i].fileData.length !== 0 &&
+                this.cookingOrder[i].fileData.name.length !== 0) ^
               (this.cookingOrder[i].contents.trim().length === 0)
             )
           ) {
-            //   console.log(this.cookingOrder[i].filename, this.cookingOrder[i].contents);
             alert("조리순서 설명과 사진이 필요합니다1");
             return false;
           }
@@ -503,7 +504,8 @@ export default {
         return true;
       } else {
         if (
-          this.cookingOrder[0].filename.length === 0 ||
+          this.cookingOrder[0].fileData.length == 0 ||
+          this.cookingOrder[0].fileData.name.length === 0 ||
           this.cookingOrder[0].contents.trim().length === 0
         ) {
           alert("조리순서 설명과 사진이 필요합니다2");
@@ -541,12 +543,11 @@ export default {
       return true;
     },
     calibCookingOrder() {
-      //delete this.cookingOrder.imgUrl;
       for (let i = 0; i < this.cookingOrder.length; i++) {
         // URL.revokeObjectURL(this.cookingOrder[i].imgUrl);
         // delete this.cookingOrder[i].imgUrl;
         if (
-          !this.cookingOrder[i].filename.length &&
+          !this.cookingOrder[i].fileData &&
           !this.cookingOrder[i].contents.trim().length
         ) {
           this.cookingOrder.splice(i, 1);
@@ -563,15 +564,9 @@ export default {
     },
     calibTips(tips) {
       for (let i = 0; i < tips.length; i++) {
-        if (
-          tips[i] == "" ||
-          tips[i] == null ||
-          tips[i] == undefined ||
-          (tips[i] != null && typeof tips[i] == "object" && !Object.keys(tips[i]).length)
-        ) {
+        tips[i].text.trim();
+        if (tips[i].text.trim().length === 0) {
           tips.splice(i, 1);
-        } else {
-          tips[i].trim();
         }
       }
     },
@@ -586,6 +581,10 @@ export default {
       // for selected ingredients
       // 입력된 재료양은 숫자로 바꿔주고 재료양이 없으면 기본값을 0으로 입력해주기
       this.calibIngredientsVolume();
+
+      // for main image
+      // revoke blob image for preview
+      this.calibMainImg();
 
       // for cooking order
       // 조리순서 이미지url항목지우기
@@ -609,9 +608,8 @@ export default {
       const params = {
         //for recipe table
         period: this.period,
-        timeTaken: this.timeTaken,
-        clip_link: this.clipUrl,
-        youtube_link: this.youtubeUrl,
+        quantity: this.quantity,
+        timeTakenId: this.timeTaken,
 
         // for content table
         contentsEntity: {
@@ -627,37 +625,42 @@ export default {
 
       // Add tips if it's existed
       if (this.Tips.length !== 0) {
-        params.tips = this.Tips;
+        params.tipEntities = this.Tips;
       }
 
       // Add urls if it's existed
       if (this.youtubeUrl.trim().length !== 0) {
-        params.youtube_link = this.youtubeUrl;
+        params.youtubeLink = this.youtubeUrl;
       }
 
       if (this.clipUrl.trim().length !== 0) {
-        params.clip_link = this.clipUrl;
+        params.clipLink = this.clipUrl;
       }
 
       return params;
     },
-    publish() {
-      // valibarate all data
-      this.calibrateAllData();
-
+    async publish() {
       // make form data for server
       const formData = new FormData();
-      // const file = document.getElementById("mainPicture");
-      // console.log(file.files[0]);
-      // formData.append("mainPicture", file.files[0]);
-      // for (let i = 0; i < this.CookingOrder.length; i++) {
-      //   console.log();
-      //   file = document.getElementById("cookingOrder" + i);
-      //   console.log(file.files[0]);
-      // }
-      //file = document.getElementById("cookingOrder");
 
-      // param data
+      formData.append("file", this.mainImg, "M" + this.mainImg.name);
+      for (let i = 0; i < this.cookingOrder.length; i++) {
+        // change file name
+        var filename = this.cookingOrder[i].fileData.name;
+
+        formData.append(
+          "file",
+          this.cookingOrder[i].fileData,
+          "C" +
+            filename.substring(0, filename.lastIndexOf(".")) +
+            String(i + 1).padStart(2, 0) +
+            filename.substring(filename.lastIndexOf("."), filename.length)
+        );
+      }
+
+      // calibarate all data
+      this.calibrateAllData();
+
       const allParams = this.makeParams();
 
       // Insert new recipe
@@ -690,15 +693,7 @@ export default {
 };
 </script>
 
-<style>
-.mainpicture {
-  width: 160px;
-  height: 120px;
-  border: solid 1px;
-  text-align: center;
-  cursor: pointer;
-}
-
+<style scoped>
 .pickpicture {
   display: none;
   z-index: 5;
