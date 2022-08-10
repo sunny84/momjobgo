@@ -18,12 +18,12 @@
                         v-for="(item, index) in recipeBoxes"
                         :key="index"><!-- class="swiper-slide" -->
                         <div>
-                            <button @click="selectRecipeBox(item.id)">{{item.name}} {{item.id}}<span hidden>({{item.id}})</span></button>
+                            <button @click="selectRecipeBox(item.id)">{{item.name}} <span hidden>({{item.id}})</span></button>
                         </div>
                     </swiper-slide>
                     <swiper-slide role="tab">
                         <div>
-                            <button @click="addNewBoxPage()">+{{ $t('button.addNewBox') }}</button>
+                            <button @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</button>
                         </div>
                     </swiper-slide>
                 </swiper>
@@ -112,50 +112,54 @@
                 </div>
             </div>
             <div>
-                <span>체크한 이름: {{ selectedRecipeIds }}</span>
+                <span hidden>체크한 이름: {{ selectedRecipeIds }}</span>
             </div>
             
-            <div class="moveBox" v-if="moveStep===0">
-                <button @click="callMoveRecipe">{{$t("button.move")}}</button>&nbsp;
-                <button @click="callDeleteRecipe">{{$t("button.delete")}}</button>
-                <!-- <button @click="deleteRecipe">{{$t("button.delete")}}</button> -->
+            <div class="select_done" v-if="moveStep===0">
+                <div>
+                    <span class="select on fl margin-right-5"></span>
+                    <span class="dp-inline-block fl">{{$t("content.select")}} {{ selectedRecipeIds.length }}/{{ recipeList.length }}</span>
+                </div>
+                <div class="wrap_select0">
+                <ul >
+                    <li class="menu1 fl" style=" cursor: pointer;" @click="callMoveRecipe">{{$t("button.move")}}</li>
+                    <li class="menu2 fl" @click="callDeleteRecipe">{{$t("button.delete")}}</li>
+                </ul>
+                </div>
             </div>
-            <div class="moveBox" v-if="moveStep===1">
-                <div class="moveBoxHeader">
-                    <ul>
-                        <li>{{$t("content.moveBox")}}</li>
-                        <li>
-                            <button @click="addNewBoxPage()">+{{ $t('button.addNewBox') }}</button>
-                        </li>
-                    </ul>
+            <div class="select_done" v-if="moveStep===1">
+                <div>
+                    <div class="fl margin-bottom-5">
+                    <span class="select on fl margin-right-5"></span>
+                    <span class="dp-inline-block fl">{{$t("content.select")}} {{ selectedRecipeIds.length }}/{{ recipeList.length }}</span>
+                    </div>
+                    <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</div>
                 </div>
-                <div class="moveBoxBody">
+                <div class="wrap_select">
                     <ul v-for="(box, index) in recipeBoxes" :key="index">
-                        <li @click="callMoveRecipeBox(box.id)">
-                            <button v-on:click="callDeleteBox(box.id)">X</button>
-                            <p>
-                                <img :src="box.recipe?box.recipe[0].mainImgId:''" width="200px" height="150px" @error="setEmptyImg">
-                            </p>
-                            {{box.name}}
+                        <li class="menu fl" @click="callMoveRecipeBox(box.id)">
+                            <!-- <button class="btn btn-default fr" v-on:click="callDeleteBox(box.id)">X</button> -->
+                            {{ box.name }}
                         </li>
                     </ul>
+                    <div class="arr_right">더보기</div>
                 </div>
-                <div class="moveBoxFooter">
-                    <button @click="cancel">{{$t("button.cancel")}}</button>
-                </div>
+                <div class="btn btn-default" style="width:112px;" @click="cancel">{{$t("button.cancel")}}</div>
             </div>
         </div>
-        <div class="contents" id="new-box" v-if="step===3">
-            <fieldset>
-                <legend>새 박스 추가</legend>
+        <div class="wrap_newbox" id="new-box" v-if="step===3">
+            <!-- <fieldset class="wrap_in"> -->
+                <!-- <legend>새 박스 추가</legend> -->
                 <form v-on:submit="onSubmitForm">
-                    <label for="newBox">새로운 박스의 이름을 입력해 주세요.</label><br/>
-                    <input type="text" v-model="newBox" maxlength="10"> <button>추가</button>
+                    <label class="title" for="newBox">새 박스 추가</label><br/>
+                    <input class="width80" type="text" v-model="newBox" maxlength="10" placeholder="새로운 박스의 이름을 입력해 주세요."> <div class="btn btn-default"><button style="none">추가</button></div>
                 </form>
-            </fieldset>
+            <!-- </fieldset> -->
+            <div>
             <label id="result-label" hidden for="result"></label><br/>
-            <button @click="cancel">{{$t("button.cancel")}}</button>
-            <!-- <button @click="done">{{$t("button.done")}}</button> -->
+            <div class="btn btn-default fl margin-bottom-40" @click="cancel">{{$t("button.cancel")}}</div>
+            <div class="btn btn-default fl" @click="done">{{$t("button.done")}}</div>
+            </div>
         </div>
     </main>
     </div>

@@ -222,6 +222,14 @@ main.recipebox .select_done .wrap_select .menu {background: #fff;padding: 15px;w
 main.recipebox .select_done .wrap_select .menu.on {background:#FF9519;padding: 15px; border: #FF9519 1px solid;color: #fff;font-size:12px;}
 main.recipebox .select_done .wrap_select .arr_right {position:absolute;right:-10px;top:40%;text-indent:-99999px; background:url(../images/icon_right.png) no-repeat;width:30px;height:30px;}
 
+main.recipebox .wrap_newbox        {overflow:hidden; height:100%; background-color: #f9f9f9; margin: 20px 0 0; padding:15px;}
+main.recipebox .wrap_newbox .title {font-size: 16px; font-weight: 600; display: inline-block; border-bottom: 3px #ccc solid; padding: 0 5px; margin:30px 0 20px;}
+main.recipebox .wrap_newbox .exp   {background-color: #fff; padding:5px;text-align: center; border-radius: 30px;}
+main.recipebox .wrap_newbox .intext    {padding:8px 3px 7px 3px;font-size:14px; color:#9D9D9D !important;text-align: left;}
+main.recipebox .wrap_newbox .intext[type="number"]     {text-align:center;}
+main.recipebox .wrap_newbox .intext[type="number"]::-webkit-outer-spin-button,
+main.recipebox .wrap_newbox .intext[type="number"]::-webkit-inner-spin-button {-webkit-appearance:none; margin:0;}
+
 main.recipewrite                  {overflow: hidden;}
 main.recipewrite .wrap_menu       {position:relative;  padding:20px 0 9px 0; margin-bottom: 20px; display: inline-block;width:100%; border-bottom: 1px #9D9D9D dotted;}
 main.recipewrite .wrap_menu  ul   {height: 25px; text-align: center;}
