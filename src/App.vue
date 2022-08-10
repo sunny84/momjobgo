@@ -30,8 +30,8 @@
 
 <script>
 import i18n from "@/i18n";
-import "@/assets/css/common.css";
 import "@/assets/css/eu.css";
+import "@/assets/css/common.css";
 
 export default {
   methods: {
