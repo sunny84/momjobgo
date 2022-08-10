@@ -79,15 +79,6 @@
     },
 
     "ing_category" : {
-        "none" : "none",
-        "rootAndTuberCrops" : "root and tuber crops",
-        "blockIronAbsorption" : "block iron absorption(recommend after 6 months)",
-        "fruits" : "fruits",
-        "animalProtein" : "animal protein",
-        "essential" : "essential"
-    },
-
-    "ing_category2" : {
         "none" : ["select ingredient", ""],
         "rootAndTuberCrops" : ["root and tuber crops", ""],
         "blockIronAbsorption" : ["block iron absorption", "recommend after 6 months"],

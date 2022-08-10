@@ -65,7 +65,7 @@
 
         <div v-for="(category, idx) in ing_data" :key="idx" v-show="category.id !== 6">
           <h2 v-show="category.id !==1">
-            <span class="title">{{ $t("ing_category." + [category.key]) }}</span>
+            <span class="title">{{ $t("ing_category." + [category.key])[0] }}</span>
             <span class="titlemargin">&nbsp;</span>
           </h2>
           <div class="wrap_select">

@@ -79,15 +79,6 @@
     },
 
     "ing_category" : {
-        "none" : "없음",
-        "rootAndTuberCrops" : "서류 (구황작물)",
-        "blockIronAbsorption" : "철분흡수 방해 (중기6개월부터 권장)",
-        "fruits" : "과일류",
-        "animalProtein" : "동물성 단백질", 
-        "essential" : "필수"
-    },
-
-    "ing_category2" : {
         "none" : ["식재료 선택", ""],
         "rootAndTuberCrops" : ["서류", "구황작물"],
         "blockIronAbsorption" : ["철분흡수 방해", "중기6개월~부터 권장"],
