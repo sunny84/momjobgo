@@ -21,8 +21,8 @@
         </VueSlideBar>
       </div>
       <div v-for="(category, idx) in ing_data" :key="idx" v-show="category.id !== 6">
-        <h2><span class="title">{{ $t("ing_category2." + [category.key])[0] }}</span>
-        <span class="title2">{{ $t("ing_category2." + [category.key])[1] }}</span></h2>
+        <h2><span class="title">{{ $t("ing_category." + [category.key])[0] }}</span>
+        <span class="title2">{{ $t("ing_category." + [category.key])[1] }}</span></h2>
         <div class="wrap_select">
           <span  v-for="(item, idx) in category.ingredientEntities" :key="idx">
             <span class="food" :class="{on : selectedIngredientIds.includes(item.id)}" @click="setSelectedIng(item.id)">{{$t('ingredient.' + [item.key])}}</span>

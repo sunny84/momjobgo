@@ -2,6 +2,7 @@ import { mapGetters } from "vuex";
 import axios from "axios";
 
 const API_SERVER = "http://m-api.devcury.kr";
+// const API_SERVER = "http://localhost:8090";
 
 const handleError = (e, errorCallback) => {
   if (

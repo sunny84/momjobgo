@@ -58,7 +58,7 @@
                             {{recipe.title}} <br/>
                             {{recipe.subTitle}} <br/>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
-                                <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}}|{{recipe.recipeId}}|{{recipe.boxId}}</li>
+                                <li v-if="recipe.period == idx">{{period[0]}} {{recipe.boxName}}|{{recipe.recipeId}}|{{recipe.boxId}}</li>
                             </ul>
                             </router-link>
                         </td>
@@ -89,7 +89,7 @@
                             {{recipe.subTitle}} <br/>
                             <span v-if="recipe.new">New</span>
                             <ul v-for="(period, idx) in $t('option.period')" :key="idx">
-                                <li v-if="recipe.period == idx">{{period}} {{recipe.boxName}} {{recipe.recipeId}} {{recipe.boxId}}</li>
+                                <li v-if="recipe.period == idx">{{period[0]}} {{recipe.boxName}} {{recipe.recipeId}} {{recipe.boxId}}</li>
                             </ul>
                             </router-link>
                         </td>
