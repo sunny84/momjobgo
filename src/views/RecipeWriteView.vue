@@ -10,7 +10,7 @@
         {{ $t("content.step") }}
         <select v-model="period">
           <option v-for="(period, idx) in $t('option.period')" :value="idx" :key="idx">
-            {{ period }}
+            {{ period[0] }} ( {{period[1]}} )
           </option>
         </select>
         {{ $t("content.quantity") }}
