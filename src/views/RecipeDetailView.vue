@@ -45,7 +45,7 @@
 
         <!-- 이유시기 / 조리시간 -->
         <div class="wrap_info row border-b-dotted">
-          <div class="fl" style="width:30%;"><span class="squre3">{{ $t("option.period[" + recipe_data.period + "]") }}</span></div>
+          <div class="fl" style="width:30%;"><span class="squre3">{{ $t("option.period[" + recipe_data.period + "]")[0] }}</span></div>
           <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet clock fl" style="width:30% ;">{{ $t("option.timeTaken[" + recipe_data.timeTaken + "]") }}</span></div>
           <!-- <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet star fl" style="width:20% ;">5.0</span></div> -->
         </div>

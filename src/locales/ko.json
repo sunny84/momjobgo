@@ -16,7 +16,7 @@
 
     "description" : {
         "writeRecipe" : "레시피 작성을 시작해 볼까요?",
-        "ingredient" : "어떤 식재료를 넣을까요?",
+        "ingredient" : "어떤 식재료가 좋을까요?",
         "almostDone" : "거의 다 왔어요! 힘내요!",
         "finishAndSave" : "완성! 레시피를 저장할까요?",
         "publishRecipe" : "레시피를 공개할까요?",
@@ -44,8 +44,7 @@
         "times" : "회분",
         "timeTaken" : "소요시간",
         "choiceOfIngredient" : "식재료 선택",
-        "title" : "제목 - 들어가는 식재료",
-        "subTitle" : "특별한 레시피를 설명하는 한마디! ex) 맛있는 이유!",
+        "title" : "제목",
         "mainPicture" : "대표사진",
         "listOfIngredient" : "재료소개",
         "measuringUnit" : "계량단위",
@@ -62,7 +61,10 @@
     },
 
     "content_description" : {
+        "title" : "들어가는 식재료명으로 입력하세요.",
+        "subTitle" : "특별한 레시피를 설명하는 한마디! ex) 맛있는 이유!",
         "measuringUnit" : "계량단위",
+        "cookingOrder" : "조리순서에 맞게 내용을 입력하세요.",
         "option" : "선택사항",
         "tip" : "Tip을 입력하세요.",
         "movieClipUrl" : "url을 입력하세요.",
@@ -70,22 +72,13 @@
     },
 
     "option" : {
-        "period" : ["초기(미음)", "중기(죽)", "후기(진밥)"],
+        "period" : [["초기", "미음"], ["중기", "죽"], ["후기", "진밥"]],
         "period_s" : [["초기","만 4개월 ~ 5개월"], ["중기","만 7개월 ~ 11개월"],["후기","만 11개월 ~ 13개월"]],
-        "timeTaken" : ["15분이내", "15분", "30분", "60분", "60분 이상"],
+        "timeTaken" : ["~15분", "15분", "30분", "60분", "60분+"],
         "timeTaken_s" : ["15분-", "15분", "30분", "60분", "60분+"]
     },
 
     "ing_category" : {
-        "none" : "없음",
-        "rootAndTuberCrops" : "서류",
-        "blockIronAbsorption" : "철분흡수 방해(중기6개월~부터 권장)",
-        "fruits" : "과일류",
-        "animalProtein" : "동물성 단백질", 
-        "essential" : "필수"
-    },
-
-    "ing_category2" : {
         "none" : ["식재료 선택", ""],
         "rootAndTuberCrops" : ["서류", "구황작물"],
         "blockIronAbsorption" : ["철분흡수 방해", "중기6개월~부터 권장"],
