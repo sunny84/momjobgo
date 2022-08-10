@@ -1211,9 +1211,13 @@ fieldset[disabled] a.btn_noRadius {
   color:#4f5872;
   background-color: #fff !important;
   border:1px #D8DBE0 solid !important;
-  padding-top:4px !important;
-  width:80px;
-  height:38px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px 5px 10px;
+}
+.btn-default.edit,.btn-default.edit:active {
+  background:url(../images/icon_edit.png)90% 50% no-repeat; 
+  padding: 5px 20px 5px 10px;
 }
 .btn-default:focus,
 .btn-default.focus {
