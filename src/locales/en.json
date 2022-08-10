@@ -72,7 +72,7 @@
     },
 
     "option" : {
-        "period" : ["begining(thin rice gruel)", "middle(Porridge)", "latter(soft boiled rice)"],
+        "period" : [["begining", "thin rice gruel"], ["middle", "Porridge"], ["latter", "soft boiled rice"]],
         "period_s" : [["begining","thin rice gruel"], ["middle","Porridge"], ["latter","soft boiled rice"]],
         "timeTaken" : ["~15M", "15M", "30M", "60M", "60M+"],
         "timeTaken_s" : ["15M-", "15M", "30M", "60M", "60M+"]
