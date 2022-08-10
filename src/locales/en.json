@@ -32,8 +32,7 @@
         "times" : "meals",
         "timeTaken" : "Required time",
         "choiceOfIngredient" : "Ingredient Choice",
-        "title" : "Title - Chosen ingredient",
-        "subTitle" : "A word for this special recipe! ex) The delicious reason!",
+        "title" : "Title",
         "mainPicture" : "Presentative Picture",
         "listOfIngredient" : "Ingredients",
         "cookingOrder" : "Cooking order",
@@ -48,7 +47,10 @@
     },
 
     "content_description" : {
+        "title" : "Enter title with chosen ingredient",
+        "subTitle" : "A word for this special recipe! ex) The delicious reason!",
         "measuringUnit" : "measure unit",
+        "cookingOrder" : "Fill in according to cooking order",
         "option" : "Optional",
         "tip" : "Add Tips",
         "movieClipUrl" : "Enter url",
@@ -57,7 +59,9 @@
 
     "option" : {
         "period" : ["begining(thin rice gruel)", "middle(Porridge)", "latter(soft boiled rice)"],
-        "timeTaken" : ["within 15 min", "15 min", "30 min", "60 min", "over 60 min"]
+        "period_s" : [["begining","thin rice gruel"], ["middle","Porridge"], ["latter","soft boiled rice"]],
+        "timeTaken" : ["~15M", "15M", "30M", "60M", "60M+"],
+        "timeTaken_s" : ["15M-", "15M", "30M", "60M", "60M+"]
     },
 
     "ing_category" : {
