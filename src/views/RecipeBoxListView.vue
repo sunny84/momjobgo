@@ -33,7 +33,7 @@
             <img v-else class="pic" src="@/assets/emptyImg.png">
           </div>
         </div>
-        <div class="column1 full fl"
+        <div class="column1 fl"
           @click="callRecipeBox(recipeBoxes[1].id)">
           <div class="wrap_row">
             <div class="circleNum">{{ recipeBoxes[1].recipe?box.recipe.length:0 }}</div>

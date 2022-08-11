@@ -6,23 +6,28 @@
         </h1>
         <div class="wrap_menu">
             <ul>
-                <li class="menu" style="cursor: ponter;" onclick="location.href='/myrecipe';">{{ $t("menu.myRecipe") }}</li><!--<router-link :to="'/myrecipe'"></router-link>-->
-                <li class="menu on" style="cursor: ponter;" onclick="location.href='/recipeboxlist';">{{ $t("menu.savedRecipe") }}</li><!--<router-link :to="'/recipeboxlist'"></router-link>-->
-                <li class="menu" style="cursor: ponter;" onclick="location.href='';">{{ $t("menu.historyRecipe") }}</li><!--<router-link :to="'#'"></router-link>-->
+                <li class="menu" style="cursor: ponter;" onclick="location.href='/myrecipe';">{{ $t("menu.myRecipe") }}</li>
+                <li class="menu on" style="cursor: ponter;" onclick="location.href='/recipeboxlist';">{{ $t("menu.savedRecipe") }}</li>
+                <li class="menu" style="cursor: ponter;" onclick="location.href='';">{{ $t("menu.historyRecipe") }}</li>
             </ul>
         </div>  
-        <div class="boxes-wrap">
-            <div class="wrap_keywords boxes swiper-container swiper-navigation">
-                <swiper class="swiper" ref="filterSwiper" :options="swiperOption" role="tablist">
-                    <swiper-slide class="keywords" role="tab" 
+        <div class="wrap-boxes">
+            <div class="boxes">
+                <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">
+                    <swiper-slide role="tab" 
                         v-for="(item, index) in recipeBoxes"
-                        :key="index"><!-- class="swiper-slide" -->
-                        <div>
-                            <button @click="selectRecipeBox(item.id)">{{item.name}} <span hidden>({{item.id}})</span></button>
+                        :key="index">
+                        <div class="keywords" 
+                                :class="{on : selectedRecipeBoxIds.includes(item.id) || boxId == item.id}" 
+                                @click="setSelectedRecipeBox(item.id)">
+                            <span>
+                                {{item.name}}
+                            </span>
                         </div>
                     </swiper-slide>
                     <swiper-slide role="tab">
-                        <div>
+                        <div class="keywords" 
+                            :class="{on : step==3}">
                             <button @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</button>
                         </div>
                     </swiper-slide>
@@ -130,15 +135,16 @@
             <div class="select_done" v-if="moveStep===1">
                 <div>
                     <div class="fl margin-bottom-5">
-                    <span class="select on fl margin-right-5"></span>
+                    <span class="select fl margin-right-5"></span>
                     <span class="dp-inline-block fl">{{$t("content.select")}} {{ selectedRecipeIds.length }}/{{ recipeList.length }}</span>
                     </div>
                     <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</div>
                 </div>
                 <div class="wrap_select">
                     <ul v-for="(box, index) in recipeBoxes" :key="index">
-                        <li class="menu fl" @click="callMoveRecipeBox(box.id)">
-                            <!-- <button class="btn btn-default fr" v-on:click="callDeleteBox(box.id)">X</button> -->
+                        <li class="menu fl"
+                            :class="{on : tempBoxId.includes(box.id)}"
+                            @click="callMoveRecipeBox(box.id)">
                             {{ box.name }}
                         </li>
                     </ul>
@@ -173,32 +179,17 @@ export default {
     name : "RecipeBoxView",
     data: ()=>({
         swiperOption: {
-            // on {
-            //     click: function() {
-            //         this.activeTab()
-            //     },
-            //     tap: function() {
-            //         this.activeTab()
-            //     },
-            // },
-            slidesPerView: 4,   // 'auto'
-            spaceBetween: 10,   // swiper-slide 사이의 간격 지정
+            slidesPerView: 3.5,   // 'auto'
+            spaceBetween: 0,   // swiper-slide 사이의 간격 지정
             slidesOffsetBefore: 0, // slidesOffsetBefore는 첫번째 슬라이드의 시작점에 대한 변경할 때 사용
             slidesOffsetAfter: 0, // slidesOffsetAfter는 마지막 슬라이드 시작점 + 마지막 슬라이드 너비에 해당하는 위치의 변경이 필요할 때 사용
             freeMode: true, // freeMode를 사용시 스크롤하는 느낌으로 구현 가능
             centerInsufficientSlides: true, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
             slideToClickedSlide: true,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-                navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
         },
         recipeBoxes : [],
         selectedRecipeBox : [],
+        selectedRecipeBoxIds : [],
         /* 
             step=0 레시피 박스 화면 RecipeBoxListView.vue 로 분리
             step=1 레시시 박스 상세 화면
@@ -229,13 +220,6 @@ export default {
         this.initialize();
     },
     methods : {
-        // swiperInit: function() {
-        //     this.activeTab()
-        // },
-        // activeTab: function(swiper) {
-        //     swiper
-        // },
-
         initialize() {
             this.getRecipeBoxById(this.boxId);
             this.getRecipeBoxList();
@@ -297,6 +281,16 @@ export default {
             }else{
                 this.selectedRecipeIds.push(id);
             }
+        },
+        setSelectedRecipeBox(id) {
+            let index = this.selectedRecipeBoxIds.findIndex(x => x === id);
+            if(index>=0) {
+                this.selectedRecipeBoxIds.splice(index, 1);
+            }else{
+                this.selectedRecipeBoxIds = []
+                this.selectedRecipeBoxIds.push(id);
+            }
+            this.selectRecipeBox(id)
         },
         selectRecipeBox(id) {
             console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
@@ -536,7 +530,16 @@ export default {
         },
         selectedRecipeIds(newValue){
             console.log("selectedRecipeIds: ", newValue)
+        },  
+        tempBoxId(newValue){
+            console.log("tempBoxId: ", newValue)
         },     
+        selectedRecipeBoxIds(newValue){
+            console.log("selectedRecipeBoxIds: ", newValue)
+        },
+        boxId(newValue){
+            console.log("boxId: ", newValue)
+        }
     },
 }
 </script>
@@ -551,67 +554,4 @@ button
     overflow:visible; 
     cursor:pointer
 }
-.swiper-container {
-  padding: 0 20px;
-  &:before,
-  &:after {
-    display: block;
-    position: absolute;
-    top: 0;
-    width: 20px;
-    height: 100%;
-    z-index: 10;
-    content: "";
-  }
-  &:before {
-    left: 0;
-    background: linear-gradient(90deg, #fff -20.19%, rgba(255, 255, 255, 0.8) 18.31%, rgba(255, 255, 255, 0) 75%);
-  }
-  &:after {
-    right: 0;
-    background: linear-gradient(270deg, #fff -20.19%, rgba(255, 255, 255, 0.8) 18.31%, rgba(255, 255, 255, 0) 75%);
-  }
-  .swiper-wrapper {
-    .swiper-slide {
-      width: auto;
-      min-width: 56px !important;overflow: hidden;
-      padding: 0px 14px;
-      line-height: 30px;
-      text-align: center;
-      border:#CBCBCB solid 1px; 
-      color:#CBCBCB;
-      border-radius:20px; 
-      font-weight: 500; 
-      display: inline-block; 
-      padding: 2px 8px; 
-      margin: 0 4px 0 0; 
-      font-size: 14px;
-    //   background: #f3f4f7;
-    background: #fff;
-      appearance: none;
-      cursor: pointer;
-    //   &[aria-selected="true"] { // FIXME: 왜 적용 안될까? hover 시 텍스트 색상 적용 안됨
-    //     border: #FF9519 solid 1px; 
-    //     color:#FF9519;
-    //     font-weight: 600;
-    //   }
-    }
-  }
-}
-// .swiper-container .swiper-wrapper .swiper-slide:hover {
-//         border: #FF9519 solid 1px; 
-//         color:#FF9519;
-//         font-weight: 600;
-
-// }
-// .navbar ul {
-//     list-style: none;
-// }
-// .contents ul {
-//     list-style: none;
-// }
-// .contents li {
-//     float: left;
-//     margin: 1px 6px;
-// }
 </style>

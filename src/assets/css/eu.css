@@ -159,12 +159,31 @@ main.recipebox .wrap_menu .menu:hover,main.recipebox .wrap_menu .menu.on{border-
 
 main.recipebox .wrap_recipes    {position:relative; clear: both;}
 main.recipebox .wrap_recipes .row0 {overflow: hidden;margin: 0 auto 15px;}
+
+main.recipebox .wrap_recipes .column1 {width: 50%;}
+main.recipebox .wrap_recipes .column1 .wrap_row {height:24px;}
+main.recipebox .wrap_recipes .column1 .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px;background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1 .wrap_row .title     {float: left; z-index: -1;border: 1px #CBCBCB solid; border-radius: 10px 10px 0 0; padding:0 10px 1px 10px; margin-left:13px;background-color:#fff; color:#333;text-align: center;}
+main.recipebox .wrap_recipes .column1 .wrap_row .new       {float: left;margin-top:5px; background: url(../images/bul-new.png)50% 50% no-repeat;width:35px;height: 16px;display:block;}
+main.recipebox .wrap_recipes .column1 .photo     {padding: 0;margin: 0 10px 0 0; display:block; border: 2px #CBCBCB solid; border-radius: 5px; box-shadow: 2px 2px 2px 0 #ccc;}
+main.recipebox .wrap_recipes .column1 .photo img {width: 100%; height: 100%;}
+
 main.recipebox .wrap_recipes .column1.on {width: 50%; }
 main.recipebox .wrap_recipes .column1.on .wrap_row {height:24px;}
+main.recipebox .wrap_recipes .column1:hover .wrap_row .circleNum,
+main.recipebox .wrap_recipes .column1.full:hover .wrap_row .circleNum,
 main.recipebox .wrap_recipes .column1.on .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px;background-color:#FF9519; color: #fff;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1:hover .wrap_row .title,
+main.recipebox .wrap_recipes .column1.full:hover .wrap_row .title,
 main.recipebox .wrap_recipes .column1.on .wrap_row .title     {float: left; z-index: -1;border: 3px #FF9519 solid; border-bottom: none; border-radius: 10px 10px 0 0; padding:0 5px 0 6px; margin-left:13px;background-color:#fff; color: #FF9519;text-align: center;}
+main.recipebox .wrap_recipes .column1:hover .wrap_row .new,
+main.recipebox .wrap_recipes .column1.full:hover .wrap_row .new,
 main.recipebox .wrap_recipes .column1.on .wrap_row .new       {float: left;margin-top:5px; background: url(../images/bul-new.png)50% 50% no-repeat;width:35px;height: 16px;display:block;}
+main.recipebox .wrap_recipes .column1:hover .photo,
+main.recipebox .wrap_recipes .column1.full:hover .photo,
 main.recipebox .wrap_recipes .column1.on .photo     {padding: 0;margin: 0 10px 0 0; display:block; border: 3px #FF9519 solid; border-radius: 5px; box-shadow: 2px 2px 2px 0 #ccc;}
+main.recipebox .wrap_recipes .column1:hover .photo img,
+main.recipebox .wrap_recipes .column1.full:hover .photo img,
 main.recipebox .wrap_recipes .column1.on .photo img {width: 100%; height: 100%;}
 
 main.recipebox .wrap_recipes .column1.off {width: 50%;}
@@ -219,7 +238,7 @@ main.recipebox .select_done .wrap_select0 .menu1 {background: url(../images/btn_
 main.recipebox .select_done .wrap_select0 .menu2 {background: url(../images/btn_boxdelete.png) no-repeat; width:144px;height: 137px; text-indent: -9999px;}
 main.recipebox .select_done .wrap_select {position: relative; background: #fff;padding:15px 0 15px 15px;clear: both; margin:10px auto;border-radius: 10px; text-align: center;}
 main.recipebox .select_done .wrap_select .menu {background: #fff;padding: 15px;width:40px;height:40px;text-align: center;vertical-align:middle ; border: #FF9519 1px solid;color: #FF9519;font-size:12px; border-radius: 10px;margin-right:20px;}
-main.recipebox .select_done .wrap_select .menu.on {background:#FF9519;padding: 15px; border: #FF9519 1px solid;color: #fff;font-size:12px;}
+main.recipebox .select_done .wrap_select .menu:hover, main.recipebox .select_done .wrap_select .menu.on {background:#FF9519;padding: 15px; border: #FF9519 1px solid;color: #fff;font-size:12px;}
 main.recipebox .select_done .wrap_select .arr_right {position:absolute;right:-10px;top:40%;text-indent:-99999px; background:url(../images/icon_right.png) no-repeat;width:30px;height:30px;}
 
 main.recipebox .wrap_newbox        {overflow:hidden; height:100%; background-color: #f9f9f9; margin: 20px 0 0; padding:15px;}
