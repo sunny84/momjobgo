@@ -2,11 +2,11 @@ package kr.momjobgo.eyou.web.service.impl;
 
 import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.common.GetDateTime;
-import kr.momjobgo.eyou.web.jpa.entity.FileEntity;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
-import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
+import kr.momjobgo.eyou.web.jpa.entity.*;
 import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,15 +17,21 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
     private final RecipeRepository recipeRepository;
     private final FileRepository fileRepository;
     private final GetDateTime getDateTime;
+    ScoreRepository scoreRepository;
+    TimeTakenRepository timeTakenRepository;
 
     public RecipeBoxServiceImpl(RecipeBoxRepository recipeBoxRepository,
                                 RecipeRepository recipeRepository,
                                 FileRepository fileRepository,
-                                GetDateTime getDateTime) {
+                                GetDateTime getDateTime,
+                                ScoreRepository scoreRepository,
+                                TimeTakenRepository timeTakenRepository) {
         this.recipeBoxRepository = recipeBoxRepository;
         this.recipeRepository = recipeRepository;
         this.fileRepository = fileRepository;
         this.getDateTime = getDateTime;
+        this.scoreRepository = scoreRepository;
+        this.timeTakenRepository = timeTakenRepository;
     }
 
     @Override
@@ -136,16 +142,16 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
         return recipeBoxRepository.findByIsDefaultAndUserId(true, userId);
     }
 
-    @Override
-    public List<RecipeBoxEntity> findByUserId() {
-        return recipeBoxRepository.findByUserId(UserManager.getUser().getId());
-    }
+//    @Override
+//    public List<RecipeBoxEntity> findByUserId() {
+//        return recipeBoxRepository.findByUserId(UserManager.getUser().getId());
+//    }
 
     @Override
-    public List<Map<String, Object>> getReceipeBoxList() {
+    public List<Map<String, Object>> getReceipeBoxList(Pageable pageable) {
         List recipeBoxList = new ArrayList<>();
-        List<RecipeBoxEntity> recipeBoxes = recipeBoxRepository.findByUserId(UserManager.getUser().getId());
-
+        List<RecipeBoxEntity> recipeBoxes = recipeBoxRepository.findByUserId(UserManager.getUser().getId(), pageable);
+        System.out.println(recipeBoxes);
         Collections.sort(recipeBoxes, (Comparator<RecipeBoxEntity>) (a, b) -> {
                 if (a.getIsDefault()) {
                     return -1;
@@ -171,7 +177,21 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
                 Map<String, Object> recipeMap = new HashMap<>();
                 recipeMap.put("id", recipe.getId());
                 recipeMap.put("title", recipe.getContentsEntity().getTitle());
-                List<FileEntity> files = fileRepository.findByContentsId(recipe.getContentsEntity().getId());
+                recipeMap.put("subTitle", recipe.getContentsEntity().getSubTitle());
+                recipeMap.put("new", recipe.getContentsEntity().getCreatedAt().after(this.getDateTime.yesterday())); // 어제 이후 시간이면 true
+                Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipe.getId());
+                if (scoreEntity.isPresent()) {
+                    recipeMap.put("score", scoreEntity.get().getScore());
+                }
+                Optional<TimeTakenEntity> timeTakenEntity = timeTakenRepository.findById(recipe.getTimeTakenId());
+                if (timeTakenEntity.isPresent()) {
+                    recipeMap.put("timeTaken", timeTakenEntity.get().getTime());
+                }
+                recipeMap.put("period", recipe.getPeriod());
+                recipeMap.put("recipeId", recipe.getId());
+                Long contentsId = recipe.getContentsId();
+                recipeMap.put("contentsId", contentsId);
+                List<FileEntity> files = fileRepository.findByContentsId(contentsId);
                 files.forEach(file -> {
                     if (file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
                         recipeMap.put("mainImgId", file.getId());
