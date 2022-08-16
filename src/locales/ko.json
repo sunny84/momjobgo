@@ -57,7 +57,9 @@
         "all" : "전체",
         "moveBox" : "박스 이동",
         "myRecipe" : "나의 레시피",
-        "selectAll" : "전체선택"
+        "selectAll" : "전체선택", 
+        "select" : "선택",
+        "newBox" : "새로운 박스"
     },
 
     "content_description" : {
@@ -128,7 +130,7 @@
         "delete" : "삭제",
         "cancel" : "취소",
         "done" : "완료",
-        "addNewBox" : "새 박스 추가",
+        "addNewBox" : "새 박스",
         "write" : "작성하기"
     }
 }

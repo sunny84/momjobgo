@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import user from './modules/user'
 import filter from './modules/filter'
 import createPersistedState from 'vuex-persistedstate';
+import box from './modules/box';
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     // recipe
     user: user,
     filter: filter,
+    box: box,
   },
   plugins : [createPersistedState({
     paths : ["user"],
