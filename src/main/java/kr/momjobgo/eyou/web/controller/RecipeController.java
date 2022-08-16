@@ -1,5 +1,7 @@
 package kr.momjobgo.eyou.web.controller;
 
+import kr.momjobgo.eyou.config.security.UserManager;
+import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.service.RecipeService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class RecipeController {
     @GetMapping("/contents={contentsId}")
     public ResponseEntity<?> getByContentsId(@PathVariable Long contentsId) { return ResponseEntity.ok().body( recipeService.getByContentsId(contentsId) ); }
     
-    @GetMapping("/detail={id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<?> getDetailById(@PathVariable Long id) {
         if(!recipeService.getDetailById(id).isEmpty())
             return ResponseEntity.ok().body(recipeService.getDetailById(id));

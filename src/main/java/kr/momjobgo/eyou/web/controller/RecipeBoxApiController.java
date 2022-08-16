@@ -1,8 +1,11 @@
 package kr.momjobgo.eyou.web.controller;
 
 import kr.momjobgo.eyou.web.service.RecipeBoxService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +21,9 @@ public class RecipeBoxApiController {
     }
 
     @GetMapping("/mine")
-    public ResponseEntity<?> getReceipeBoxList() {
-        return ResponseEntity.ok().body( recipeBoxService.getReceipeBoxList() );
+    public ResponseEntity<?> getReceipeBoxList(
+            @RequestParam(value = "page") int page){
+        return ResponseEntity.ok().body( recipeBoxService.getReceipeBoxList(PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC,"createdAt"))) );
     }
 
     @GetMapping("/{id}")

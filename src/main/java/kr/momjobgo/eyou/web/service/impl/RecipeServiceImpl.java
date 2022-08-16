@@ -8,8 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
-import static java.lang.Integer.parseInt;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -20,16 +19,19 @@ public class RecipeServiceImpl implements RecipeService {
     private final IngredientRepository ingredientRepository;
     private final ScoreRepository scoreRepository;
     private final TimeTakenRepository timeTakenRepository;
+    private final UserRepository userRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository, ContentsRepository contentsRepository,
                              FileRepository fileRepository, IngredientRepository ingredientRepository,
-                             ScoreRepository scoreRepository, TimeTakenRepository timeTakenRepository) {
+                             ScoreRepository scoreRepository, TimeTakenRepository timeTakenRepository,
+                             UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.contentsRepository = contentsRepository;
         this.fileRepository = fileRepository;
         this.ingredientRepository = ingredientRepository;
         this.scoreRepository = scoreRepository;
         this.timeTakenRepository = timeTakenRepository;
+        this.userRepository = userRepository;
      }
 
     @Override
@@ -118,7 +120,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findByContentsId(contentsId);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> getDetailById(Long id) {
         Optional <RecipeEntity> recipeEntity = recipeRepository.findById(id);
@@ -131,16 +132,34 @@ public class RecipeServiceImpl implements RecipeService {
             Long contentsId = recipeEntity.get().getContentsId();
 
             result.put("contentsId", contentsId);
-            result.put("writer", recipe.getContentsEntity().getWriter());
-
-            // user table id대신 snsid를 보여줘야할 경우 사용할 코드
-            //result.put("writer", UserManager.getUser().getSnsId());
-
             result.put("title", recipe.getContentsEntity().getTitle());
             result.put("subTitle", recipe.getContentsEntity().getSubTitle());
             result.put("period", recipe.getPeriod());
             result.put("quantity", recipe.getQuantity());
             result.put("timeTaken", recipe.getTimeTakenId());
+
+            /** User info **/
+            Long userId = recipe.getContentsEntity().getWriter();
+            UserEntity userEntity = userRepository.getById(userId);
+            Map<String, Object> user = new HashMap<>();
+            user.put("id", userEntity.getId());
+            user.put("snsId", userEntity.getSnsId());
+            user.put("email", userEntity.getEmail());
+            user.put("nickname", userEntity.getNickname());
+
+            // recipe count written by writer
+            Long category = Long.valueOf(1);  // 1 is the number of content category for recipe
+            List <ContentsEntity> contentsEntityList=contentsRepository.findByWriterAndCategory(userEntity.getId(), category);
+            AtomicInteger recipeCount = new AtomicInteger();
+            contentsEntityList.forEach(contents -> {
+                if(recipeRepository.findByContentsId(contents.getId()).get(0).getOpen()!= false) {
+                    recipeCount.getAndIncrement();
+                }
+            });
+
+            user.put("recipeCount", recipeCount);
+            result.put("writer", user);
+
 
             /** ingredients with key and volume **/
             List<RecipeIngredientMapEntity> recipeIngredientMapEntities = recipe.getRecipeIngredientMapEntities();

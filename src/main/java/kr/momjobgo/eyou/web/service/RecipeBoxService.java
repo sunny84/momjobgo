@@ -1,6 +1,8 @@
 package kr.momjobgo.eyou.web.service;
 
 import kr.momjobgo.eyou.web.jpa.entity.RecipeBoxEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
@@ -23,8 +25,7 @@ public interface RecipeBoxService {
     List<RecipeBoxEntity> findByNameContains(String name);
     RecipeBoxEntity findByIsDefault();
 
-    List<RecipeBoxEntity> findByUserId();
-    List<Map<String, Object>> getReceipeBoxList();
-
+//    List<RecipeBoxEntity> findByUserId();
+    List<Map<String, Object>> getReceipeBoxList(Pageable pageable);
 }
 

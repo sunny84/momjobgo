@@ -2,6 +2,8 @@ package kr.momjobgo.eyou.web.controller;
 
 import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.service.RecipeRecipeBoxService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,14 @@ public class RecipeRecipeBoxApiController {
     }
 
     @GetMapping("/recipe")
-    public ResponseEntity<?> findByRecipeContents(@RequestParam(value = "box", required = false) Long boxId) {
-        return ResponseEntity.ok().body( recipeRecipeBoxService.findByRecipeContents(boxId) );
+    public ResponseEntity<?> findByRecipeContents(@RequestParam(value = "box", required = false) Long boxId,
+                                                  @RequestParam(value = "page") int page) {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.findByRecipeContents(boxId, PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC,"Id")) ));
+    }
+
+    @GetMapping("/recipe/mine")
+    public ResponseEntity<?> findByRecipeContentsByUserId() {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.findByRecipeContentsByUserId() );
     }
 
     @PostMapping("")
@@ -44,7 +52,7 @@ public class RecipeRecipeBoxApiController {
             @RequestParam(value = "period", required = false) Long period) {
         Long userId = UserManager.getUser().getId();
 //        System.out.println("===> user ID : "+ userId);
-        return ResponseEntity.ok().body(recipeRecipeBoxService.getSubscribeList(1L, period));
+        return ResponseEntity.ok().body(recipeRecipeBoxService.getSubscribeList(userId, period));
     }
 
     @PostMapping("/{id}")

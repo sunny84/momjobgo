@@ -8,6 +8,7 @@ import kr.momjobgo.eyou.web.jpa.repository.UserRepository;
 import kr.momjobgo.eyou.web.service.UserService;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,18 +32,28 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserEntity> entity = userRepository.findBySnsId(request.getSnsId());
 
-        String token = null;
+        Token.TokenResponse tokenResponse = new Token.TokenResponse();
 
         if(entity.isPresent()){
-            token = JwtTokenProvider.generateToken(entity.get());
+            tokenResponse.setToken(JwtTokenProvider.generateToken(entity.get()));
+            UserEntity newUser1 = new UserEntity();
+            newUser1.setNickname(request.getNickname());
+            newUser1.setProfile_img(request.getProfile_img());
+            userRepository.save(newUser1.builder().profile_img(newUser1.getProfile_img()).id(entity.get().getId())
+                                .snsId(entity.get().getSnsId()).email(entity.get().getEmail()).nickname(newUser1.getNickname())
+                                .phone(entity.get().getPhone()).enable(entity.get().getEnable()).build());
         } else {
             UserEntity newUser = new UserEntity();
             newUser.setSnsId(request.getSnsId());
             newUser.setNickname(request.getNickname());
-            token = JwtTokenProvider.generateToken(userRepository.save(newUser));
+            newUser.setProfile_img(request.getProfile_img());
+            tokenResponse.setToken(JwtTokenProvider.generateToken(userRepository.save(newUser)));
         }
 
-        return Token.TokenResponse.builder().token(token).build();
+        Optional<UserEntity> entity2 = userRepository.findBySnsId(request.getSnsId());
+        tokenResponse.setId(entity2.get().getId());
+
+        return tokenResponse;
     }
 
 }
