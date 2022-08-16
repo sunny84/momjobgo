@@ -326,9 +326,7 @@ import emptyImg from '@/assets/emptyImg.png'
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "swiper/dist/css/swiper.min.css";
 import { mapGetters, mapActions } from "vuex";
-import BoxKeywordView from '@/components/BoxKeywordView.vue';
 import InfiniteLoading from 'vue-infinite-loading';
-import BoxReipeView from '@/components/BoxReipeView.vue';
 import ModalView from '@/components/ModalView.vue';
 
 export default {
@@ -391,9 +389,6 @@ export default {
     swiper,
     swiperSlide,
     InfiniteLoading,
-    BoxKeywordView,
-    BoxReipeView,
-    ModalView,
     ModalView
 },    
 
