@@ -57,7 +57,9 @@
         "all" : "All",
         "moveBox" : "Go to Box",
         "myRecipe" : "My Recipe",
-        "selectAll" : "Select All"
+        "selectAll" : "Select All",
+        "select" : "Select",
+        "newBox" : "New Box"
     },
     
     "content_description" : {
@@ -128,7 +130,7 @@
         "delete" : "Delete",
         "cancel" : "Cancel",
         "done" : "Done",
-        "addNewBox" : "Add New Box",
+        "addNewBox" : "New Box",
         "write" : "Write"
     }
 }

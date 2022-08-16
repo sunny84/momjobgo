@@ -1,64 +1,91 @@
 <template>
   <div>
-    <!--HEADER-->
-    <h4>{{ $t("title.recipeBox") }}</h4>
-    <div class="menu">
-        <ul>
-            <li><router-link :to="'/myrecipe'">{{ $t("menu.myRecipe") }}</router-link></li>
-            <li><router-link :to="'/recipeboxlist'">{{ $t("menu.savedRecipe") }}</router-link></li>
-            <li><router-link :to="'#'">{{ $t("menu.historyRecipe") }}</router-link></li>
-        </ul>
-    </div>
-    <!--CONTENT-->
-    <div class="contents">        
-        <button @click="callEdit">{{$t("button.edit")}}</button>
-        <tr v-for="(box, index) in recipeBoxes" :key="index">
-          <td>
-            <router-link :to="'/recipebox/'+box.id">
-              <ul>
-                <li v-if="box.recipe?box.recipe.length:0"><!-- 레시피가 있는 박스 -->
-                  <ul v-for="(r, i) in box.recipe.slice(0,1)" :key="i">
-                    <li><!--  v-if="i==0" 첫번째 레시피 이미지 -->
-                      <p><img
-                        :src="r.mainImgId?`${$API_SERVER}/file/download/thumbnail?fileId=${r.mainImgId}`:mainPicture"
-                        width="200px" 
-                        height="150px" 
-                        @error="setEmptyImg"
-                      /></p>
-                    </li>
-                  </ul>
-                  {{box.name}} {{box.recipe.length}}<br/>
-                  <span v-if="box.new">New</span>
-                </li>
-                <li v-else><!-- 레시피가 없는 박스 -->
-                  <p><img
-                    :src="mainPicture" 
-                    width="200px" 
-                    height="150px" 
-                    @error="setEmptyImg"
-                  /></p>
-                  {{box.name}} 0<br/>
-                  <span v-if="box.new">New</span>
-                  </li>
-              </ul>
-            </router-link>
-          </td>
-        </tr>
-        <tr>          
-          <td>
-            <confirm-input
-              :text="'+ '+$t('button.addNewBox')"
-              :title="$t('button.addNewBox')"
-              :value="boxName"
-              :callback="text => addNewBox(text)"
-            />
-            <p>
-              <img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg">
-            </p>
-            <br/>
-          </td>
-        </tr>
-    </div>
+    <main class="recipebox">
+      <!--HEADER-->
+      <h1 class="fl"><router-link :to="'/recipedetail/'+recipeId"><img src="@/assets/images/icon_back.png" alt="돌아가기" title="돌아가기"/></router-link>
+        <span class="color-orange padding-left-15">{{ $t("title.recipeBox") }}</span>
+      </h1>
+      <div class="wrap_menu">
+          <ul>
+              <li class="menu" :class="{on : this.$route.path == '/myrecipe'}" style="cursor: ponter;" onclick="location.href='/myrecipe';">{{ $t("menu.myRecipe") }}</li><!--<router-link :to="'/myrecipe'"></router-link>-->
+              <li class="menu" :class="{on : this.$route.path == '/recipeboxlist'}" style="cursor: ponter;" onclick="location.href='/recipeboxlist';">{{ $t("menu.savedRecipe") }}</li><!--<router-link :to="'/recipeboxlist'"></router-link>-->
+              <li class="menu" :class="{on : this.$route.path == '/todaySawRecipe'}" style="cursor: ponter;" onclick="location.href='/todaySawRecipe';">{{ $t("menu.historyRecipe") }}</li><!--<router-link :to="'#'"></router-link>-->
+          </ul>
+      </div>
+      <!--CONTENT-->
+      <div class="btn btn-default edit fr margin-bottom-20">
+        <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
+      </div>
+      <!-- <BoxListView :key="listView"></BoxListView> -->
+      <div class="wrap_recipes">
+          <div class="row0">
+              <div class="column1 full fl" 
+              v-for="(box, $index) in allBoxInfo" :key="$index"
+              @click="callRecipeBox('all')"
+              >
+                  <div>
+                      <div class="wrap_row">
+                          <div class="circleNum">{{ box.recipeCnt }}</div>
+                          <div class="title">{{ box.name }}</div>
+                          <div class="new" v-if="box.new"></div>
+                      </div>
+                      <div v-if="box.thumbnails">
+                          <div class="photo" v-for="(img, $i) in box.thumbnails.slice(0,4)" :key="$i">
+                              <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
+                              <img v-else class="pic" src="@/assets/emptyImg.png">
+                          </div>
+                      </div>
+                      <div v-else>
+                          <div class="photo">
+                              <img class="pic" src="@/assets/emptyImg.png">
+                              <img class="pic" src="@/assets/emptyImg.png">
+                              <img class="pic" src="@/assets/emptyImg.png">
+                              <img class="pic" src="@/assets/emptyImg.png">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="column1 fl" 
+              v-for="(box, $index) in boxList" :key="$index"
+              @click="callRecipeBox(box.id)"
+              >
+                  <div v-if="!box.isDefault && box.recipe"><!-- 빈 박스(폴더)는 비활성화 -->
+                  <div v-if="box.recipe.length > 0">
+                      <div class="wrap_row">
+                          <div class="circleNum">{{ box.recipe?box.recipe.length:0 }}</div>
+                          <div class="title">{{ box.name }}</div>
+                          <div class="new" v-if="box.new"></div>
+                          <button hidden v-on:click="callDeleteBox(box.id)">X</button>
+                      </div>
+                      <div v-if="box.recipe">
+                          <div class="photo" v-for="(r, $i) in box.recipe.slice(0,1)" :key="$i">
+                              <img v-if="r.mainImgId != null" class="pic" :src="getImgURL(r.mainImgId)" @error="setEmptyImg">
+                              <img v-else class="pic" src="@/assets/emptyImg.png">
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="wrap_recipes">
+          <div class="row0">
+              <div class="column1 new fl" v-on:click.capture="addNewBox(boxName)">
+                  <div class="wrap_row">
+                      <div class="title">{{ $t('content.newBox') }}</div>
+                  </div>
+                  <div class="photo">
+                      <img src="@/assets/images/icon_plus.png" alt="새로운 박스"/>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- <div>
+        <infinite-loading @infinite="infiniteHandler">
+            <div slot="no-more"><br/></div>
+        </infinite-loading>
+      </div> -->
+    </main>
     <!--FOOTER-->
   </div>
 </template>
@@ -66,14 +93,36 @@
 <script>
 import emptyImg from '@/assets/emptyImg.png'
 import ConfirmInput from 'vue-confirm-input'
+import InfiniteLoading from 'vue-infinite-loading';
+import { mapActions } from "vuex";
 
 export default {
   name : "RecipeBoxListView",
   data: ()=>({
-    recipeBoxes : [],
-    mainPicture : '',
+    page : 0,
+    boxList : [],       // 화면에 보여줄 담은 레시피 목록
+    recipeBoxes : [],   // 서버로 부터 얻어온 담은 레시피 목록
+    allBoxInfo : [],    // 모아 보기
     boxName: '기본박스',
+    recipeId: 0,
   }),
+
+  components: {
+    ConfirmInput,
+    InfiniteLoading
+  },
+
+  computed: {
+    reversedMesage: {
+      get() {
+        return this.boxName.split('').reverse().join('')
+      },
+      set(value) {
+        console.log(value)
+        this.boxName = value
+      }
+    }
+  },
 
   created() {
     this.initialize();
@@ -83,23 +132,75 @@ export default {
     this.$checkToken('recipeboxlist');
   },
 
-  components: {
-      ConfirmInput
-  },
+  watch: {
+  }, 
 
   methods: {
+    // ...mapMutations('box', ['setStep','setBoxId', 'setAllBoxInfo']),
+    ...mapActions('box', ['setStep','setBoxId', 'setAllBox']),
+
     initialize() {
       this.getRecipeBoxAll();
     },
-
-    async getRecipeBoxAll() {      
-      const response = await this.$api(
-        `${this.$API_SERVER}/api/recipebox/mine`,
-        "get"
-      );
+    
+    async getRecipeBoxAll() {
+      let params = '';
+        // params += `?page=${this.page}`;
+        // params += '&sort=createdAt,DESC';
+      const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe/mine`+params, "get");
       if (response.status === this.HTTP_OK) {
+        this.allBoxInfo = []
+        // this.setAllBoxInfo(allBoxInfo)
         this.recipeBoxes = response.data;
-        console.log(this.recipeBoxes);
+
+        let recipeCnt = 0
+        let thumbnails = []
+        let newFlag = false
+        this.recipeBoxes.forEach(box => {
+          if(box.recipe){
+              box.recipe.forEach(recipe => {
+              recipeCnt = recipeCnt + 1
+              if(recipe.mainImgId) thumbnails.push({"mainImgId": recipe.mainImgId})
+              if(recipe.new) newFlag = true
+            });
+          }
+        });
+        this.allBoxInfo.push({
+          'name': '모든 레시피',
+          'recipeCnt': recipeCnt,
+          'thumbnails': thumbnails,
+          'new': newFlag,
+          'recipeBoxes': this.recipeBoxes
+          });
+        this.boxList = this.recipeBoxes
+        console.log(this.allBoxInfo)
+        this.setAllBox(this.allBoxInfo)
+      }
+    },
+
+    async infiniteHandler($state){
+      let params = `page=${this.page}`;
+        // params += '&sort=createdAt,DESC';
+      console.log(params);
+      const response = await this.$api(`${this.$API_SERVER}/api/recipebox/mine?`+params, `get`);
+      if (response.status === this.HTTP_OK) {
+        if(response.data.length){
+          console.log(response.data);
+          for(const data of response.data){
+            this.boxList.push(data);
+            // this.setAllBoxInfo(data);
+          }          
+          this.page++;
+          $state.loaded();
+          if(response.data.length / 2 < 1){
+            $state.complete();
+          }
+        }else{
+          $state.complete();
+        }
+      }else{
+        console.log(response.status);
+        $state.complete();
       }
     },
 
@@ -109,6 +210,15 @@ export default {
     },
 
     async addNewBox(name) {
+        name = prompt('새 박스 이름를 입력하고 확인버튼을 눌러주세요.', '새 박스 이름');
+        if(name === null){
+          alert("취소되었습니다.")
+          return
+        }
+        if(name.length < 2 || name.length > 20 || name === ' '){ /* TODO: 특수문자 처리 */
+          alert("박스 이름은 공백을 제외한 글자수 2 이상에서 20 이하로 작성해 주세요.")
+          return
+        }
         console.log("addNewBox : "+name);
         this.boxName = name;
         const response = await this.$api(
@@ -124,15 +234,27 @@ export default {
     setEmptyImg(e) {
       e.target.src=emptyImg;
     },
-    async getFileId(id){
-        const response = await this.$api(
-          `${this.$API_SERVER}/file?contentsId=${id}`,
-          "get"
-        );
-        if (response.status === this.HTTP_OK) {
-            console.log(response.data);
-        }
-    }
+
+    getImgURL(id) {
+      const url = `${this.$API_SERVER}/file/download/thumbnail?fileId=` + id;
+      console.log(url);
+      return url
+    },
+
+    callRecipeBox(id) {
+      this.setBoxId(id)
+      this.setStep(4)
+      // this.$store.commit('box/setAllBoxInfo', this.allBoxInfo);
+      // this.$store.commit('box/setBoxId', id);
+      // if(id == 'all'){
+      //   this.$store.commit('box/setStep', 4)
+      // }
+      // else{
+      //   this.$store.commit('box/setStep', 1)
+      // }
+      location.href=`/recipebox/${id}`;
+
+    },
   },
 }
 </script>
@@ -147,11 +269,5 @@ button
     padding:0; 
     overflow:visible; 
     cursor:pointer
-}
-ul {
-    list-style: none;
-}
-li {
-    float: left;
 }
 </style>
