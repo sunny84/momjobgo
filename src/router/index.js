@@ -9,6 +9,7 @@ import RecipeFilterView from "@/views/RecipeFilterView.vue";
 import RecipeListView from "@/views/RecipeListView.vue";
 import RecipeBoxListView from "@/views/RecipeBoxListView.vue";
 import RecipeDetailView from "@/views/RecipeDetailView.vue";
+import TodaySawRecipeView from "@/views/TodaySawRecipeView.vue";
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,11 @@ const routes = [
     path: "/myrecipe",
     name: "myrecipe",
     component: MyRecipeView,
+  },
+  {
+    path: "/todaySawRecipe",
+    name: "todaySawRecipe",
+    component: TodaySawRecipeView,
   },
   {
     path: "/write",

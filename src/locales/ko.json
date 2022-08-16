@@ -58,7 +58,8 @@
         "moveBox" : "박스 이동",
         "myRecipe" : "나의 레시피",
         "selectAll" : "전체선택", 
-        "select" : "선택"
+        "select" : "선택",
+        "newBox" : "새로운 박스"
     },
 
     "content_description" : {

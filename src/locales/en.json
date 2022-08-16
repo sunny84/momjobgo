@@ -58,7 +58,8 @@
         "moveBox" : "Go to Box",
         "myRecipe" : "My Recipe",
         "selectAll" : "Select All",
-        "select" : "Select"
+        "select" : "Select",
+        "newBox" : "New Box"
     },
     
     "content_description" : {

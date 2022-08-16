@@ -1,60 +1,132 @@
-<template>
+d<template>
   <div>
     <main class="recipebox">
-        <h1 class="fl"><router-link :to="'/recipedetail/'+recipeId"><img src="@/assets/images/icon_back.png" alt="돌아가기" title="돌아가기"/></router-link>
+        <h1 class="fl"><router-link :to="'/recipedetail/'+rcpId"><img src="@/assets/images/icon_back.png" alt="돌아가기" title="돌아가기"/></router-link>
         <span class="color-orange padding-left-15">{{ $t("title.recipeBox") }}</span>
         </h1>
         <div class="wrap_menu">
             <ul>
-                <li class="menu" style="cursor: ponter;" onclick="location.href='/myrecipe';">{{ $t("menu.myRecipe") }}</li>
-                <li class="menu on" style="cursor: ponter;" onclick="location.href='/recipeboxlist';">{{ $t("menu.savedRecipe") }}</li>
-                <li class="menu" style="cursor: ponter;" onclick="location.href='';">{{ $t("menu.historyRecipe") }}</li>
+                <li class="menu" :class="{on : this.$route.path == '/myrecipe'}" style="cursor: ponter;" onclick="location.href='/myrecipe';">{{ $t("menu.myRecipe") }}</li><!--<router-link :to="'/myrecipe'"></router-link>-->
+                <li class="menu" :class="{on : this.$route.path == '/recipebox/'+boxId || 'all'}" style="cursor: ponter;" onclick="location.href='/recipebox/all';">{{ $t("menu.savedRecipe") }}</li><!--<router-link :to="'/recipeboxlist'"></router-link>-->
+                <li class="menu" :class="{on : this.$route.path == '/todaySawRecipe'}" style="cursor: ponter;" onclick="location.href='/todaySawRecipe';">{{ $t("menu.historyRecipe") }}</li><!--<router-link :to="'#'"></router-link>-->
             </ul>
-        </div>  
+        </div>
+        <!-- <BoxKeywordView :key="listView"></BoxKeywordView> -->
+        <span>{{ step }} {{ boxId }}</span>
         <div class="wrap-boxes">
             <div class="boxes">
-                <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">
-                    <swiper-slide role="tab" 
-                        v-for="(item, index) in recipeBoxes"
-                        :key="index">
+                <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">                    
+                    <swiper-slide role="tab">
                         <div class="keywords" 
-                                :class="{on : selectedRecipeBoxIds.includes(item.id) || boxId == item.id}" 
-                                @click="setSelectedRecipeBox(item.id)">
+                            :class="{on : step==4 && boxId == 'all'}">
+                            <button @click="callAllList()">모든 레시피</button>
+                        </div>
+                    </swiper-slide>
+                    <swiper-slide role="tab" 
+                        v-for="(box, $index) in recipeBoxes"
+                        v-if="box.isDefault === false"
+                        :key="$index">
+                        <div class="keywords" 
+                                :class="{on : selectedRecipeBoxIds.includes(box.id) || boxId == box.id}" 
+                                @click="setSelectedRecipeBox(box.id)">
                             <span>
-                                {{item.name}}
+                                {{box.name}}
                             </span>
                         </div>
                     </swiper-slide>
                     <swiper-slide role="tab">
                         <div class="keywords" 
-                            :class="{on : step==3}">
-                            <button @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</button>
+                            :class="{on : step==3 || boxId == 'new'}">
+                            <!-- <button @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</button> -->
+                            <button @click="isModalViewed=true">{{ $t('button.addNewBox') }} +</button>
                         </div>
                     </swiper-slide>
                 </swiper>
-                <!-- <div class="wrapper">
+                <!-- ////<div class="wrapper">
                 <div class="swiper-pagination" slot="pagination"></div>
                 <div class="swiper-button-prev" slot="button-prev"></div>
                 <div class="swiper-button-next" slot="button-next"></div>
+                </div>//// -->
+                <!-- <div>
+                ////<infinite-loading @infinite="infiniteHandler"> -->
+                <!-- <infinite-loading @infinite="getRecipeBoxList">
+                    <div slot="no-more"><br/></div>
+                </infinite-loading>
                 </div> -->
             </div>
             <div>
                 <span hidden>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
             </div>
         </div>
-        <div v-if="step===1">
+        <div v-if="step==0">
+            <div v-for="(all, $index) in allBoxInfo" :key="$index">
+            <div v-for="(boxes, $index) in all" :key="$index">
+            <div v-for="(box, $index) in boxes" :key="$index">
+            <div v-if="selectedRecipeBox.id == box.id">
+                <div class="wrap_allnum fl">
+                    <span class="dp-inline-block fl">{{$t("content.all")}} </span>
+                    <span class="num">{{ box.recipe?box.recipe.length:0 }}</span>
+                </div>
+                <div class="btn btn-default edit fr">
+                    <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
+                </div>
+                <!-- TODO: 이부분만 갱신하도록 수정 --> 
+                <!-- TODO: 편집step==3부분도 변경 --> 
+                <div class="wrap_recipes" v-if="box.recipe.length > 0">
+                    <div class="alltitle">{{ box.name }}</div>
+                    <div class="wrap_in" v-for="(recipe, $index) in box.recipe" :key="$index">
+                    <router-link :to="'/recipedetail/'+recipe.recipeId">
+                        <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
+                        <div class="wrap_text fl">
+                            <div class="wrap_bullet">
+                                <span v-for="(period, idx) in $t('option.period')" :key="idx">
+                                    <div class="squre4 fl" v-if="recipe.period == idx">{{ period[0] }}</div>
+                                </span>
+                                <div class="new2 fl" v-if="recipe.new"></div>
+                            </div>
+                            <div class="fr"></div>
+                            <div class="title">
+                                <div class="fl padding-right-10">{{ recipe.title }}</div>
+                                <span class="icon_reply fl"></span>
+                            </div>
+                            <div class="text">{{ recipe.subTitle }}</div>
+                        </div>
+                    </router-link>
+                    </div>
+                    <!-- ////<infinite-loading @infinite="getRecipeRecipeBoxList(boxId)">
+                        <div slot="no-more"><br/></div>
+                    </infinite-loading>//// -->
+                    <!-- <div
+                        type="button"
+                        v-on:click="appendRecipes(false)"
+                        :disabled="this.dataRcpFull === true"
+                        :hidden="this.totRecipes == this.cntRecipes"
+                        :class="{disabled : dataRcpFull}"
+                    >
+                    더보기 ({{cntRecipes}}/{{totRecipes}})
+                    </div> -->
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <!-- <div v-if="step===1 || step===0" > -->
+        <div v-if="step==1">
+            <!-- <BoxReipeView :boxId="selectedRecipeBox.id"></BoxReipeView> -->
             <div class="wrap_allnum fl">
                 <span class="dp-inline-block fl">{{$t("content.all")}} </span>
-                <span class="num">{{ recipeList.length }}</span>
+                <span class="num">{{ recipeList?recipeList.length:0 }}</span>
             </div>
             <div class="btn btn-default edit fr">
                 <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
             </div>
-            <div class="wrap_recipes">
+            <div class="wrap_recipes" v-if="recipeList.length > 0">
                 <div class="alltitle">{{ selectedRecipeBox.name }}</div>
-                <div class="wrap_in" v-for="(recipe, index) in recipeList.slice(0,5)" :key="index">
+                <div class="wrap_in" v-for="(recipe, index) in recipes" :key="index">
                 <router-link :to="'/recipedetail/'+recipe.recipeId">
-                    <div class="photo fl"><img :src="recipe.file"/></div>
+                    <span hidden>{{recipe.mainImgId}} {{recipeList.length}} {{ recipes.length}}</span>
+                    <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
                     <div class="wrap_text fl">
                         <div class="wrap_bullet">
                             <span v-for="(period, idx) in $t('option.period')" :key="idx">
@@ -71,6 +143,18 @@
                     </div>
                 </router-link>
                 </div>
+                <!-- ////<infinite-loading @infinite="getRecipeRecipeBoxList(boxId)">
+                    <div slot="no-more"><br/></div>
+                 </infinite-loading>//// -->
+                <!-- <div
+                    type="button"
+                    v-on:click="appendRecipes(false)"
+                    :disabled="this.dataRcpFull === true"
+                    :hidden="this.totRecipes == this.cntRecipes"
+                    :class="{disabled : dataRcpFull}"
+                >
+                더보기 ({{cntRecipes}}/{{totRecipes}})
+                </div> -->
             </div>
         </div>
         <div v-if="step===2">
@@ -78,7 +162,7 @@
                 <div class="fl" v-on:click="on = !on">
                     <span class="select dp-inline-block fl margin-right-5" 
                         :class="{on : on}" 
-                        @click="callAllSelect"
+                        @click="callAllSelect()"
                     />
                     <span class="dp-inline-block">{{$t("content.selectAll")}}</span>
                 </div>
@@ -91,9 +175,10 @@
             </div>
             <div class="wrap_recipes">
                 <div class="alltitle hidden">{{ selectedRecipeBox.name }}</div>
-                <div class="wrap_in" v-for="(recipe, index) in recipeList.slice(0,5)" :key="index">
+                <!-- <div class="wrap_in" v-for="(recipe, index) in recipeList.slice(0,5)" :key="index"> -->
+                    <div class="wrap_in" v-for="(recipe, $index) in recipes" :key="$index">
                     <div class="photo fl">
-                        <img :src="recipe.file"/>
+                        <img :src="getImgURL(recipe.mainImgId)"/>
                     </div>
                     <div class="wrap_text fl">
                         <div class="wrap_bullet">
@@ -140,31 +225,97 @@
                     </div>
                     <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</div>
                 </div>
-                <div class="wrap_select">
-                    <ul v-for="(box, index) in recipeBoxes" :key="index">
+                <div class="wrap_select" id="more_list">
+                    <ul v-for="(box, index) in boxes" :key="index">
                         <li class="menu fl"
+                            v-if="box.isDefault === false"
                             :class="{on : tempBoxId.includes(box.id)}"
                             @click="callMoveRecipeBox(box.id)">
                             {{ box.name }}
+                            <button hidden v-on:click="callDeleteBox(box.id)">X</button>
                         </li>
                     </ul>
-                    <div class="arr_right">더보기</div>
+                    <div
+                        class="arr_right" 
+                        type="button"
+                        v-on:click="appendBoxes()"
+                        :disabled="this.dataFull === true"
+                        :class="{disabled : dataFull}"
+                    >
+                    더보기 ({{cntBoxes}}/{{totBoxes}})
+                    </div>
                 </div>
                 <div class="btn btn-default" style="width:112px;" @click="cancel">{{$t("button.cancel")}}</div>
             </div>
         </div>
-        <div class="wrap_newbox" id="new-box" v-if="step===3">
+            <ModalView v-if="isModalViewed" @close-modal="isModalViewed=false">
+            <div slot="body">
             <!-- <fieldset class="wrap_in"> -->
                 <!-- <legend>새 박스 추가</legend> -->
                 <form v-on:submit="onSubmitForm">
-                    <label class="title" for="newBox">새 박스 추가</label><br/>
-                    <input class="width80" type="text" v-model="newBox" maxlength="10" placeholder="새로운 박스의 이름을 입력해 주세요."> <div class="btn btn-default"><button style="none">추가</button></div>
+                    <h1><label class="title" for="newBox">박스 추가</label></h1><br/>
+                    <input class="width90" type="text" v-model="newBox" maxlength="10" placeholder="박스 명(최대 13자)">
+                <div>
+                    <label id="result-label" hidden for="result"></label><br/>
+                    <div class="btn btn-default fl margin-left-30 margin-bottom-40" @click="isModalViewed=false">{{$t("button.cancel")}}</div>
+                    <div class="btn btn-default fl margin-left-10"><button style="none">저장</button></div>
+                </div>
                 </form>
             <!-- </fieldset> -->
-            <div>
-            <label id="result-label" hidden for="result"></label><br/>
-            <div class="btn btn-default fl margin-bottom-40" @click="cancel">{{$t("button.cancel")}}</div>
-            <div class="btn btn-default fl" @click="done">{{$t("button.done")}}</div>
+            </div>
+            </ModalView>
+        <!-- <div class="wrap_newbox" id="new-box" v-if="step===3">
+        </div> -->
+        <div v-if="step===4">
+            <!-- <BoxReipeView :boxId="boxId"></BoxReipeView> -->
+            <div class="wrap_allnum fl">
+                <span class="dp-inline-block fl">{{$t("content.all")}} </span>
+                <span class="num" v-for="(box, $index) in allBoxInfo" :key="$index">{{ box.recipeCnt }}</span>
+            </div>
+            <div class="btn btn-default edit fr">
+                <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
+            </div>
+            <!-- TODO: 이부분을 갱신해서 가져오도록 수정 -->
+            <div class="wrap_recipes">
+                <div v-for="(box, $index) in recipeBoxes" :key="$index">
+                <div class="alltitle" v-if="box.isDefault===false && box.recipe && box.recipe.length > 0">{{ box.name }}</div>
+                <div v-else-if="box.isDefault===true"><br/></div><!-- 기본 박스 -->
+                <div v-else-if="box.recipe?false:true"></div><!-- 빈 폴더(박스) 비활성화 -->
+                <div v-else></div>
+                <div class="wrap_in" v-for="recipe in box.recipe" :key="recipe.id">
+                <router-link :to="'/recipedetail/'+recipe.recipeId">
+                    <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
+                    <div class="wrap_text fl">
+                        <div class="wrap_bullet">
+                            <span v-for="(period, idx) in $t('option.period')" :key="idx">
+                            <div class="squre4 fl" v-if="recipe.period == idx">{{ period[0] }}</div>
+                            </span>
+                            <div class="new2 fl" v-if="recipe.new"></div>
+                            <!-- <div class="alltitle fl" v-if="box.isDefault===false">{{ box.name }}</div> -->
+                        </div>
+                        <div class="fr"></div>
+                        <div class="title">
+                            <div class="fl padding-right-10">{{ recipe.title }}</div>
+                            <span class="icon_reply fl"></span>
+                        </div>
+                        <div class="text">{{ recipe.subTitle }}</div>
+                    </div>
+                </router-link>
+                </div>
+            
+                </div>
+                <!-- <div
+                    type="button"
+                    v-on:click="appendRecipes(true)"
+                    :disabled="this.dataRcpFull === true"
+                    :hidden="this.totRecipes == this.cntRecipes"
+                    :class="{disabled : dataRcpFull}"
+                >
+                더보기 ({{cntRecipes}}/{{totRecipes}})
+                </div> -->
+                <!--////<infinite-loading @infinite="getRecipeBoxList">
+                    <div slot="no-more"><br/></div>
+                </infinite-loading>//// -->
             </div>
         </div>
     </main>
@@ -174,6 +325,11 @@
 import emptyImg from '@/assets/emptyImg.png'
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "swiper/dist/css/swiper.min.css";
+import { mapGetters, mapActions } from "vuex";
+import BoxKeywordView from '@/components/BoxKeywordView.vue';
+import InfiniteLoading from 'vue-infinite-loading';
+import BoxReipeView from '@/components/BoxReipeView.vue';
+import ModalView from '@/components/ModalView.vue';
 
 export default {
     name : "RecipeBoxView",
@@ -187,7 +343,7 @@ export default {
             centerInsufficientSlides: true, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
             slideToClickedSlide: true,
         },
-        recipeBoxes : [],
+        recipeBoxes : [],   // 전체 박스 목록 데이터
         selectedRecipeBox : [],
         selectedRecipeBoxIds : [],
         /* 
@@ -196,13 +352,13 @@ export default {
             step=2 레시피 박스 편집 화면
             step=3 새 레시피 박스 입력 화면
         */
-        step : 1,
+        step : 0,
         /* 
             moveStep=0 레시피 박스 편집 화면
             moveStep=1 레시시 박스 편집 > 이동 화면
         */
         moveStep : 0,
-        recipeList : [],
+        recipeList : [],    // 전체 레시피 목록 데이터
         mainPicture : '',
         selectedRecipeIds : [],
         recipeIds : [],
@@ -212,28 +368,142 @@ export default {
         newBox : "",
         edit : '',
         tempBoxId : [],
-        recipeId: 0, // TODO: 부모로 부터 상속되어야 한다.
+        rcpId: 0, // TODO: 부모로 부터 상속되어야 한다.
         on: false,
+        // 편집 > 박스이동 더보기
+        // boxesAll: {},    // 전체 데이터
+        boxes: {},       // 화면에 노출되는 데이터
+        totBoxes: 0,     // 전체 데이터 수
+        cntBoxes: 3,     // 화면에 노출할 데이터 수 (초기 세팅 = 3) 기본박스 + 1
+        dataFull: false,// 전체 데이터보다 많은 데이터 호출 여부
+        // 담긴 레시피 목록 더보기
+        // recipesAll: {},    // 전체 레시피 목록 데이터
+        recipes: {},       // 화면에 노출되는 데이터
+        totRecipes: 0,     // 전체 데이터 수
+        cntRecipes: 5,     // 화면에 노출할 데이터 수 (초기 세팅 = 5)
+        dataRcpFull: false,// 전체 데이터보다 많은 데이터 호출 여부
+        page : 0,
+        allBoxInfo: [],
+        isModalViewed: false,
     }),
-    created() {
-        this.boxId = this.$route.params.boxId;
-        this.initialize();
-    },
-    methods : {
-        initialize() {
-            this.getRecipeBoxById(this.boxId);
-            this.getRecipeBoxList();
-            this.getRecipeRecipeBoxList(this.boxId);
+    
+    components: {
+    swiper,
+    swiperSlide,
+    InfiniteLoading,
+    BoxKeywordView,
+    BoxReipeView,
+    ModalView,
+    ModalView
+},    
+
+    computed: {
+        swiper() {
+            console.log("computed:swiper");
+            return this.$refs.filterSwiper.swiper;
         },
-        async getRecipeBoxList() {            
-            const response = await this.$api(
-            `${this.$API_SERVER}/api/recipebox/mine`,
-            "get"
-            );
-            if (response.status === this.HTTP_OK) {
-                this.recipeBoxes = response.data;
+
+        allSelected: {
+            get: function() {
+                this.recipeIds = []
+                this.recipeList.slice(0,5).forEach((recipe) => {
+                    this.recipeIds.push(recipe.recipeId)
+                })
+                return this.recipeIds.length === this.selectedRecipeIds.length;
+            },
+            set: function(e) {
+                this.selectedRecipeIds = e ? this.recipeIds : [];
             }
         },
+    },
+
+    created() {
+        this.boxId = this.$route.params.boxId
+        this.initialize();
+    },
+
+    mounted () {
+        console.log("mounted");
+    },
+
+    watch: {
+        boxId(boxId) {          
+            this.getRecipeBoxById(boxId)
+            this.getRecipeRecipeBoxList(boxId)
+            // makeRecipeList()
+        }
+    },
+
+    methods : {
+        ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setSelectedRBox']),
+        initialize(){
+            this.getRecipeBoxAll()
+            if(this.boxId == 'all'){ 
+                this.step = 4
+            } else{
+                this.getRecipeBoxById(this.boxId)
+                // this.getRecipeRecipeBoxList(this.boxId)
+            }
+        },
+        makeRecipeList(){
+            this.recipeBoxes.forEach(box => {
+                if(box.recipe){
+                    if(box.id == this.boxId){
+                        this.recipeList.push({
+                            title: recipe.title,
+                            subTitle: recipe.subTitle,
+                            new: recipe.new,
+                            score: recipe.score,
+                            timeTaken: recipe.timeTaken,
+                            period: recipe.period,
+                            recipeId: recipe.recipeId,
+                            contentsId: recipe.contentsId,
+                            mainImgId: recipe.mainImgId,
+                            boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
+                            boxId: this.selectedRecipeBox.id,
+                        })
+                    }
+                }
+                console.log("====", this.recipeList)
+            });
+            
+                        
+        },
+        // recipeBoxes
+        async getRecipeBoxAll() {
+            let params = '';
+                // params += `?page=${this.page}`;
+                // params += '&sort=createdAt,DESC';
+            const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe/mine`+params, "get");
+            if (response.status === this.HTTP_OK) {
+                this.allBoxInfo = []
+                this.recipeBoxes = response.data;
+                console.log("getRecipeBoxAll:",this.recipeBoxes)
+
+                let recipeCnt = 0
+                let thumbnails = []
+                let newFlag = false
+                this.recipeBoxes.forEach(box => {
+                    if(box.recipe){
+                        box.recipe.forEach(recipe => {
+                            recipeCnt = recipeCnt + 1
+                            if(recipe.mainImgId) thumbnails.push({"mainImgId": recipe.mainImgId})
+                            if(recipe.new) newFlag = true
+                        });
+                    }
+                });
+                this.allBoxInfo.push({
+                    'name': '모든 레시피',
+                    'recipeCnt': recipeCnt,
+                    'thumbnails': thumbnails,
+                    'new': newFlag,
+                    'recipeBoxes': this.recipeBoxes
+                });
+                this.bindBoxes()
+                console.log(this.allBoxInfo)
+            }
+        },
+        // selectedRecipeBox
         async getRecipeBoxById(id) {
             const response = await this.$api(
             `${this.$API_SERVER}/api/recipebox/${id}`,
@@ -243,14 +513,66 @@ export default {
                 this.selectedRecipeBox = response.data;
             }
         },
-        async getRecipeRecipeBoxList(id) {
-            this.recipeList = [];
-            const response = await this.$api(
-            `${this.$API_SERVER}/api/reciperecipebox/recipe`,
-            "get",
-            {box: id}
-            );            
+        // recipeList
+        async getRecipeRecipeBoxList($state) {    
+            let params = `?page=${this.page}`;
+                // params += '&sort=createdAt,DESC';
+            console.log(params);
+            this.recipeList = []; 
+            const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe`+params, `get`, {box: $state.boxId});
             if (response.status === this.HTTP_OK) {
+                if(response.data.length){
+                // console.log(response.data);
+                response.data.forEach( obj => {
+                    this.recipeList.push({
+                        title: obj.title,
+                        subTitle: obj.subTitle,
+                        new: obj.new,
+                        score: obj.score,
+                        timeTaken: obj.timeTaken,
+                        period: obj.period,
+                        recipeId: obj.recipeId,
+                        contentsId: obj.contentsId,
+                        mainImgId: obj.mainImgId,
+                        mainImg: obj.mainImgId?`${this.$API_SERVER}/file/download/thumbnail?fileId=${obj.mainImgId}`:this.mainPicture,
+                        boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
+                        boxId: this.selectedRecipeBox.id,
+                        commentsNumber : 66   // TODO: comments
+                    })             
+                });
+                
+                this.page++;
+                $state.loaded();
+                if(response.data.length / 2 < 1){
+                    $state.complete();
+                }
+                }else{
+                    $state.complete();
+                }
+            }else{
+                console.log(response.status);
+                $state.complete();
+            }
+            this.bindRecipes()
+        },
+        
+        async getRecipeRecipeBoxList() {    
+            let params = `?page=${this.page}`;
+                // params += '&sort=createdAt,DESC';
+            console.log(params);
+            this.recipeList = []; 
+            if(this.boxId == 'all'){
+                const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe/mine`+params, "get");
+                if (response.status === this.HTTP_OK) {
+                    if(response.data.length){
+                        console.log(response.data);
+                    }
+                }
+            }
+            else{
+                const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe`+params, `get`, {box: this.boxId});
+            if (response.status === this.HTTP_OK) {
+                if(response.data.length){
                 console.log(response.data);
                 response.data.forEach( obj => {
                     this.recipeList.push({
@@ -262,15 +584,19 @@ export default {
                         period: obj.period,
                         recipeId: obj.recipeId,
                         contentsId: obj.contentsId,
-                        fileId: obj.fileId,
-                        file: obj.fileId?`${this.$API_SERVER}/file/download/thumbnail?fileId=${obj.fileId}`:this.mainPicture,
+                        mainImgId: obj.mainImgId,
+                        mainImg: obj.mainImgId?`${this.$API_SERVER}/file/download/thumbnail?fileId=${obj.mainImgId}`:this.mainPicture,
                         boxName: this.selectedRecipeBox.name?this.selectedRecipeBox.name:"기본박스",
                         boxId: this.selectedRecipeBox.id,
                         commentsNumber : 66   // TODO: comments
-                    })
-                });                 
+                    })             
+                });   
+                this.bindRecipes()
+                }
+            }
             }
         },
+
         setEmptyImg(e) {
             e.target.src=emptyImg;
         },
@@ -291,15 +617,16 @@ export default {
                 this.selectedRecipeBoxIds.push(id);
             }
             this.selectRecipeBox(id)
+            this.step = 0
+            this.boxId = id
         },
         selectRecipeBox(id) {
             console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
-            location.href=`/recipebox/${id}`;
+            // location.href=`/recipebox/${id}`;
         },
         moveRecipeBox() {
             this.selectedRecipeIds.forEach(async (item, index, arr) => {
-                this.tempBoxId.forEach(async (id, index, arr) => {     
-                // console.log(`${this.selectedRecipeBox.id}?recipe=${item}&to=${id}`);           
+                this.tempBoxId.forEach(async (id, index, arr) => {                
                     const response = await this.$api(
                     `${this.$API_SERVER}/api/reciperecipebox/${this.selectedRecipeBox.id}`,
                     "post",
@@ -319,6 +646,7 @@ export default {
         addNewBoxPage() {
             console.log("addNewBoxPage step=2")
             this.step = 3
+            this.boxId = 0
         },
         onSubmitForm(e) {
             console.log("onSubmitForm : "+e);
@@ -339,6 +667,7 @@ export default {
                 element.innerText = text;
             }
             e.preventDefault();
+            this.isModalViewed = false
         },
         async addNewBox(name) {
             console.log("addNewBox : "+name);
@@ -385,8 +714,12 @@ export default {
             console.log("Edit");
             this.step = 2
         },
-        callAllSelect() {
-            console.log("All");
+        callAllList() {
+            this.boxId = 'all'
+            this.step=4
+            // location.href=`/recipebox/all`;
+        },
+        callAllSelect(){
             this.selectedRecipeIds = []
             if(!this.on){
                 this.recipeList.forEach((recipe, index, arr) => {
@@ -467,6 +800,7 @@ export default {
             }
             this.step = 1
             this.moveStep = 0
+            this.cntBoxes = 3;
             this.initialize();
         },
         done() {
@@ -482,64 +816,89 @@ export default {
             }
             this.step = 1
             this.moveStep = 0
-            //this.initialize();
+            this.cntBoxes = 3;
+            this.initialize();
+            // this.bindRecipes()
         },
-    },
-    components: {
-        swiper,
-        swiperSlide,
-    },    
-    computed: {
-        swiper() {
-            console.log("computed:swiper");
-            return this.$refs.filterSwiper.swiper;
-        },
-        // isOverview() {
-        //     console.log("computed:isOverview");
-        //     return window.innerWidth >= this.swiper.virtualSize
-        // }
-        allSelected: {
-            get: function() {
-                this.recipeIds = []
-                this.recipeList.slice(0,5).forEach((recipe) => {
-                    this.recipeIds.push(recipe.recipeId)
-                })
-                return this.recipeIds.length === this.selectedRecipeIds.length;
-            },
-            set: function(e) {
-                this.selectedRecipeIds = e ? this.recipeIds : [];
+        bindBoxes() {
+            this.totBoxes = this.recipeBoxes.length;
+            let data = []
+            for(var i=0;i<this.cntBoxes;i++){
+                if(this.recipeBoxes[i])
+                    data.push(this.recipeBoxes[i])
+                else
+                    this.cntBoxes = i
             }
-        }
-    },
-    mounted () {
-        console.log("mounted");
-        // this.swiperInit();
-        // this.$nextTick(() => {
-        //     const swiperOption = this.$refs.filterSwiper.swiper;
-        //     swiperOption.controller.control = filterSwiper;
-        // });
-        // console.log(swiper)
-    },
+            this.boxes = data;
+        },
+        appendBoxes() {
+            if(this.cntBoxes < this.totBoxes){
+                this.cntBoxes += 3
+                let data = []
+                for(var i=0;i<this.cntBoxes;i++){
+                    if(this.recipeBoxes[i])
+                        data.push(this.recipeBoxes[i])
+                    else
+                        this.cntBoxes = i
+                }
+                this.boxes = data
+            }else{
+                this.dataFull = true
+                alert('List items are fully loaded!')
+            }
+        },
+        bindRecipes() {
+            console.log("this.bindRecipes", this.recipeList)
+            this.totRecipes = this.recipeList.length;
+            let data = []
+            let idx = 0
+            // FIXME: this.recipeList[i] 값이 있으나 체크 못하는 경우가 있어서 forEach로 변경함
+            this.recipeList.forEach((recipe, index, array) => {
+                if(recipe){
+                    data.push(recipe)
+                    idx = index + 1
+                }
+                if(index>=this.cntRecipes)
+                    return true;
+            })
+            this.cntRecipes = idx;
+            this.recipes = data;
+        },
+        appendRecipes(all) {
+            if(this.cntRecipes < this.totRecipes){
+                this.cntRecipes += 5
+                let data = []
+                for(var i=0;i<this.cntRecipes;i++){
+                    if(all){
+                        // TODO: 복잡하네...
+                        // recipeList 형식에 맞게 모든 레시피 목록을 따로 만들어 보낼까? 
+                        // recipeList 형식에 box.name 필요. 최신순 정렬 필요
+                        //this.recipeBoxes
+                        // data.push(this.recipeList[i])
+                    }
+                    if(this.recipeList[i]){
+                        data.push(this.recipeList[i])
+                    }else{
+                        this.cntRecipes = i
+                    }
+                }
+                this.recipes = data
+            }else{
+                this.dataRcpFull = true
+                alert('List items are fully loaded!')
+            }
+        }, 
+        recipeAll() {
+            this.step = 4
+            this.boxId = 0
+        },
 
-    watch: {
-        swiperOption(newValue) {
-            console.log('swiperOption:', newValue)
+        getImgURL(id) {
+            const url = `${this.$API_SERVER}/file/download/thumbnail?fileId=` + id;
+            console.log(url);
+            return url
         },
-        on(newValue){
-            console.log("on: ", newValue)
-        },
-        selectedRecipeIds(newValue){
-            console.log("selectedRecipeIds: ", newValue)
-        },  
-        tempBoxId(newValue){
-            console.log("tempBoxId: ", newValue)
-        },     
-        selectedRecipeBoxIds(newValue){
-            console.log("selectedRecipeBoxIds: ", newValue)
-        },
-        boxId(newValue){
-            console.log("boxId: ", newValue)
-        }
+
     },
 }
 </script>
