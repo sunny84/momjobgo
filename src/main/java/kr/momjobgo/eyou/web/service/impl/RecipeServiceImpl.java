@@ -226,7 +226,7 @@ public class RecipeServiceImpl implements RecipeService {
             if (recipe.getClipLink() != null && !recipe.getClipLink().isEmpty()) {
                 result.put("clipLink", recipe.getClipLink());
             }
-            if (recipe.getClipLink() != null && !recipe.getYoutubeLink().isEmpty()) {
+            if (recipe.getYoutubeLink() != null && !recipe.getYoutubeLink().isEmpty()) {
                 result.put("youtubeLink", recipe.getYoutubeLink());
             }
 
