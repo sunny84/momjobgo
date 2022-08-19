@@ -1,22 +1,13 @@
 d<template>
   <div>
     <main class="recipebox">
-        <h1 class="fl"><router-link :to="'/recipedetail/'+rcpId"><img src="@/assets/images/icon_back.png" alt="돌아가기" title="돌아가기"/></router-link>
-        <span class="color-orange padding-left-15">{{ $t("title.recipeBox") }}</span>
-        </h1>
-        <div class="wrap_menu">
-            <ul>
-                <li class="menu" :class="{on : this.$route.path == '/myrecipe'}" style="cursor: ponter;" onclick="location.href='/myrecipe';">{{ $t("menu.myRecipe") }}</li><!--<router-link :to="'/myrecipe'"></router-link>-->
-                <li class="menu" :class="{on : this.$route.path == '/recipebox/'+boxId || 'all'}" style="cursor: ponter;" onclick="location.href='/recipebox/all';">{{ $t("menu.savedRecipe") }}</li><!--<router-link :to="'/recipeboxlist'"></router-link>-->
-                <li class="menu" :class="{on : this.$route.path == '/todaySawRecipe'}" style="cursor: ponter;" onclick="location.href='/todaySawRecipe';">{{ $t("menu.historyRecipe") }}</li><!--<router-link :to="'#'"></router-link>-->
-            </ul>
-        </div>
+        <BoxListMenu></BoxListMenu>
         <!-- <BoxKeywordView :key="listView"></BoxKeywordView> -->
-        <span>{{ step }} {{ boxId }}</span>
+        <span hidden>{{ step }} {{ boxId }} {{ recipeId }}</span>
         <div class="wrap-boxes">
             <div class="boxes">
                 <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">                    
-                    <swiper-slide role="tab">
+                    <swiper-slide role="tab" class="wrap_in">
                         <div class="keywords" 
                             :class="{on : step==4 && boxId == 'all'}">
                             <button @click="callAllList()">모든 레시피</button>
@@ -25,16 +16,17 @@ d<template>
                     <swiper-slide role="tab" 
                         v-for="(box, $index) in recipeBoxes"
                         v-if="box.isDefault === false"
-                        :key="$index">
-                        <div class="keywords" 
-                                :class="{on : selectedRecipeBoxIds.includes(box.id) || boxId == box.id}" 
-                                @click="setSelectedRecipeBox(box.id)">
+                        :key="$index" class="wrap_in">
+                        <div
+                            class="keywords" 
+                            :class="{on : selectedRecipeBoxIds.includes(box.id) || boxId == box.id}" 
+                            @click="setSelectedRecipeBox(box.id)">
                             <span>
                                 {{box.name}}
                             </span>
                         </div>
                     </swiper-slide>
-                    <swiper-slide role="tab">
+                    <swiper-slide role="tab" class="wrap_in">
                         <div class="keywords" 
                             :class="{on : step==3 || boxId == 'new'}">
                             <!-- <button @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</button> -->
@@ -328,17 +320,18 @@ import "swiper/dist/css/swiper.min.css";
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import ModalView from '@/components/ModalView.vue';
+import BoxListMenu from "../components/BoxListMenu.vue";
 
 export default {
     name : "RecipeBoxView",
     data: ()=>({
         swiperOption: {
             slidesPerView: 3.5,   // 'auto'
-            spaceBetween: 0,   // swiper-slide 사이의 간격 지정
-            slidesOffsetBefore: 0, // slidesOffsetBefore는 첫번째 슬라이드의 시작점에 대한 변경할 때 사용
-            slidesOffsetAfter: 0, // slidesOffsetAfter는 마지막 슬라이드 시작점 + 마지막 슬라이드 너비에 해당하는 위치의 변경이 필요할 때 사용
+            spaceBetween: 10,   // swiper-slide 사이의 간격 지정
+            slidesOffsetBefore: 10, // slidesOffsetBefore는 첫번째 슬라이드의 시작점에 대한 변경할 때 사용
+            slidesOffsetAfter: 10, // slidesOffsetAfter는 마지막 슬라이드 시작점 + 마지막 슬라이드 너비에 해당하는 위치의 변경이 필요할 때 사용
             freeMode: true, // freeMode를 사용시 스크롤하는 느낌으로 구현 가능
-            centerInsufficientSlides: true, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
+            centerInsufficientSlides: false, // 컨텐츠의 수량에 따라 중앙정렬 여부를 결정함
             slideToClickedSlide: true,
         },
         recipeBoxes : [],   // 전체 박스 목록 데이터
@@ -389,10 +382,13 @@ export default {
     swiper,
     swiperSlide,
     InfiniteLoading,
-    ModalView
+    ModalView,
+    BoxListMenu
 },    
 
     computed: {
+        ...mapGetters("box", ["recipeId"]),
+
         swiper() {
             console.log("computed:swiper");
             return this.$refs.filterSwiper.swiper;
@@ -430,7 +426,7 @@ export default {
     },
 
     methods : {
-        ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setSelectedRBox']),
+        // ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setSelectedRBox']),
         initialize(){
             this.getRecipeBoxAll()
             if(this.boxId == 'all'){ 
