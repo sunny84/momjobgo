@@ -2,7 +2,7 @@
   <div>
     <main class="recipebox">
       <!--HEADER-->    
-      <BoxListMenu></BoxListMenu>
+      <BoxListMenu :key="recipeId"></BoxListMenu>
       <!--CONTENT-->
       <div class="btn btn-default edit fr margin-bottom-20">
         <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
@@ -148,7 +148,6 @@ export default {
   }, 
 
   methods: {
-    // ...mapMutations('box', ['setStep','setBoxId', 'setAllBoxInfo']),
     ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setRecipeId']),
 
     initialize() {
@@ -257,15 +256,7 @@ export default {
     callRecipeBox(id) {
       this.setBoxId(id)
       this.setStep(4)
-      // this.$store.commit('box/setAllBoxInfo', this.allBoxInfo);
-      // this.$store.commit('box/setBoxId', id);
-      // if(id == 'all'){
-      //   this.$store.commit('box/setStep', 4)
-      // }
-      // else{
-      //   this.$store.commit('box/setStep', 1)
-      // }
-      location.href=`/recipebox/${id}`;
+      this.$router.push(`/recipebox/${id}`)
 
     },
   },

@@ -14,6 +14,7 @@
       boxList: [],
       selectedRBox: [],      
       // selectedRecipeBoxIds: [],
+      recipeId: 0,
     },
   
     getters : {
@@ -38,6 +39,10 @@
       // selectedRecipeBoxIds(state){
       //   return state.selectedRecipeBoxIds;
       // },
+      recipeId(state){
+        console.log(state.recipeId)
+        return state.recipeId;
+      }
     },
   
     mutations : {
@@ -62,6 +67,9 @@
       // setselectedRecipeBoxIds(state, selectedRecipeBoxIds){
       //   state.selectedRecipeBoxIds = selectedRecipeBoxIds;
       // },
+      setRecipeId(state, recipeId){
+        state.recipeId = recipeId;
+      },
     },
   
     actions : {
@@ -86,5 +94,9 @@
       // setselectedRecipeBoxIds({commit}, selectedRecipeBoxIds){
       //   commit('setselectedRecipeBoxIds', selectedRecipeBoxIds);
       // },
+      setRecipeId({commit}, recipeId){
+        console.log('actions:setRecipeId', recipeId)
+        commit('setRecipeId', recipeId);
+      },
     }
   }
