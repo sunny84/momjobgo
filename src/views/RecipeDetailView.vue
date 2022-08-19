@@ -37,7 +37,7 @@
               <div class="longtext">{{ recipe_data.subTitle }}</div>
             </div>
             <div class="fr right" style="width:30%;">
-              <span class="bookmark2"></span>
+              <span class="bookmark2" @click="callRecipeBox(recipeId)"></span>
               <span class="share"></span>
             </div>
           </div>
@@ -181,7 +181,8 @@ export default {
     measuringUnit:{
       isOpened : false,
       timer: 0
-    }
+    },
+    defaultRecipeBox : []
   }),
 
   computed: {
@@ -191,6 +192,7 @@ export default {
   created() {
     this.recipeId = this.$route.params.recipeId;
     this.getRecipeById(this.recipeId);
+    this.getDefaultBoxId();
   },
 
   methods: {
@@ -215,6 +217,55 @@ export default {
           this.$router.push("/");
         }
       });
+    },
+    async getDefaultBoxId() {
+      const response = await this.$api(
+      `${this.$API_SERVER}/api/recipebox/default`,
+      "get"
+      );
+      if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+          this.defaultRecipeBox = response.data;
+      }
+      if(response.data.isNaN){
+        // create Default Box
+        const response = await this.$api(
+        `${this.$API_SERVER}/api/recipebox/defaudlt`,
+        "post",
+        {}
+        );
+        if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+            this.defaultRecipeBox = response.data;
+        }
+      }
+    },
+    async callRecipeBox(id) {
+      console.log("callRecipeBox : "+id);
+      const response = await this.$api(
+      `${this.$API_SERVER}/api/reciperecipebox?box=${this.defaultRecipeBox.id}&recipe=${id}`,
+      "post"
+      );
+      if (response.status === this.HTTP_CREATED) {
+        console.log("기본박스에 저장 성공")
+      }
+      location.href=`/recipeboxlist/${id}`;
+    },
+    callWrite() {
+      console.log("write button");
+      location.href=`/write`;
+    },
+    setEmptyImg(e) {
+      e.target.src=emptyImg;
+    },
+    async updateRecipeBox(name) {
+      console.log("updateRecipeBox : "+name);
+      const response = await this.$api(
+      `${this.$API_SERVER}/api/recipebox/${this.defaultRecipeBox.id}`,
+      "patch",
+      {name: name}
+      );
+      if (response.status === this.HTTP_CREATED) {
+        console.log("이름 변경 성공")
+      }
     },
     redirectYoutube() {
       console.log(this.recipe_data.youtubeLink);

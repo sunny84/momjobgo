@@ -30,9 +30,27 @@
                           <div class="new" v-if="box.new"></div>
                       </div>
                       <div v-if="box.thumbnails">
-                          <div class="photo" v-for="(img, $i) in box.thumbnails.slice(0,4)" :key="$i">
-                              <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
-                              <img v-else class="pic" src="@/assets/emptyImg.png">
+                          <div class="photo" style="display:inline-block;">
+                            <div>
+                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(0,1)" :key="$i">
+                                <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
+                                <img v-else class="pic" src="@/assets/emptyImg.png">
+                              </div>
+                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(1,2)" :key="$i">
+                                <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
+                                <img v-else class="pic" src="@/assets/emptyImg.png">
+                              </div>
+                            </div>
+                            <div>
+                              <div class="clear-both fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(2,3)" :key="$i">
+                                <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
+                                <img v-else class="pic" src="@/assets/emptyImg.png">
+                              </div>
+                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(3,4)" :key="$i">
+                                <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
+                                <img v-else class="pic" src="@/assets/emptyImg.png">                                
+                              </div>
+                            </div>
                           </div>
                       </div>
                       <div v-else>
@@ -125,6 +143,7 @@ export default {
   },
 
   created() {
+    this.recipeId = this.$route.params.recipeId
     this.initialize();
   },
   
@@ -137,9 +156,10 @@ export default {
 
   methods: {
     // ...mapMutations('box', ['setStep','setBoxId', 'setAllBoxInfo']),
-    ...mapActions('box', ['setStep','setBoxId', 'setAllBox']),
+    ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setRecipeId']),
 
     initialize() {
+      this.setRecipeId(this.recipeId)
       this.getRecipeBoxAll();
     },
     
