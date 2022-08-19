@@ -50,7 +50,7 @@
             </template>
           </VueSlideBar>
         </div>
-      </div><!--wrap_write-->
+      </div>
     </div>
 
     <!-- Step 2 : 식재료 선택 -->
@@ -74,7 +74,7 @@
             </span>
           </div>
         </div>
-      </div><!--wrap_write-->
+      </div>
     </div>
 
     <!-- Step 3 : 제목(부제목), 대표사진, 재료양, 조리순서, Tip, 영상url 입력 -->
@@ -121,7 +121,7 @@
           <span v-else> ml</span>
         </div>
 
-        <!-- cooking order : published version -->
+        <!-- cooking order -->
         <h2 class="title">{{ $t("content.cookingOrder") }}</h2>
         <draggable v-model="cookingOrder" handle=".handler" :animation="400">
           <div class="margin-bottom-10 overflow-h" v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
@@ -138,29 +138,6 @@
           </div>
         </draggable>
         <div class="btn_circle_plus" @click="addOrder"></div>
-
-
-      <!-- cooking order : first developed version -->
-      <!-- <p>{{ $t("content.cookingOrder") }} <span @click="addOrder">+</span></p>
-      <p v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
-        <button @click="goUp(ord_idx)">↑</button>
-        <button @click="goDown(ord_idx)">↓</button>
-        <span>{{ order.contentsNo }}</span>
-        <textarea width="140px" height="50" v-model="order.contents"></textarea>
-         <img
-          :src="cookingOrderPic[ord_idx]"
-          width="50px"
-          height="50px"
-          @error="setEmptyImg"
-        />
-        <img :src="order.imgUrl" width="50px" height="50px" @error="setEmptyImg" />
-        <input
-          :id="`cookingPicture${ord_idx}`"
-          type="file"
-          accept="image/*"
-          @change="uploadOrderImg(order, $event)"
-        /><label :for="`cookingPicture${ord_idx}`">+</label>
-      </p> -->
 
         <!-- Tip -->
         <h2 class="title">{{ $t("content.tip") }}
@@ -190,27 +167,27 @@
       <div class="wrap_contents margin-top-10">
         <div class="contents1">
          <img class="pic" :src="mainPicture">
-         <div class="text bg-light no-border margin-top-10">
-            <div class="row ">
-                <div class="fl">
+         <div class="text">
+            <div class="row">
+                <div class="fl" style="width:70%;">
                     <div class="title fl">{{ title }}</div>
                     <div class="longtext fl">{{ subTitle }}</div>
                 </div>
                 <!-- TODO : 북마크 /공유 (flow 3 이후)-->
-                <div class="fr" style="margin-top:-55px;">
-                    <span class="bookmark2">북마크</span>
-                    <span class="share">공유</span>
+                <div class="fr right" style="width:30%;">
+                    <span class="bookmark2"></span>
+                    <span class="share"></span>
                 </div>
             </div>
-         </div><!--text-->
+         </div>
          <div class="wrap_info row border-b-dotted">
             <div class="fl" style="width:30%;"><span class="squre3">{{$t("option.period["+period+"]")[0]}}</span></div>
             <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet clock fl" style="width:30% ;">{{ $t("option.timeTaken[" + timeTaken + "]") }}</span></div>
             <!-- TODO : 별점기능 (flow 3 이후)-->
             <!-- <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet star fl" style="width:20% ;">5.0</span></div> -->
          </div>
-        </div><!--contents1-->
-       </div><!--wrap_contents-->
+        </div>
+       </div>
     </div>
     <div class="wrap_write" style="margin-top:0px;">
         <div class="exp">{{ $t("description.autoSave") }}</div>
@@ -262,9 +239,6 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["id"]),
-    firstImg() {
-      return "@/assets/images/btn_addphoto.png";
-    },
   },
 
   watch: {
