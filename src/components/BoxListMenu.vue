@@ -31,7 +31,8 @@ export default {
         else if(flag == 2)
           this.$router.push('/recipeboxlist/' + this.recipeId)
         else if(flag == 3)
-          this.$router.push('/todaySawRecipe')
+            console.log('not implemented!')
+            //this.$router.push('/todaySawRecipe')
       }
     }
 }
