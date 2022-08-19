@@ -20,7 +20,7 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/recipeboxlist",
+    path: "/recipeboxlist/:recipeId",
     name: "recipeboxlist",
     component: RecipeBoxListView,
   },
