@@ -45,61 +45,65 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<Map<String, Object>> findByWriter(){
         List recipes = new ArrayList<>();
-        contentsRepository.findByWriter(UserManager.getUser().getId()).forEach(contents -> {
-            recipeRepository.findByContentsId(contents.getId()).forEach(recipe -> {
-                Long recipeId = recipe.getId();
-                System.out.println(recipeId);
+        try {
+            contentsRepository.findByWriter(UserManager.getUser().getId()).forEach(contents -> {
+                recipeRepository.findByContentsId(contents.getId()).forEach(recipe -> {
+                    Long recipeId = recipe.getId();
+                    System.out.println(recipeId);
 //                recipes.add(getDetailById(recipeId));
-                RecipeEntity recipeEntity = recipeRepository.getById(recipeId);
-                Map<String, Object> result = new HashMap<>();
-                result.put("recipeId", recipeId);
+                    RecipeEntity recipeEntity = recipeRepository.getById(recipeId);
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("recipeId", recipeId);
 
-                /** Recipe 기본정보 **/
-                Long contentsId = recipeEntity.getContentsEntity().getId();
-                result.put("contentsId", contentsId);
-                result.put("writer", recipeEntity.getContentsEntity().getWriter());
+                    /** Recipe 기본정보 **/
+                    Long contentsId = recipeEntity.getContentsEntity().getId();
+                    result.put("contentsId", contentsId);
+                    result.put("writer", recipeEntity.getContentsEntity().getWriter());
 
-                result.put("title", recipeEntity.getContentsEntity().getTitle());
-                result.put("subTitle", recipeEntity.getContentsEntity().getSubTitle());
-                result.put("period", recipeEntity.getPeriod());
-                result.put("quantity", recipeEntity.getQuantity());
-                result.put("timeTaken", recipeEntity.getTimeTakenId());
-                result.put("open", recipeEntity.getOpen());
+                    result.put("title", recipeEntity.getContentsEntity().getTitle());
+                    result.put("subTitle", recipeEntity.getContentsEntity().getSubTitle());
+                    result.put("period", recipeEntity.getPeriod());
+                    result.put("quantity", recipeEntity.getQuantity());
+                    result.put("timeTaken", recipeEntity.getTimeTakenId());
+                    result.put("open", recipeEntity.getOpen());
 
-                /** cooking order & images **/
-                List <CookingOrderEntity> cookingOrderEntities = recipeEntity.getCookingOrderEntities();
-                List <FileEntity> fileEntity=fileRepository.findByContentsId(contentsId);
-                List <Map<String, Object>> cookingDataWithFileInfo = new ArrayList<Map<String, Object>>();
-                result.put("cookingOrderExist", cookingOrderEntities.isEmpty()?"N":"Y");
-                if(!cookingOrderEntities.isEmpty()) {
-                    Long mainImgId = 0L;
-                    Long[] C_orderImgId = new Long[fileEntity.size()];
-                    for(int i=0; i<fileEntity.size(); i++) {
-                        String fileRealName = fileEntity.get(i).getFileRealName();
-                        String compareFileName =fileRealName.substring(fileRealName.lastIndexOf(".") - 2, fileRealName.lastIndexOf("."));
-                        if(fileRealName.charAt(0) =='M') {
-                            mainImgId = fileEntity.get(i).getId();
-                        } else if (fileRealName.charAt(0) == 'C') {
-                            C_orderImgId[Integer.parseInt(compareFileName)-1]=fileEntity.get(i).getId();
+                    /** cooking order & images **/
+                    List<CookingOrderEntity> cookingOrderEntities = recipeEntity.getCookingOrderEntities();
+                    List<FileEntity> fileEntity = fileRepository.findByContentsId(contentsId);
+                    List<Map<String, Object>> cookingDataWithFileInfo = new ArrayList<Map<String, Object>>();
+                    result.put("cookingOrderExist", cookingOrderEntities.isEmpty() ? "N" : "Y");
+                    if (!cookingOrderEntities.isEmpty()) {
+                        Long mainImgId = 0L;
+                        Long[] C_orderImgId = new Long[fileEntity.size()];
+                        for (int i = 0; i < fileEntity.size(); i++) {
+                            String fileRealName = fileEntity.get(i).getFileRealName();
+                            String compareFileName = fileRealName.substring(fileRealName.lastIndexOf(".") - 2, fileRealName.lastIndexOf("."));
+                            if (fileRealName.charAt(0) == 'M') {
+                                mainImgId = fileEntity.get(i).getId();
+                            } else if (fileRealName.charAt(0) == 'C') {
+                                C_orderImgId[Integer.parseInt(compareFileName) - 1] = fileEntity.get(i).getId();
+                            }
                         }
+
+                        for (int i = 0; i < cookingOrderEntities.size(); i++) {
+                            Map<String, Object> C_orderAndImg = new HashMap<>();
+                            C_orderAndImg.put("contentsNo", cookingOrderEntities.get(i).getContentsNo());
+                            C_orderAndImg.put("contents", cookingOrderEntities.get(i).getContents());
+                            C_orderAndImg.put("imgId", C_orderImgId[i]);
+
+                            cookingDataWithFileInfo.add(C_orderAndImg);
+                        }
+
+                        //System.out.println("CookingOrder Data : " +cookingDataWithFileInfo);
+                        result.put("mainImgId", mainImgId);
+                        result.put("cookingOrder", cookingDataWithFileInfo);
                     }
-
-                    for (int i = 0; i < cookingOrderEntities.size(); i++) {
-                        Map<String, Object> C_orderAndImg = new HashMap<>();
-                        C_orderAndImg.put("contentsNo", cookingOrderEntities.get(i).getContentsNo());
-                        C_orderAndImg.put("contents", cookingOrderEntities.get(i).getContents());
-                        C_orderAndImg.put("imgId", C_orderImgId[i]);
-
-                        cookingDataWithFileInfo.add(C_orderAndImg);
-                    }
-
-                    //System.out.println("CookingOrder Data : " +cookingDataWithFileInfo);
-                    result.put("mainImgId", mainImgId);
-                    result.put("cookingOrder", cookingDataWithFileInfo);
-                }
-                recipes.add(result);
+                    recipes.add(result);
+                });
             });
-        });
+        } catch(Exception e) {
+            System.out.println(e);
+        }
         return recipes;
     }
 
