@@ -12,7 +12,7 @@
       <ul class="wrap_indicater">
         <router-link class="link" to="/"><li class="menu n01" :class="{ on : this.$router.currentRoute.path=='/'}">{{ $t("footermenu.home") }}</li></router-link>
         <li class="menu n02">{{ $t("footermenu.search") }}</li>
-        <router-link class="link" to="/recipeboxlist"><li class="menu n03" :class="{ on : this.$router.currentRoute.path=='/recipeboxlist'}">{{ $t("footermenu.recipebox") }}</li></router-link>
+        <router-link class="link" to="/recipeboxlist/47"><li class="menu n03" :class="{ on : this.$router.currentRoute.path=='/recipeboxlist/47'}">{{ $t("footermenu.recipebox") }}</li></router-link>
         <!-- <router-link class="link" to="/my"><li class="menu n04">{{ $t("footermenu.my") }}</li></router-link> -->
         <router-link class="link" to="/write"><li class="menu n04" :class="{ on : this.$router.currentRoute.path=='/write'}">{{ $t("title.writeRecipe") }}</li></router-link>
       </ul>
