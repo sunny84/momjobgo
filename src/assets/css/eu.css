@@ -1,5 +1,5 @@
 @charset "utf-8";
-/* CSS Document */
+/* EU CSS Document */
 html,body {height: 100%;}
 body 		    {background-color: #fff; overflow-x:hidden; position: relative;  }
 .wrap 	        {position:relative; margin: 0 auto;min-width: 360px; max-width:700px; }
