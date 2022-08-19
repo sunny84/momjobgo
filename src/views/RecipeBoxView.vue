@@ -1,7 +1,7 @@
 d<template>
   <div>
     <main class="recipebox">
-        <BoxListMenu></BoxListMenu>
+        <BoxListMenu :key="recipeId"></BoxListMenu>
         <!-- <BoxKeywordView :key="listView"></BoxKeywordView> -->
         <span hidden>{{ step }} {{ boxId }} {{ recipeId }}</span>
         <div class="wrap-boxes">
@@ -613,7 +613,6 @@ export default {
         },
         selectRecipeBox(id) {
             console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
-            // location.href=`/recipebox/${id}`;
         },
         moveRecipeBox() {
             this.selectedRecipeIds.forEach(async (item, index, arr) => {
@@ -708,7 +707,6 @@ export default {
         callAllList() {
             this.boxId = 'all'
             this.step=4
-            // location.href=`/recipebox/all`;
         },
         callAllSelect(){
             this.selectedRecipeIds = []

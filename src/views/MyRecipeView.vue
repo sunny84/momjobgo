@@ -2,11 +2,16 @@
   <div>
     <main class="recipebox">
     <!--HEADER-->
-    <BoxListMenu></BoxListMenu>
+    <BoxListMenu :key="recipeId"></BoxListMenu>
     <!--CONTENT-->
-    <div class="contents">        
-        <h4>{{$t("content.myRecipe")}} {{ recipeList?recipeList.length:0 }}</h4>
-        <button @click="callWrite">{{$t("button.write")}}</button>
+    <div>
+        <div class="wrap_allnum fl">
+            <span class="dp-inline-block fl">{{$t("content.myRecipe")}} </span>
+            <span class="num">{{ recipeList?recipeList.length:0 }}</span>
+        </div>
+        <div class="btn btn-default fr margin-bottom-20">
+          <span class="padding-right-5" @click="callWrite">{{$t("button.write")}}</span>
+        </div>
         <!-- <confirm-input 
             :text="$t('button.addNewBox')"
             :title="$t('button.addNewBox')"
@@ -66,7 +71,6 @@ export default {
       recipeList : [],
       mainPicture : '',
       defaultRecipeBox : [],
-      recipeId : 47,
     }),
     components: {
     ConfirmInput,
@@ -76,7 +80,7 @@ export default {
     BoxListMenu
 },
     computed : {  
-      ...mapGetters('user', ['hasToken', 'token'])
+      ...mapGetters('box', ['recipeId'])
     },
     created() {
       this.initialize();
@@ -84,40 +88,45 @@ export default {
     methods : {
       initialize() {
         this.getDefaultBoxId();
+        this.createDefaultBox();
         this.getMyRecipeList();
       },
       async getDefaultBoxId() {
-        const response = await this.$api(
-        `${this.$API_SERVER}/api/recipebox/default`,
-        "get"
-        );
-        if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
-            this.defaultRecipeBox = response.data;
-        }
-        if(response.data.isNaN){
-          // create Default Box
-          const response = await this.$api(
-          `${this.$API_SERVER}/api/recipebox/default`,
-          "post",
-          {}
+          await this.$api(`${this.$API_SERVER}/api/recipebox/default`, "get").then(
+            (res) => {
+              if (res.status === this.HTTP_OK || res.status === this.HTTP_CREATED) {
+                  this.defaultRecipeBox = res.data;            
+              } else {
+                console.log("NOT Ok", res.status);
+              }
+            }
           );
-          if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
-              this.defaultRecipeBox = response.data;
-          }
+      },
+      async createDefaultBox() {
+        if(this.defaultRecipeBox.isNaN){
+            await this.$api(`${this.$API_SERVER}/api/recipebox/default`, "post", {}).then(
+            (res) => {
+                if (res.status === this.HTTP_OK || res.status === this.HTTP_CREATED) {
+                    this.defaultRecipeBox = res.data;
+                } else {
+                  console.log("NOT Ok", res.status);
+                }
+            });
         }
       },
       async getMyRecipeList() {
-          this.list = [];
-          const response = await this.$api(
-          `${this.$API_SERVER}/api/Recipe/mine`,
-          "get",
-          );            
-          if (response.status === this.HTTP_OK) {
-              response.data.forEach( obj => {
-                // console.log(obj);
-                this.recipeList.push(obj);
-              });                 
+        await this.$api(`${this.$API_SERVER}/api/Recipe/mine`, "get").then(
+          (res) => {
+            if (res.status === this.HTTP_OK) {
+                res.data.forEach( obj => {
+                  // console.log(obj);
+                  this.recipeList.push(obj);
+                });                 
+            } else {
+              console.log("NOT Ok", res.status);
+            }
           }
+        );
       },
       async callRecipeBox(recipeId) {
         console.log("recipebox save button")
