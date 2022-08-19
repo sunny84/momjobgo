@@ -158,7 +158,7 @@
 .color-grey3 		{color: #2a40a1;}
 .color-light-grey 	{color: #666;}
 .color-dark 		{color: #555555;}
-.color-darker 		{color:#4f5872333;}
+.color-darker 		{color: #4f5872;}
 .color-green 		{color: #9cff00;}
 .color-brown 		{color: #9c8061;}
 .color-orange 		{color: #FF9519;}
@@ -1035,7 +1035,7 @@ input,
 optgroup,
 textarea {margin: 0;  padding:4px 4px 4px 5px; color: #ccc; display:table-cell;border:1px #a9a9a9 solid;}
 select { margin-right:40px; border:1px #ced4da solid; min-width:80px;padding:3px 4px 4px 6px; font: inherit;font-weight: 400;}
-select[disabled] { border:1px #ccc solid; pointer-events: none; background-color:#f9f9f9; cursor: default; filter: alpha(opacity=55); -webkit-box-shadow: none;         box-shadow: none;}
+select[disabled] { border:1px #ccc solid; pointer-events: none; background-color:#f9f9f9; cursor: default; filter: alpha(opacity=55); -webkit-box-shadow: none; box-shadow: none;}
 select.select2 {margin-right:20px; border:1px #a9a9a9 solid; }
 select.select0 { width:100%;}
 select.select1 {width:95%;}
@@ -1062,7 +1062,7 @@ input.searchBg {
   line-height:1.42857143;
   color:#555;
   border:1px #D8DBE0  solid;
-  /* background:#fff url(../images/icon-search2.png) no-repeat 230px 50%; */
+  /* background:#fff url(../images/icon-search.png) no-repeat 230px 50%; */
   border-radius:5px;
   padding:0 10px;
 }
@@ -1154,7 +1154,7 @@ fieldset[disabled] a.btn {
   pointer-events: none;
 }
 .btn_noRadius {
-  display: inline-block;
+  /* display: inline-block; */
   margin-bottom: 0;
   margin-left:-1px;
   font-size: 12px;
@@ -1173,7 +1173,6 @@ fieldset[disabled] a.btn {
   border: 1px solid transparent;
   border-radius: 0;
   padding:4px 8px 4px 4px;
-
 }
 .btn_noRadius:focus,
 .btn_noRadius:active:focus,
@@ -1787,10 +1786,10 @@ fieldset[disabled] .btn-red.focus {
   padding-left:15px;
 }
 .btn-sky.bg {
-  /* background:#85A9FF url(../images/icon-s-search.png) no-repeat 50px 10px ;   */
+  /* background:#85A9FF url(../images/icon-s-search.png) no-repeat 50px 10px; */
 }
 .btn-sky.bg:hover {
-  /* background:#eee url(../images/icon-s-search.png) no-repeat 50px 10px ;   */
+  /* background:#eee url(../images/icon-s-search.png) no-repeat 50px 10px; */
 }
 .btn-sky.bg:active {
   /* background:#e6e6e6 url(../images/icon-s-search.png) no-repeat 50px 10px ;   */

@@ -41,6 +41,7 @@
     "content" : {
         "step" : "단계",
         "quantity" : "분량",
+        "total" : "총",
         "times" : "회분",
         "timeTaken" : "소요시간",
         "choiceOfIngredient" : "식재료 선택",

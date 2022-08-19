@@ -41,6 +41,7 @@
     "content" : {
         "step" : "Step",
         "quantity" : "Qunatity",
+        "total" : "Total",
         "times" : "meals",
         "timeTaken" : "Required time",
         "choiceOfIngredient" : "Ingredient Choice",

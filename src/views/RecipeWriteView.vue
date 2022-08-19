@@ -10,14 +10,10 @@
 
     <div class="wrap_menu">
       <ul>
-        <li class="menu" :class="{ on : step ===0}" style="cursor: pointer;"
-          onclick="location.href='03-01-recipewrite.html';">1</li>
-        <li class="menu" :class="{ on : step ===1}" style="cursor: pointer;"
-          onclick="location.href='03-02-recipewrite.html';">2</li>
-        <li class="menu" :class="{ on : step ===2}" style="cursor: pointer;"
-          onclick="location.href='03-03-recipewrite.html';">3</li>
-        <li class="menu" :class="{ on : step ===3}" style="cursor: pointer;"
-          onclick="location.href='03-04-recipewrite.html';">4</li>
+        <li class="menu" :class="{ on : step ===0}" style="cursor: pointer;">1</li>
+        <li class="menu" :class="{ on : step ===1}" style="cursor: pointer;">2</li>
+        <li class="menu" :class="{ on : step ===2}" style="cursor: pointer;">3</li>
+        <li class="menu" :class="{ on : step ===3}" style="cursor: pointer;">4</li>
       </ul>
     </div>
 
@@ -30,7 +26,7 @@
 
         <select  class="width100 padding10" v-model="period">
           <option v-for="(period, idx) in $t('option.period')" :value="idx" :key="idx">
-            {{ period[0] }} ( {{period[1]}} )
+            {{ period[0] }} ( {{ period[1] }} )
           </option>
         </select>
 
@@ -61,12 +57,13 @@
     <div v-show="step === 1">
       <p class="fs20 b">{{ $t("description.ingredient") }}</p>
       <div class="wrap_write">
-        <h2><span class="title">{{ $t("content.choiceOfIngredient") }}</span></h2>
+        <h2 class="title">{{ $t("content.choiceOfIngredient") }}</h2>
 
         <div v-for="(category, idx) in ing_data" :key="idx" v-show="category.id !== 6">
           <h2 v-show="category.id !==1">
-            <span class="title">{{ $t("ing_category." + [category.key])[0] }}</span>
-            <span class="titlemargin">&nbsp;</span>
+            <span class="title" style="color:#000000;">{{ $t("ing_category." + [category.key])[0] }}</span>
+            <span class="fs12 color-grey2">{{ $t("ing_category." + [category.key])[1] }}</span>
+            <span>&nbsp;</span>
           </h2>
           <div class="wrap_select">
             <span
@@ -85,63 +82,65 @@
       <p class="fs20 b">{{ $t("description.almostDone") }}</p>
       <div class="wrap_write">
         <!-- Title / subtitle -->
-        <h2><span class="title">{{ $t("content.title")}}</span></h2>
-        <input type="text" class="intext margin-bottom-10" style="width:95%;text-align:left;"
-          :placeholder="$t('content_description.title')" v-model="title" />
-        <input type="text" class="intext" style="width:95%;"
-          :placeholder="$t('content_description.subTitle')" v-model="subTitle" />
+        <h2 class="title">{{ $t("content.title")}}</h2>
+        <div>
+          <input type="text" class="intext margin-bottom-10" style="width:80%;text-align:left;"
+            :placeholder="$t('content_description.title')" v-model="title" /> <span> {{ $t("option.period[" + this.period + "]")[1] }}</span>
+          <input type="text" class="intext" style="width:95%;"
+            :placeholder="$t('content_description.subTitle')" v-model="subTitle" />
+        </div>
 
         <!-- main picture -->
-        <h2><span class="title">{{ $t("content.mainPicture") }}</span></h2>
-        <div class="mainphoto">
-          <img style="max-width:100%;" :class="[ mainPicture !='' ? 'dp-inline-block' : 'dp-none']"
-            :src="mainPicture" @error="setEmptyImg"/>
-          <div style="padding:80px 0;z-index:5;" :class="[ mainPicture !='' ? 'dp-none' : 'dp-block']">
-            <input type="file" id="mainPicture" class="dp-none" accept="image/*" @change="uploadMainImg" />
-            <label for="mainPicture">
-              <!--<img src="@/assets/images/btn_addphoto.png" />-->
+        <h2 class="title">{{ $t("content.mainPicture") }}</h2>
+        <div style="width:100%;">
+          <label for="mainPicture">
+            <img style="max-width:100%;max-height:100%;" :class="[ mainPicture !='' ? 'dp-inline-block' : 'dp-none']"
+              :src="mainPicture" @error="setEmptyImg"/>
+          </label>
+          <label for="mainPicture">
+            <div style="padding:100px 0;z-index:5;margin:auto;text-align:center;background-color:#d9d9d9;" :class="[ mainPicture !='' ? 'dp-none' : 'dp-block']">
+              <img src="@/assets/images/btn_addphoto.png" />
               <span class="dp-block color-grey2">ADD PHOTO</span>
-            </label>
-          </div>
+            </div>
+          </label>
+          <input type="file" id="mainPicture" class="dp-none" accept="image/*" @change="uploadMainImg" />
         </div>
-        <!-- main picture -->
-        <!-- <p><img :src="mainPicture" width="200px" height="150px" @error="setEmptyImg" /></p>
-        <p>
-          <input
-            type="file"
-            id="mainPicture"
-            class="pickpicture"
-            accept="image/*"
-            @change="uploadMainImg"
-          /><label for="mainPicture">+</label>
-        </p> -->
 
         <!-- list and volume of ingredient -->
-        <h2><span class="title">{{ $t("content.listOfIngredient") }}</span>
+        <h2 class="title" style="border-bottom: 0;">
+          <span style="border-bottom: 3px #ccc solid;">{{ $t("content.listOfIngredient") }}</span>
         <!--<span>{{ $t("content_description.measuringUnit") }}</span>-->
-        <img src="@/assets/images/bul_info.png" style="filter: grayscale(100%);" /></h2>
+          <span class="fs11 dp-inline-block" style="border-bottom: 0;padding-left:10px;">{{$t("content.total")}}{{this.quantity}}{{$t("content.times")}}
+          (1{{$t("content.times")}} 150g)</span>
+        </h2>
 
         <div v-for="(item, idx) in selectedIngredients" :key="idx">
           <label :for="item.key"><span class="dp-inline-block" style="width:50px;">{{ $t("ingredient." + [item.key]) }}</span></label>
-          <input type="number" :id="item.key" v-model="item.volume" min="1" class="intext margin-bottom-10" style="width:70%" />
+          <input type="number" :id="item.key" v-model="item.volume" min="1" class="intext margin-bottom-10" style="width:70%;" />
           <span v-if="item.ingredientId !== 1"> g</span>
           <span v-else> ml</span>
         </div>
 
-        <!-- cooking order-->
-        <!-- 테스트 중-->
-        <!-- <h2><span class="title">{{ $t("content.cookingOrder") }}</span></h2>
-        <div class="margin-bottom-10 overflow-h" v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
-            <div class="circleNum">{{ order.contentsNo }}</div>
-            <textarea type="text" class="textarea" :placeholder="$t('content_description.cookingOrder')" v-model="order.contents"></textarea>
-            <input :id="`cookingPicture${ord_idx}`" type="file" accept="image/*" @change="uploadOrderImg(order, $event)" class="dp-none" />
-            <label :for="`cookingPicture${ord_idx}`"><span class="btn_noRadius btn-default addphoto margin-right-2" style="height:70px;"
-              :style="{'background':'url('+$order.imgUrl+')'}"> </span></label>
-            <button :id="`test${ord_idx}`" class="btn_noRadius btn-default move" >+</button>
-        </div>
-        <div class="btn_circle_plus" @click="addOrder"></div> -->
+        <!-- cooking order : published version -->
+        <h2 class="title">{{ $t("content.cookingOrder") }}</h2>
+        <draggable v-model="cookingOrder" handle=".handler" :animation="400">
+          <div class="margin-bottom-10 overflow-h" v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
+              <div class="circleNum">{{ ord_idx+1 }}</div>
+              <textarea type="text" class="textarea" :placeholder="$t('content_description.cookingOrder')" v-model="order.contents"></textarea>
+              <input :id="`cookingPicture${ord_idx}`" type="file" accept="image/*" @change="uploadOrderImg(order, $event)" class="dp-none" />
+              <label :for="`cookingPicture${ord_idx}`">
+                <img :src="order.imgUrl" style="width:80px;height:80px;vertical-align:top;"
+                  :class="[ order.imgUrl !='' ? 'dp-inline-block' : 'dp-none']" />
+                <div class="btn_noRadius addphoto margin-right-2" style="padding:0;z-index:5;"
+                  :class="[ order.imgUrl !='' ? 'dp-none' : 'dp-inline-block']" >+</div>
+              </label>
+              <div class="handler btn_noRadius btn-default move dp-inline-block" style="padding:0;">+</div>
+          </div>
+        </draggable>
+        <div class="btn_circle_plus" @click="addOrder"></div>
 
-      <!-- cooking order-->
+
+      <!-- cooking order : first developed version -->
       <!-- <p>{{ $t("content.cookingOrder") }} <span @click="addOrder">+</span></p>
       <p v-for="(order, ord_idx) in cookingOrder" :key="`o-${ord_idx}`">
         <button @click="goUp(ord_idx)">↑</button>
@@ -160,30 +159,18 @@
           type="file"
           accept="image/*"
           @change="uploadOrderImg(order, $event)"
-          class="pickpicture"
         /><label :for="`cookingPicture${ord_idx}`">+</label>
       </p> -->
 
         <!-- Tip -->
-        <h2><span class="title">{{ $t("content.tip") }}</span></h2>
+        <h2 class="title">{{ $t("content.tip") }}
+          <!-- <span class="title">({{ $t("content_description.option") }})</span> -->
+        </h2>
         <div class="margin-bottom-10" style="position:relative;" v-for="(tip, idx) in Tips" :key="`t-${idx}`">
             <div class="circleNum">{{ idx+1 }}</div>
             <input type="text" class="intext" style="width:89%;" :value="tip.text" @input="updateTip(idx, $event)" :placeholder="$t('content_description.tip')">
-            <button class="btn_noRadius fr addTip" @click="addTip">+</button>
+            <button class="btn_noRadius fr addTip" @click="addTip" type="button">+</button>
         </div>
-        <!-- Tip -->
-        <!-- <p>
-          {{ $t("content.tip") }} ({{ $t("content_description.option") }})
-          <span @click="addTip">+</span>
-        </p>
-        <p v-for="(tip, idx) in Tips" :key="`t-${idx}`">
-          <input
-            type="text"
-            :placeholder="$t('content_description.tip')"
-            :value="tip.text"
-            @input="updateTip(idx, $event)"
-          />
-        </p> -->
 
         <!-- Clip moive link -->
         <h2><span class="fs14">{{ $t("content.movieClipUrl") }}</span></h2>
@@ -197,6 +184,7 @@
       </div>
     </div>
 
+    <!--Step 4 : 저장 전 미리보기-->
     <div v-show="step === 3">
       <p class="fs20 b">{{ $t("description.finishAndSave") }}</p>
       <div class="wrap_contents margin-top-10">
@@ -208,26 +196,28 @@
                     <div class="title fl">{{ title }}</div>
                     <div class="longtext fl">{{ subTitle }}</div>
                 </div>
+                <!-- TODO : 북마크 /공유 (flow 3 이후)-->
                 <div class="fr" style="margin-top:-55px;">
-                    <span class="bookmark2"><!--span class="bookmark1"></span-->북마크</span>
+                    <span class="bookmark2">북마크</span>
                     <span class="share">공유</span>
                 </div>
             </div>
          </div><!--text-->
          <div class="wrap_info row border-b-dotted">
-            <div class="fl" style="width:30%;"><span class="squre3">{{$t("option.period["+period+"]")}}</span></div>
+            <div class="fl" style="width:30%;"><span class="squre3">{{$t("option.period["+period+"]")[0]}}</span></div>
             <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet clock fl" style="width:30% ;">{{ $t("option.timeTaken[" + timeTaken + "]") }}</span></div>
+            <!-- TODO : 별점기능 (flow 3 이후)-->
             <!-- <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet star fl" style="width:20% ;">5.0</span></div> -->
          </div>
         </div><!--contents1-->
        </div><!--wrap_contents-->
     </div>
-    <div class="wrap_write">
+    <div class="wrap_write" style="margin-top:0px;">
         <div class="exp">{{ $t("description.autoSave") }}</div>
         <div>
           <div class="btn-pre fl margin-bottom-40" v-show="this.step !== 0" @click="validateByStep(-1)">{{ $t("button.back") }}</div>
           <div class="btn-next fr " v-show="this.step !== 3" @click="validateByStep(+1)">{{ $t("button.next") }}</div>
-          <div class="btn-next fr" v-show="this.step === 3" @click="validateByStep(+1)">{{ $t("button.saveAndPreview") }}</div>
+          <div class="btn-next fr" v-show="this.step === 3" @click="publish">{{ $t("button.saveAndPreview") }}</div>
         </div>
     </div>
 
@@ -238,6 +228,7 @@
 import emptyImg from "@/assets/emptyImg.png";
 import VueSlideBar from "vue-slide-bar";
 import { mapGetters } from "vuex";
+import draggable from "vuedraggable";
 
 export default {
   name: "RecipeWriteView",
@@ -253,7 +244,7 @@ export default {
     subTitle: "", // 레시피 부제목
     mainPicture: "",
     mainImg: "", // 대표사진
-    cookingOrder: [{ contentsNo: 1, contents: "", imgUrl: "", fileData: "" }], // 조리 순서
+    cookingOrder: [{ contents: "", imgUrl: "", fileData: "" }], // 조리 순서
     cookingOrderData: [], // 서버로 보낼 cooking order data
     Tips: [{ orderNum: 1, text: "" }], // Tip
     youtubeUrl: "",
@@ -267,6 +258,7 @@ export default {
 
   components : {
     VueSlideBar,
+    draggable,
   },
   computed: {
     ...mapGetters("user", ["id"]),
@@ -302,7 +294,8 @@ export default {
       this.subTitle = "";
       this.mainPicture = "";
       this.mainImg = "";
-      this.cookingOrder = [{ contentsNo: 1, contents: "", imgUrl: "", fileData: "" }];
+      this.cookingOrder = [{ contents: "", imgUrl: "", fileData: "" }];
+      this.cookingOrderData = [];
       this.Tips = [{ orderNum: 1, text: "" }];
       this.youtubeUrl = "";
       this.clipUrl = "";
@@ -331,7 +324,6 @@ export default {
         }
       );
     },
-
     validateByStep(arrow) {
       // validate data by step then go next/back
       // push "WATER" for essential ingredient on step 1before go to step 2
@@ -359,6 +351,7 @@ export default {
     changeStep(arrow) {
       this.step = this.step + arrow;
       //this.step=+arrow;
+      window.scrollTo(0, 0);
     },
     changeQuantity(arrow) {
       if(arrow==='+') {
@@ -396,7 +389,7 @@ export default {
     uploadOrderImg(targetOrder, e) {
       let files = e.target.files;
 
-      console.log(targetOrder);
+      //console.log(targetOrder);
       if (this.checkFileType(files[0].type, "image/")) {
         // Have to use wrapping method for array due to detecting changed array of VUE
         targetOrder.imgUrl = URL.createObjectURL(files[0]);
@@ -408,34 +401,12 @@ export default {
     },
     addOrder() {
       this.cookingOrder.push({
-        contentsNo: this.cookingOrder.length + 1,
         contents: "",
         imgUrl: "",
         fileData: "",
       });
 
       this.fileCnt++;
-    },
-    sortByContentId() {
-      this.cookingOrder.sort(function (a, b) {
-        return a.contentsNo - b.contentsNo;
-      });
-    },
-    goDown(idx) {
-      // go down for cooking order
-      if (idx < this.cookingOrder.length - 1) {
-        this.cookingOrder[idx].contentsNo = idx + 2;
-        this.cookingOrder[idx + 1].contentsNo = idx + 1;
-      }
-      this.sortByContentId();
-    },
-    goUp(idx) {
-      // go up for cooking order
-      if (idx > 0) {
-        this.cookingOrder[idx].contentsNo = idx;
-        this.cookingOrder[idx - 1].contentsNo = idx + 1;
-      }
-      this.sortByContentId();
     },
     addTip() {
       if (this.Tips.length < 5) {
@@ -557,10 +528,11 @@ export default {
       }
       for (let i = 0; i < this.cookingOrder.length; i++) {
         this.cookingOrderData.push({
-          contentsNo: this.cookingOrder[i].contentsNo,
+          contentsNo: i+1,
           contents: this.cookingOrder[i].contents,
         });
       }
+      console.log(this.cookingOrderData);
     },
     calibTips(tips) {
       for (let i = 0; i < tips.length; i++) {
@@ -664,30 +636,30 @@ export default {
       const allParams = this.makeParams();
 
       // Insert new recipe
-      const resContents = await this.$api(
-        `${this.$API_SERVER}/api/Recipe/write`,
-        "post",
-        "",
-        allParams
-      );
-      if (resContents.status == this.HTTP_OK) {
-        const contentsId = resContents.data.contentsId;
-        const recipeId = resContents.data.recipeId;
+      // const resContents = await this.$api(
+      //   `${this.$API_SERVER}/api/Recipe/write`,
+      //   "post",
+      //   "",
+      //   allParams
+      // );
+      // if (resContents.status == this.HTTP_OK) {
+      //   const contentsId = resContents.data.contentsId;
+      //   const recipeId = resContents.data.recipeId;
 
-        // upload files
-        const resFiles = await this.$api(
-          `${this.$API_SERVER}/file/upload`,
-          "post",
-          { contentsId: contentsId },
-          formData,
-          { "Content-Type": "multipart/form-data" }
-        );
-        if (resFiles.status == this.HTTP_OK) {
-          this.releaseAndRemoveExtraData();
-          this.$router.push("/recipedetail/" + recipeId);
-          this.initWriteRecipeProcess();
-        }
-      }
+      //   // upload files
+      //   const resFiles = await this.$api(
+      //     `${this.$API_SERVER}/file/upload`,
+      //     "post",
+      //     { contentsId: contentsId },
+      //     formData,
+      //     { "Content-Type": "multipart/form-data" }
+      //   );
+      //   if (resFiles.status == this.HTTP_OK) {
+      //     this.releaseAndRemoveExtraData();
+      //     this.$router.push("/recipedetail/" + recipeId);
+      //     this.initWriteRecipeProcess();
+      //   }
+      // }
     },
   },
 };

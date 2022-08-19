@@ -47,30 +47,33 @@
         <div class="wrap_info row border-b-dotted">
           <div class="fl" style="width:30%;"><span class="squre3">{{ $t("option.period[" + recipe_data.period + "]")[0] }}</span></div>
           <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet clock fl" style="width:30% ;">{{ $t("option.timeTaken[" + recipe_data.timeTaken + "]") }}</span></div>
+          <!-- TODO : 별점 기능(flow 3이후) -->
           <!-- <div class="fl" style="width:30%; margin-top:3px;"><span class="bullet star fl" style="width:20% ;">5.0</span></div> -->
         </div>
       </div>
     </div>
 
     <!-- 재료소개 -->
-    <h2>
+    <h2 class="fl">
       <span class="title3">{{ $t("content.listOfIngredient") }}</span>
       <span class="ti_pic1">주방장</span>
-      <img src="@/assets/images/bul_info.png">
-      <img src="@/assets/images/img_infobox.png">
     </h2>
-    <!--  Q. 분량 : (분량 숫자) (몇 회분인지) 표시는 어떻게?
-      <p>
-      {{ $t("content.quantity") }} : {{ recipe_data.quantity }} {{ $t("content.times") }}
-    </p> -->
-
-    <!-- Q. 스푼의 의미는?-->
-    <!-- <li class="dot_green">쌀 <span>60g</span>(<span class="icon_spoon fs11">X3</span>) </li> -->
-    <ul class="wrap_ingred border-b-dotted">
+    <div class="fl">
+      <img src="@/assets/images/bul_info.png" class="dp-line-block" @click="popup">
+      <span style="box-shadow:1px 2px 3px #ccc; border:1px #f1f1f1 solid; padding:0 14px 0 4px;position: relative;"
+        :class="[measuringUnit.isOpened ? 'dp-inline-block' :'dp-none']">
+        <span class="icon_spoon fs11">=20</span>
+        <img src="@/assets/images/btn_cancel.png" style="position:absolute;right:2px;top:2px;" @click="closePopup"><!-- 계량단위 -->
+      </span>
+      <span class="fs11 dp-block">{{$t("content.total")}} {{recipe_data.quantity}} 
+        {{ $t("content.times")}} (1{{ $t("content.times")}} 150g)</span>
+    </div>
+    <ul class="wrap_ingred border-b-dotted clear-both">
       <li class="dot_green" v-for="(ing, idx) in recipe_data.ingredients" :key="idx">
         <span> {{ $t("ingredient." + ing.key) }}  {{ ing.volume }} </span>
         <span v-if="ing.key !== 'WATER'">g</span>
         <span v-else>ml</span>
+        <span v-if="ing.key=='GLUTINOUS_RICE'"> ( <span class="icon_spoon fs11">X{{Math.round(ing.volume*10)/200}}</span>)</span> 
       </li>
     </ul>
 
@@ -88,7 +91,7 @@
     </div>
 
     <!-- Tip -->
-    <ul class="wrap_tip border_green">
+    <ul class="wrap_tip border_green" v-if="recipe_data.tips && recipe_data.tips.length!==0">
       <h2><span class="title3">{{ $t("content.tip") }}</span></h2>
       <li class="star" v-for="(tip, idx) in recipe_data.tips" :key="idx">{{ tip.text }}</li>
     </ul>
@@ -106,7 +109,7 @@
     </div>
 
     <!-- youtube link -->
-    <div class="btn_green margin-bottom-10" @click="redirectYoutube">
+    <div class="btn_green margin-bottom-10" @click="redirectYoutube" v-if="recipe_data.youtubeLink">
       <span class="icon-go">{{ $t('content.youtubeView')}}</span>
     </div>
 
@@ -156,16 +159,18 @@
     </div>-->
 
     <!-- 밀어서 공개하기 -->
-    <div v-if="recipe_data.open === false && recipe_data.writer.id === this.id">
-      {{ $t("description.publishRecipe") }}<br />
-      <button @click="updateOpen">{{ $t("button.slideAndPublish") }}</button>
+    <div v-if="recipe_data.open === false && recipe_data.writer.id === this.id" 
+      class="bg-light margin-bottom-40 center no-border">
+      <p class="fs20 b color-light-grey">{{ $t("description.publishRecipe") }}</p>
+      <div class="btn_gray margin-bottom-20 margin-top-20 width80 dp-inline-block">
+        <div class="btn_gray bg-white width50" @click="updateOpen">{{ $t("button.slideAndPublish") }}</div>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-//import defaultProfileImg from "@/asset/images/photo_empty.png";
 
 export default {
   name: "RecipeDetailView",
@@ -173,6 +178,10 @@ export default {
     defaultProfileImg : "/assets/images/photo_empty.png",
     recipeId: 0,
     recipe_data: [],
+    measuringUnit:{
+      isOpened : false,
+      timer: 0
+    }
   }),
 
   computed: {
@@ -202,20 +211,36 @@ export default {
       ).then((res) => {
         if (res.status === this.HTTP_OK) {
           console.log("레시피 공개 완료");
-          this.$router.push("/recipedetail/" + recipeId);
+          //this.$router.push("/recipedetail/" + recipeId);
+          this.$router.push("/");
         }
       });
     },
     redirectYoutube() {
       console.log(this.recipe_data.youtubeLink);
-      window.open(this.recipe_data.youtubeLink, '_blank', 'location=no, status=no, scrollbars=yes');
+      let youtubeAddress = this.recipe_data.youtubeLink;
+      if(youtubeAddress.indexOf("https://")<0
+        &&youtubeAddress.indexOf("http://")<0) {
+          youtubeAddress = "https://"+youtubeAddress;
+      }
+      window.open(youtubeAddress, '_blank', 'location=no, status=no, scrollbars=yes');
     },
     setDefaultProfileImg(e) {
       console.log("profile error");
       e.target.src = this.defaultProfileImg;
     },
-    logmake(str) {
-      console.log(str);
+    popup() {
+      this.measuringUnit.isOpened =true;
+      this.measuringUnit.timer = setTimeout(() => {
+          this.measuringUnit.isOpened = false;
+        }, 3000);
+    },
+    closePopup() {
+      if(this.measuringUnit.timer > 0){
+        clearTimeout(this.measuringUnit.timer);
+        this.measuringUnit.isOpened=false;
+        this.measuringUnit.timer=0;
+      }
     },
   },
 };
