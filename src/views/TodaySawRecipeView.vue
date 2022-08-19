@@ -32,6 +32,6 @@ export default {
     ...mapGetters('box', ['recipeId'])
   },
   methods: {
-    ...mapActions('box', ['recipeId']),
+    ...mapActions('box', ['setRecipeId']),
   },
 }
