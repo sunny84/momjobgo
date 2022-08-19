@@ -1,28 +1,20 @@
 <template>
   <div id="app" class="wrap">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/write">{{ $t("title.writeRecipe") }}</router-link> |
-      <router-link to="/recipedetail/47">{{ $t("title.viewRecipe") }}</router-link> |
-      <router-link to="/recipeboxlist">{{ $t("title.recipeBox") }}</router-link> |
-      <router-link to="/login">login</router-link> |
-      <!-- <router-link to="/filter">{{ $t("title.RecipeFilter") }}</router-link> | -->
-      <router-link to="/recipelist">RecipeList</router-link>
-    </nav>
-    <div>
+    <!-- <div>
       <p>
         <button @click="changeLocale('ko')">한글</button>&nbsp;
         <button @click="changeLocale('en')">영어</button>
       </p>
-    </div>
+    </div> -->
     <router-view></router-view>
     <footer>
       <h2>footer Indicator Bar</h2>
       <ul class="wrap_indicater">
-        <li class="menu n01 on">홈</li>
-        <li class="menu n02">검색</li>
-        <li class="menu n03">레시피박스</li>
-        <li class="menu n04">마이페이지</li>
+        <router-link class="link" to="/"><li class="menu n01" :class="{ on : this.$router.currentRoute.path=='/'}">{{ $t("footermenu.home") }}</li></router-link>
+        <li class="menu n02">{{ $t("footermenu.search") }}</li>
+        <router-link class="link" to="/recipeboxlist"><li class="menu n03" :class="{ on : this.$router.currentRoute.path=='/recipeboxlist'}">{{ $t("footermenu.recipebox") }}</li></router-link>
+        <!-- <router-link class="link" to="/my"><li class="menu n04">{{ $t("footermenu.my") }}</li></router-link> -->
+        <router-link class="link" to="/write"><li class="menu n04" :class="{ on : this.$router.currentRoute.path=='/write'}">{{ $t("title.writeRecipe") }}</li></router-link>
       </ul>
     </footer>
   </div>

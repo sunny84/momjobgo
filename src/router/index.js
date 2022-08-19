@@ -16,8 +16,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    name: "recipelist",
+    component: RecipeListView,
   },
   {
     path: "/recipeboxlist/:recipeId",

@@ -3,6 +3,13 @@
         "name": "이유"
     },
 
+    "footermenu" : {
+        "home" : "홈",
+        "search" : "검색",
+        "recipebox" : "레시피박스",
+        "my" : "마이"
+    },
+
     "title" : {
         "writeRecipe" : "레시피 작성하기",
         "previewRecipe" : "레시피 미리보기",
