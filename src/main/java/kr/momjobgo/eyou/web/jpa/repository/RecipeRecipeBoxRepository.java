@@ -38,6 +38,8 @@ public interface RecipeRecipeBoxRepository extends JpaRepository<RecipeRecipeBox
             "LIMIT 5",
             nativeQuery = true)
     List<Map<String, Object>> getSubscribeList(@Param("userId") Long userId, @Param("period") Long period);
+
+    List<RecipeRecipeBoxEntity> findByRecipeAndUserId(Long recipeId, Long userId);
 //
 //    List<RecipeRecipeBoxEntity> findByUserIdByOrderByRecipeIdDesc(Long id);
 //

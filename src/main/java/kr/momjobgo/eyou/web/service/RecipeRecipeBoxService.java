@@ -25,4 +25,5 @@ public interface RecipeRecipeBoxService {
 //    List<Map<String, Object>> findByRecipeContents(Long boxId, Pageable pageable);
 
     List<Map<String, Object>>  findByRecipeContentsByUserId();
+    RecipeRecipeBoxEntity findByRecipeId(Long recipeId);
 }

@@ -41,6 +41,11 @@ public class RecipeRecipeBoxApiController {
         return ResponseEntity.ok().body( recipeRecipeBoxService.findByRecipeContentsByUserId() );
     }
 
+    @GetMapping("/recipeId")
+    public ResponseEntity<?> findByRecipeByRecipeId(@RequestParam(value = "id") Long recipeId) {
+        return ResponseEntity.ok().body( recipeRecipeBoxService.findByRecipeId(recipeId) );
+    }
+
     @PostMapping("")
     public ResponseEntity<?> insertRecipeBox(
             @RequestParam(value = "box", required = false) Long boxId,

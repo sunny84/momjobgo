@@ -5,7 +5,6 @@ import kr.momjobgo.eyou.web.common.GetDateTime;
 import kr.momjobgo.eyou.web.jpa.entity.*;
 import kr.momjobgo.eyou.web.jpa.repository.*;
 import kr.momjobgo.eyou.web.service.RecipeRecipeBoxService;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -151,6 +150,23 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
             });
         }
         return boxes;
+    }
+
+    @Override
+    public RecipeRecipeBoxEntity findByRecipeId(Long recipeId) {
+        Long userId = UserManager.getUser().getId();
+        List<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByUserId(userId);
+        RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
+        if(!findRecipeBox.isEmpty())
+        findRecipeBox.forEach(box -> {
+            if(recipeId == box.getRecipe().getId()){
+                recipeRecipeBoxEntity.setId(box.getId());
+                recipeRecipeBoxEntity.setUser(box.getUser());
+                recipeRecipeBoxEntity.setRecipeBox(box.getRecipeBox());
+                recipeRecipeBoxEntity.setRecipe(box.getRecipe());
+            }
+        });
+        return recipeRecipeBoxEntity;
     }
 
     @Override
