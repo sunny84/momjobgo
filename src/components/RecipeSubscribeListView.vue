@@ -26,8 +26,10 @@
                   <div class="number">609</div>
                 </ul>  
               </div>
-              <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
-              <img v-else class="pic" src="@/assets/emptyImg.png">
+              <router-link :to="'/recipedetail/'+recipe.id">
+                <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+                <img v-else class="pic" src="@/assets/emptyImg.png">
+              </router-link>
               <div class="text">
                 <div class="title">{{recipe.title}}</div>
                 <div class="wrap_info">
