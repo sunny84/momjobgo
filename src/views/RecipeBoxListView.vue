@@ -11,7 +11,7 @@
       <div class="wrap_recipes">
           <div class="row0">
               <div class="column1 full fl" 
-              v-for="(box, $index) in allBoxInfo" :key="$index"
+              v-for="(box, $index) in allBoxInfo" :key="$index+'a'"
               @click="callRecipeBox('all')"
               >
                   <div>
@@ -23,21 +23,21 @@
                       <div v-if="box.thumbnails">
                           <div class="photo" style="display:inline-block;">
                             <div>
-                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(0,1)" :key="$i">
+                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(0,1)" :key="$i+'1'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
                                 <img v-else class="pic" src="@/assets/emptyImg.png">
                               </div>
-                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(1,2)" :key="$i">
+                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(1,2)" :key="$i+'2'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
                                 <img v-else class="pic" src="@/assets/emptyImg.png">
                               </div>
                             </div>
                             <div>
-                              <div class="clear-both fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(2,3)" :key="$i">
+                              <div class="clear-both fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(2,3)" :key="$i+'3'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
                                 <img v-else class="pic" src="@/assets/emptyImg.png">
                               </div>
-                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(3,4)" :key="$i">
+                              <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(3,4)" :key="$i+'4'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
                                 <img v-else class="pic" src="@/assets/emptyImg.png">                                
                               </div>
@@ -55,7 +55,7 @@
                   </div>
               </div>
               <div class="column1 fl" 
-              v-for="(box, $index) in boxList" :key="$index"
+              v-for="(box, $index) in boxList" :key="$index+'b'"
               @click="callRecipeBox(box.id)"
               >
                   <div v-if="!box.isDefault && box.recipe"><!-- 빈 박스(폴더)는 비활성화 -->
@@ -185,7 +185,7 @@ export default {
           'recipeBoxes': this.recipeBoxes
           });
         this.boxList = this.recipeBoxes
-        console.log(this.allBoxInfo)
+        // console.log(this.allBoxInfo)
         this.setAllBox(this.allBoxInfo)
       }
     },
