@@ -226,10 +226,10 @@ export default {
       if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
           this.defaultRecipeBox = response.data;
       }
-      if(response.data.isNaN){
-        // create Default Box
+      if(response.data == ''){
+        console.log("create Default Box!")
         const response = await this.$api(
-        `${this.$API_SERVER}/api/recipebox/defaudlt`,
+        `${this.$API_SERVER}/api/recipebox/default`,
         "post",
         {}
         );
@@ -239,15 +239,32 @@ export default {
       }
     },
     async callRecipeBox(id) {
-      console.log("callRecipeBox : "+id);
-      const response = await this.$api(
-      `${this.$API_SERVER}/api/reciperecipebox?box=${this.defaultRecipeBox.id}&recipe=${id}`,
-      "post"
+      // 이미 담긴 레시피인지 확인
+      const res = await this.$api(
+      `${this.$API_SERVER}/api/reciperecipebox/recipeId`,
+      "get",
+      {id : id}
       );
-      if (response.status === this.HTTP_CREATED) {
-        console.log("기본박스에 저장 성공")
+      if (res.status === this.HTTP_OK) {
+        console.log(res.data)
+        // 담긴 레시피 정보가 없으면 default 그룹 박스에 담기
+        if(res.data.recipe == null){
+          const response = await this.$api(
+          `${this.$API_SERVER}/api/reciperecipebox`,
+          "post",
+          {
+            box : this.defaultRecipeBox.id,
+            recipe : id
+          }
+          );
+          if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+            console.log("기본박스에 저장 성공")
+          }
+        } else {
+          console.log("이미 담긴 레시피 입니다.")
+        }
+        location.href=`/recipeboxlist/${id}`;
       }
-      location.href=`/recipeboxlist/${id}`;
     },
     callWrite() {
       console.log("write button");
