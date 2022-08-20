@@ -25,7 +25,7 @@ public interface RecipeRecipeBoxRepository extends JpaRepository<RecipeRecipeBox
     List<RecipeRecipeBoxEntity> findByRecipeBoxIdAndUserId(Long boxId, Long userId,
                                                            @PageableDefault(size=5, sort="Id", direction = Sort.Direction.DESC) Pageable pageable);
 
-    @Query(value = "SELECT rrm.id, r.period, r.time_taken_id, AVG(s.score) score, c.title, f.id file_id FROM RECIPE_RECIPEBOX_MAP rrm " +
+    @Query(value = "SELECT r.id, r.period, r.time_taken_id, AVG(s.score) score, c.title, f.id file_id FROM RECIPE_RECIPEBOX_MAP rrm " +
             "INNER JOIN RECIPE r ON r.id = rrm.recipe_id " +
             "INNER JOIN CONTENTS c ON c.id = r.contents_id " +
             "LEFT JOIN SCORE s ON r.id = s.recipe_id " +
