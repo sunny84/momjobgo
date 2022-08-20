@@ -191,6 +191,7 @@ public class RecipeBoxServiceImpl implements RecipeBoxService {
                 recipeMap.put("recipeId", recipe.getId());
                 Long contentsId = recipe.getContentsId();
                 recipeMap.put("contentsId", contentsId);
+                recipeMap.put("open", recipe.getOpen());
                 List<FileEntity> files = fileRepository.findByContentsId(contentsId);
                 files.forEach(file -> {
                     if (file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
