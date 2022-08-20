@@ -161,11 +161,13 @@
     <!-- 밀어서 공개하기 -->
     <div v-if="recipe_data.open === false && recipe_data.writer.id === this.id" 
       class="bg-light margin-bottom-40 center no-border">
-      <p class="fs20 b color-light-grey">{{ $t("description.publishRecipe") }}</p>
-      <div class="btn_gray margin-bottom-20 margin-top-20 width80 dp-inline-block">
-        <div class="btn_gray bg-white width50" @click="updateOpen">{{ $t("button.slideAndPublish") }}</div>
-      </div>
+      <p class="fs20 b color-light-grey margin-bottom-30">{{ $t("description.publishRecipe") }}</p>
+      <label class="switch" style="height:30px;">
+        <input type="checkbox" />
+        <span class="slider round" @click="updateOpen"></span>
+      </label>
     </div>
+
   </main>
 </template>
 
@@ -174,6 +176,7 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "RecipeDetailView",
+
   data: () => ({
     defaultProfileImg : "/assets/images/photo_empty.png",
     recipeId: 0,
@@ -182,8 +185,14 @@ export default {
       isOpened : false,
       timer: 0
     },
-    defaultRecipeBox : []
+    defaultRecipeBox : [],
+    content : "밀어서 공개하기",
   }),
+
+  created() {
+    this.recipeId = this.$route.params.recipeId;
+    this.getRecipeById(this.recipeId);
+  },
 
   computed: {
     ...mapGetters("user", ["id"]),
@@ -207,6 +216,7 @@ export default {
       });
     },
     async updateOpen() {
+      // console.log("update success!");
       await this.$api(
         `${this.$API_SERVER}/api/Recipe/updateOpen/${this.recipeId}`,
         "patch"
@@ -314,4 +324,71 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 80%;
+  height: 34px;
+  padding:4px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:hover {
+  background: #D5EEEE;
+}
+.slider:before {
+  position: absolute;
+  content:'밀어서 공개하기';
+  padding-top:1px;
+  vertical-align: middle;
+  font-weight: 700;
+  height: 30px;
+  width: 50%;
+  top:4px;
+  left: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #028870;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #028870;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(97%);
+  -ms-transform: translateX(97%);
+  transform: translateX(97%);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 14px;
+}
+</style>
