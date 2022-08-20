@@ -87,6 +87,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                     recipe.put("period", recipeEntity.get().getPeriod());
                     recipe.put("recipeId", recipeEntity.get().getId());
                     recipe.put("contentsId", recipeEntity.get().getContentsId());
+                    recipe.put("open", recipeEntity.get().getOpen());
                     List<FileEntity> fileEntity = fileRepository.findByContentsId(recipeEntity.get().getContentsId());
                     fileEntity.forEach(file -> {
                         if(file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
@@ -135,6 +136,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                             recipe.put("recipeId", recipeEntity.get().getId());
                             Long contentsId = recipeEntity.get().getContentsId();
                             recipe.put("contentsId", contentsId);
+                            recipe.put("open", recipeEntity.get().getOpen());
                             List<FileEntity> fileEntity = fileRepository.findByContentsId(contentsId);
                             fileEntity.forEach(file -> {
                                 if (file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
@@ -208,22 +210,27 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
     public RecipeRecipeBoxEntity moveRecipeBox(Long fromBoxId, Long recipeId, Long toBoxId) {
         Long userId = UserManager.getUser().getId();
         Optional<RecipeRecipeBoxEntity> findRecipeBox = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(fromBoxId, recipeId, userId);
+        Optional<RecipeRecipeBoxEntity> findRecipeBoxTo = recipeRecipeBoxRepository.findByRecipeBoxIdAndRecipeIdAndUserId(toBoxId, recipeId, userId);
         if(findRecipeBox.isPresent()){
             recipeRecipeBoxRepository.deleteById(findRecipeBox.get().getId());
         }
+        if(findRecipeBoxTo.isPresent()){
+            return findRecipeBoxTo.get();
+        } else {
 
-        RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
-        RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
-        recipeBoxEntity.setId(toBoxId);
-        RecipeEntity recipeEntity = new RecipeEntity();
-        recipeEntity.setId(recipeId);
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId);
+            RecipeRecipeBoxEntity recipeRecipeBoxEntity = new RecipeRecipeBoxEntity();
+            RecipeBoxEntity recipeBoxEntity = new RecipeBoxEntity();
+            recipeBoxEntity.setId(toBoxId);
+            RecipeEntity recipeEntity = new RecipeEntity();
+            recipeEntity.setId(recipeId);
+            UserEntity userEntity = new UserEntity();
+            userEntity.setId(userId);
 
-        recipeRecipeBoxEntity.setRecipeBox(recipeBoxEntity);
-        recipeRecipeBoxEntity.setRecipe(recipeEntity);
-        recipeRecipeBoxEntity.setUser(userEntity);
-        return recipeRecipeBoxRepository.save(recipeRecipeBoxEntity);
+            recipeRecipeBoxEntity.setRecipeBox(recipeBoxEntity);
+            recipeRecipeBoxEntity.setRecipe(recipeEntity);
+            recipeRecipeBoxEntity.setUser(userEntity);
+            return recipeRecipeBoxRepository.save(recipeRecipeBoxEntity);
+        }
     }
 
     @Override
