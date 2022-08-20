@@ -3,7 +3,7 @@ d<template>
     <main class="recipebox">
         <BoxListMenu :key="recipeId"></BoxListMenu>
         <!-- <BoxKeywordView :key="listView"></BoxKeywordView> -->
-        <span>{{ step }} {{ boxId }} {{ recipeId }} {{ recipeList }} ...... {{ recipes }} {{ selectedRecipeBoxIds }}</span>
+        <span hidden>{{ step }} {{ boxId }} {{ recipeId }} {{ recipeList }} ...... {{ recipes }} {{ selectedRecipeBoxIds }}</span>
         <div class="wrap-boxes">
             <div class="boxes">
                 <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">                    
@@ -46,7 +46,7 @@ d<template>
                 </div> -->
             </div>
             <div>
-                <span>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
+                <span hidden>선택된 레시피박스: {{ selectedRecipeBox.name }}[{{ selectedRecipeBox.id }}]</span>
             </div>
         </div>
         <div v-if="step==0">
@@ -468,7 +468,13 @@ export default {
             const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe/mine`+params, "get");
             if (response.status === this.HTTP_OK) {
                 this.allBoxInfo = []
-                this.recipeBoxes = response.data;
+                this.recipeBoxes = []
+                response.data.forEach(data => {
+                    if(data.id){
+                        this.recipeBoxes.push(data)
+                    }
+                });
+
                 console.log("getRecipeBoxAll:",this.recipeBoxes)
 
                 let recipeCnt = 0
@@ -826,12 +832,10 @@ export default {
             this.step = 1
             this.moveStep = 0
             this.cntBoxes = 3;
-            this.initialize();
-            this.bindRecipes()
             this.$router.push('/recipebox/'+this.boxId)
-            // this.refreshAll()
         },
         bindBoxes() {
+            console.log(this.recipeBoxes.length)
             this.totBoxes = this.recipeBoxes.length;
             let data = []
             for(var i=0;i<this.cntBoxes;i++){
@@ -841,6 +845,7 @@ export default {
                     this.cntBoxes = i
             }
             this.boxes = data;
+            console.log("bindBoxes:", this.totBoxes, this.boxes)
         },
         appendBoxes() {
             if(this.cntBoxes < this.totBoxes){
@@ -857,6 +862,7 @@ export default {
                 this.dataFull = true
                 alert('List items are fully loaded!')
             }
+            console.log("appendBoxes:", this.totBoxes, this.boxes)
         },
         bindRecipes() {
             console.log("this.bindRecipes", this.recipeList)
@@ -909,11 +915,6 @@ export default {
             console.log(url);
             return url
         },
-
-        refreshAll() {
-            this.$router.go();
-        }
-
     },
 }
 </script>
