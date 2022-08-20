@@ -3,14 +3,14 @@ d<template>
     <main class="recipebox">
         <BoxListMenu :key="recipeId"></BoxListMenu>
         <!-- <BoxKeywordView :key="listView"></BoxKeywordView> -->
-        <span hidden>{{ step }} {{ boxId }} {{ recipeId }}</span>
+        <span hidden>{{ step }} {{ boxId }} {{ recipeId }} {{ selectedRecipeBoxIds }}</span>
         <div class="wrap-boxes">
             <div class="boxes">
                 <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">                    
                     <swiper-slide role="tab" class="wrap_in">
                         <div class="keywords" 
-                            :class="{on : step==4 && boxId == 'all'}">
-                            <button @click="callAllList()">모든 레시피</button>
+                            :class="{on : step == 4}">
+                            <button @click="setSelectedRecipeBox('all')">모든 레시피</button>
                         </div>
                     </swiper-slide>
                     <swiper-slide role="tab" 
@@ -19,7 +19,7 @@ d<template>
                         :key="$index" class="wrap_in">
                         <div
                             class="keywords" 
-                            :class="{on : selectedRecipeBoxIds.includes(box.id) || boxId == box.id}" 
+                            :class="{on : step == 0 && boxId == box.id}" 
                             @click="setSelectedRecipeBox(box.id)">
                             <span>
                                 {{box.name}}
@@ -28,9 +28,8 @@ d<template>
                     </swiper-slide>
                     <swiper-slide role="tab" class="wrap_in">
                         <div class="keywords" 
-                            :class="{on : step==3 || boxId == 'new'}">
-                            <!-- <button @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</button> -->
-                            <button @click="isModalViewed=true">{{ $t('button.addNewBox') }} +</button>
+                            :class="{on : step == 3}">
+                            <button @click="isModalViewed=true; setSelectedRecipeBox('new')">{{ $t('button.addNewBox') }} +</button>
                         </div>
                     </swiper-slide>
                 </swiper>
@@ -215,7 +214,7 @@ d<template>
                     <span class="select fl margin-right-5"></span>
                     <span class="dp-inline-block fl">{{$t("content.select")}} {{ selectedRecipeIds.length }}/{{ recipeList.length }}</span>
                     </div>
-                    <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</div>
+                    <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="isModalViewed=true">{{ $t('button.addNewBox') }} +</div>
                 </div>
                 <div class="wrap_select" id="more_list">
                     <ul v-for="(box, index) in boxes" :key="index">
@@ -552,7 +551,7 @@ export default {
                 // params += '&sort=createdAt,DESC';
             console.log(params);
             this.recipeList = []; 
-            if(this.boxId == 'all'){
+            if(this.boxId == 'all' || this.boxId == 'new'){
                 const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe/mine`+params, "get");
                 if (response.status === this.HTTP_OK) {
                     if(response.data.length){
@@ -600,16 +599,22 @@ export default {
             }
         },
         setSelectedRecipeBox(id) {
-            let index = this.selectedRecipeBoxIds.findIndex(x => x === id);
-            if(index>=0) {
-                this.selectedRecipeBoxIds.splice(index, 1);
-            }else{
-                this.selectedRecipeBoxIds = []
-                this.selectedRecipeBoxIds.push(id);
+            if(id == 'all'){
+                this.step = 4
+            } else if(id == 'new'){
+                this.step = 3
+            } else{
+                this.step = 0
+                this.boxId = id
+                let index = this.selectedRecipeBoxIds.findIndex(x => x === id);
+                if(index>=0) {
+                    this.selectedRecipeBoxIds.splice(index, 1);
+                }else{
+                    this.selectedRecipeBoxIds = []
+                    this.selectedRecipeBoxIds.push(id);
+                }
+                this.selectRecipeBox(id)
             }
-            this.selectRecipeBox(id)
-            this.step = 0
-            this.boxId = id
         },
         selectRecipeBox(id) {
             console.log(`selectRecipeBox: ${id} boxId: ${this.boxId}`);
@@ -703,10 +708,6 @@ export default {
         callEdit() {
             console.log("Edit");
             this.step = 2
-        },
-        callAllList() {
-            this.boxId = 'all'
-            this.step=4
         },
         callAllSelect(){
             this.selectedRecipeIds = []
