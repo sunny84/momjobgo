@@ -3,7 +3,7 @@ d<template>
     <main class="recipebox">
         <BoxListMenu :key="recipeId"></BoxListMenu>
         <!-- <BoxKeywordView :key="listView"></BoxKeywordView> -->
-        <span hidden>{{ step }} {{ boxId }} {{ recipeId }} {{ selectedRecipeBoxIds }}</span>
+        <span hidden>{{ step }} {{ boxId }} {{ recipeId }} {{ recipeList }} ...... {{ recipes }} {{ selectedRecipeBoxIds }}</span>
         <div class="wrap-boxes">
             <div class="boxes">
                 <swiper class="wrap_keywords" ref="filterSwiper" :options="swiperOption" role="tablist">                    
@@ -19,7 +19,7 @@ d<template>
                         :key="$index" class="wrap_in">
                         <div
                             class="keywords" 
-                            :class="{on : step == 0 && boxId == box.id}" 
+                            :class="{on : step == 0 || step == 1 && boxId == box.id}" 
                             @click="setSelectedRecipeBox(box.id)">
                             <span>
                                 {{box.name}}
@@ -220,7 +220,7 @@ d<template>
                     <ul v-for="(box, index) in boxes" :key="index">
                         <li class="menu fl"
                             v-if="box.isDefault === false"
-                            :class="{on : tempBoxId.includes(box.id)}"
+                            :class="{on : tempBoxId == box.id}"
                             @click="callMoveRecipeBox(box.id)">
                             {{ box.name }}
                             <button hidden v-on:click="callDeleteBox(box.id)">X</button>
@@ -357,7 +357,8 @@ export default {
         boxId : 0,
         newBox : "",
         edit : '',
-        tempBoxId : [],
+        // tempBoxId : [],
+        tempBoxId : 0,
         rcpId: 0, // TODO: 부모로 부터 상속되어야 한다.
         on: false,
         // 편집 > 박스이동 더보기
@@ -467,7 +468,13 @@ export default {
             const response = await this.$api(`${this.$API_SERVER}/api/reciperecipebox/recipe/mine`+params, "get");
             if (response.status === this.HTTP_OK) {
                 this.allBoxInfo = []
-                this.recipeBoxes = response.data;
+                this.recipeBoxes = []
+                response.data.forEach(data => {
+                    if(data.id){
+                        this.recipeBoxes.push(data)
+                    }
+                });
+
                 console.log("getRecipeBoxAll:",this.recipeBoxes)
 
                 let recipeCnt = 0
@@ -495,6 +502,7 @@ export default {
         },
         // selectedRecipeBox
         async getRecipeBoxById(id) {
+            console.log("getRecipeBoxById:", id)
             const response = await this.$api(
             `${this.$API_SERVER}/api/recipebox/${id}`,
             "get"
@@ -604,7 +612,7 @@ export default {
             } else if(id == 'new'){
                 this.step = 3
             } else{
-                this.step = 0
+                this.step = 1
                 this.boxId = id
                 let index = this.selectedRecipeBoxIds.findIndex(x => x === id);
                 if(index>=0) {
@@ -621,19 +629,32 @@ export default {
         },
         moveRecipeBox() {
             this.selectedRecipeIds.forEach(async (item, index, arr) => {
-                this.tempBoxId.forEach(async (id, index, arr) => {                
-                    const response = await this.$api(
-                    `${this.$API_SERVER}/api/reciperecipebox/${this.selectedRecipeBox.id}`,
-                    "post",
-                    {
-                        recipe: item,
-                        to: id
-                    }
-                    );
-                    if (response.status === this.HTTP_OK) {
-                        console.log("moveRecipeBox:", response.data);
-                    }
-                });
+                // 여러 박스에 담기 기능
+                // this.tempBoxId.forEach(async (id, index, arr) => {                
+                //     const response = await this.$api(
+                //     `${this.$API_SERVER}/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                //     "post",
+                //     {
+                //         recipe: item,
+                //         to: id
+                //     }
+                //     );
+                //     if (response.status === this.HTTP_OK) {
+                //         console.log("moveRecipeBox:", response.data);
+                //     }
+                // });
+                // 단일 박스에 담기
+                const response = await this.$api(
+                `${this.$API_SERVER}/api/reciperecipebox/${this.selectedRecipeBox.id}`,
+                "post",
+                {
+                    recipe: item,
+                    to: this.tempBoxId
+                }
+                );
+                if (response.status === this.HTTP_OK) {
+                    console.log("moveRecipeBox:", response.data);
+                }
             });
             //this.getRecipeBoxById(this.boxId)
             //this.getRecipeRecipeBoxList(this.boxId);
@@ -677,16 +698,16 @@ export default {
             this.initialize();
         },
         async deleteBoxId() {
-            this.tempBoxId.forEach( async(id, index, arr) => {
-                console.log("deleteBoxId: "+id);
+            // this.tempBoxId.forEach( async(id, index, arr) => {
+                console.log("deleteBoxId: "+this.tempBoxId);
                 const response = await this.$api(
-                `${this.$API_SERVER}/api/recipebox/${id}`,
+                `${this.$API_SERVER}/api/recipebox/${this.tempBoxId}`,
                 "delete"
                 );
                 if (response.status === this.HTTP_OK) {
                     console.log(response.data);
                 }
-            })
+            // })
             this.initialize();
         },
         deleteRecipe() {
@@ -712,7 +733,7 @@ export default {
         callAllSelect(){
             this.selectedRecipeIds = []
             if(!this.on){
-                this.recipeList.forEach((recipe, index, arr) => {
+                this.recipes.forEach((recipe, index, arr) => {
                     this.selectedRecipeIds.push(recipe.recipeId)
                 });
             }
@@ -723,13 +744,14 @@ export default {
         },
         callMoveRecipeBox(id){
             if(this.selectedRecipeIds.length == 0) return
-            this.tempBoxId.push(id);
+            // this.tempBoxId.push(id);
+            this.tempBoxId = id;
             this.tempMap = new Map();
-            this.recipeList.forEach((recipe, index, arr) => {
+            this.recipes.forEach((recipe, index, arr) => {
                 this.tempMap.set(index, recipe);
             });
             this.selectedRecipeIds.forEach((recipeId, index, arr) => {
-                this.recipeList.forEach((recipe, index, arr) => {
+                this.recipes.forEach((recipe, index, arr) => {
                     if(recipeId == recipe.recipeId){
                         this.$delete(arr, index)
                     }
@@ -738,12 +760,13 @@ export default {
             this.edit = 'move';
         },
         callDeleteBox(id){
-            this.tempBoxId.push(id);
+            // this.tempBoxId.push(id);
+            this.tempBoxId = id;
             this.tempMap = new Map();
-            this.recipeBoxes.forEach((box, index, arr) => {
+            this.recipes.forEach((box, index, arr) => {
                 this.tempMap.set(index, box);
             });
-            this.recipeBoxes.forEach((box, index, arr) => {
+            this.recipes.forEach((box, index, arr) => {
                 if(id == box.id){
                     this.$delete(arr, index)
                 }
@@ -752,12 +775,14 @@ export default {
         },
         callDeleteRecipe(){
             this.tempMap = new Map();
-            this.recipeList.forEach((recipe, index, arr) => {
+            // this.recipeList.forEach((recipe, index, arr) => {
+            this.recipes.forEach((recipe, index, arr) => {
                 this.tempMap.set(index, recipe);
             });
             // view 화면에서 숨기기
             this.selectedRecipeIds.forEach((recipeId, index, arr) => {
-                this.recipeList.forEach((recipe, index, arr) => {
+                this.recipes.forEach((recipe, index, arr) => {
+                // this.recipeList.forEach((recipe, index, arr) => {
                     if(recipeId == recipe.recipeId){
                         this.$delete(arr, index)
                     }
@@ -770,9 +795,9 @@ export default {
             console.log("cancel")
             if(this.edit == "move"){
                 this.selectedRecipeIds = [];
-                this.recipeList = [];
+                this.recipes = [];
                 for(let i=0;i<this.tempMap.size;i++){
-                    this.recipeList.push(this.tempMap.get(i))
+                    this.recipes.push(this.tempMap.get(i))
                 };
             }
             if(this.edit == "deleteBox"){
@@ -783,9 +808,9 @@ export default {
             }
             if(this.edit == "deleteRecipe"){
                 this.selectedRecipeIds = [];
-                this.recipeList = [];
+                this.recipes = [];
                 for(let i=0;i<this.tempMap.size;i++){
-                    this.recipeList.push(this.tempMap.get(i))
+                    this.recipes.push(this.tempMap.get(i))
                 };
             }
             this.step = 1
@@ -807,10 +832,10 @@ export default {
             this.step = 1
             this.moveStep = 0
             this.cntBoxes = 3;
-            this.initialize();
-            // this.bindRecipes()
+            this.$router.push('/recipebox/'+this.boxId)
         },
         bindBoxes() {
+            console.log(this.recipeBoxes.length)
             this.totBoxes = this.recipeBoxes.length;
             let data = []
             for(var i=0;i<this.cntBoxes;i++){
@@ -820,6 +845,7 @@ export default {
                     this.cntBoxes = i
             }
             this.boxes = data;
+            console.log("bindBoxes:", this.totBoxes, this.boxes)
         },
         appendBoxes() {
             if(this.cntBoxes < this.totBoxes){
@@ -836,6 +862,7 @@ export default {
                 this.dataFull = true
                 alert('List items are fully loaded!')
             }
+            console.log("appendBoxes:", this.totBoxes, this.boxes)
         },
         bindRecipes() {
             console.log("this.bindRecipes", this.recipeList)
@@ -888,7 +915,6 @@ export default {
             console.log(url);
             return url
         },
-
     },
 }
 </script>
