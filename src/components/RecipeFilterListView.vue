@@ -10,8 +10,10 @@
             <div class="good facebg"></div>
             <div class="number">60</div>
           </ul><!--wrap_faces-->
-          <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
-          <img v-else class="pic" src="@/assets/emptyImg.png">
+          <router-link :to="'/recipedetail/'+recipe.id">
+            <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+            <img v-else class="pic" src="@/assets/emptyImg.png">
+          </router-link>
           <div class="text">
             <div class="title">{{recipe.title}}</div>
             <div class="longtext">{{recipe.sub_title}}</div>
@@ -31,8 +33,10 @@
             <div class="good facebg"></div>
             <div class="number">60</div>
           </ul><!--wrap_faces-->
-          <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
-          <img v-else class="pic" src="@/assets/emptyImg.png">
+          <router-link :to="'/recipedetail/'+recipe.id">
+            <img v-if="recipe.file_id != null" class="pic" :src="getImgURL(recipe.file_id)" @error="setEmptyImg">
+            <img v-else class="pic" src="@/assets/emptyImg.png">
+          </router-link>
           <div class="text">
             <div class="squre3 fl">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
             <div class="title fl">{{recipe.title}}</div>
