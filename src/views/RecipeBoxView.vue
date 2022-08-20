@@ -215,7 +215,7 @@ d<template>
                     <span class="select fl margin-right-5"></span>
                     <span class="dp-inline-block fl">{{$t("content.select")}} {{ selectedRecipeIds.length }}/{{ recipeList.length }}</span>
                     </div>
-                    <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="addNewBoxPage()">{{ $t('button.addNewBox') }} +</div>
+                    <div class="fr b color-grey2 margin-bottom-5" style="margin-top: -28px;" @click="isModalViewed=true">{{ $t('button.addNewBox') }} +</div>
                 </div>
                 <div class="wrap_select" id="more_list">
                     <ul v-for="(box, index) in boxes" :key="index">
