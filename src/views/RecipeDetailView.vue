@@ -36,6 +36,7 @@
               <div class="title fl">{{ recipe_data.title }}</div>
               <div class="longtext">{{ recipe_data.subTitle }}</div>
             </div>
+            <!-- 로그인 되어 있으면 1. 구독여부 표시하고 2. 구독누르면 작동 -->
             <div  v-if="recipe_data.open === true" class="fr right" style="width:30%;">
               <span class="bookmark2" @click="callRecipeBox(recipeId)"></span>
               <span class="share"></span>
@@ -109,7 +110,7 @@
     </div>
 
     <!-- youtube link -->
-    <div class="btn_green margin-bottom-10" @click="redirectYoutube" v-if="recipe_data.youtubeLink">
+    <div class="btn_green margin-bottom-10 margin-top-20" @click="redirectYoutube" v-if="recipe_data.youtubeLink">
       <span class="icon-go">{{ $t('content.youtubeView')}}</span>
     </div>
 
@@ -192,41 +193,28 @@ export default {
   created() {
     this.recipeId = this.$route.params.recipeId;
     this.getRecipeById(this.recipeId);
+    this.getDefaultBoxId();
   },
 
   computed: {
     ...mapGetters("user", ["id"]),
   },
 
-  created() {
-    this.recipeId = this.$route.params.recipeId;
-    this.getRecipeById(this.recipeId);
-    this.getDefaultBoxId();
-  },
-
   methods: {
     async getRecipeById(id) {
-      const response = await this.$api(
-        `${this.$API_SERVER}/Recipe/detail/${id}`,
-        "get"
-      ).then((res) => {
-        if (res.status === this.HTTP_OK) {
-          this.recipe_data = res.data;
-        }
-      });
+      const response = await this.$api(`${this.$API_SERVER}/Recipe/detail/${id}`, "get");
+      if(response.status == this.HTTP_OK) {
+        this.recipe_data = response.data;
+      }
     },
     async updateOpen() {
       // console.log("update success!");
-      await this.$api(
-        `${this.$API_SERVER}/api/Recipe/updateOpen/${this.recipeId}`,
-        "patch"
-      ).then((res) => {
-        if (res.status === this.HTTP_OK) {
-          console.log("레시피 공개 완료");
-          //this.$router.push("/recipedetail/" + recipeId);
-          this.$router.push("/");
-        }
-      });
+      const response = await this.$api(`${this.$API_SERVER}/api/Recipe/updateOpen/${this.recipeId}`, "patch");
+      if (response.status === this.HTTP_OK) {
+        console.log("레시피 공개 완료");
+        //this.$router.push("/recipedetail/" + recipeId);
+        this.$router.push("/");
+      }
     },
     async getDefaultBoxId() {
       const response = await this.$api(
