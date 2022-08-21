@@ -67,7 +67,7 @@ d<template>
                     <div v-for="(recipe, $index) in box.recipe" :key="$index">
                     <div class="wrap_in" v-if="recipe.open===true">
                     <router-link :to="'/recipedetail/'+recipe.recipeId">
-                        <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
+                        <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)" style="max-width:80px;border-radius:10px;"/></div>
                         <div class="wrap_text fl">
                             <div class="wrap_bullet">
                                 <span v-for="(period, idx) in $t('option.period')" :key="idx">
@@ -119,7 +119,7 @@ d<template>
                 <div class="wrap_in" v-if="recipe.open===true">
                 <router-link :to="'/recipedetail/'+recipe.recipeId">
                     <span hidden>{{recipe.mainImgId}} {{recipeList.length}} {{ recipes.length}}</span>
-                    <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
+                    <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)" style="max-width:80px;border-radius:10px;"/></div>
                     <div class="wrap_text fl">
                         <div class="wrap_bullet">
                             <span v-for="(period, idx) in $t('option.period')" :key="idx">
@@ -172,7 +172,7 @@ d<template>
                     <div v-for="(recipe, $index) in recipes" :key="$index">
                         <div class="wrap_in" v-if="recipe.open===true">
                             <div class="photo fl">
-                                <img :src="getImgURL(recipe.mainImgId)"/>
+                                <img :src="getImgURL(recipe.mainImgId)" style="max-width:80px;border-radius:10px;"/>
                             </div>
                             <div class="wrap_text fl">
                                 <div class="wrap_bullet">
@@ -278,7 +278,7 @@ d<template>
                 <div v-else></div>
                 <div class="wrap_in" v-for="recipe in box.recipe" :key="recipe.id">
                 <router-link :to="'/recipedetail/'+recipe.recipeId">
-                    <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
+                    <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)" style="max-width:80px;border-radius:10px;"/></div>
                     <div class="wrap_text fl">
                         <div class="wrap_bullet">
                             <span v-for="(period, idx) in $t('option.period')" :key="idx">
