@@ -115,7 +115,7 @@
         </h2>
 
         <div v-for="(item, idx) in selectedIngredients" :key="idx">
-          <label :for="item.key"><span class="dp-inline-block" style="width:50px;">{{ $t("ingredient." + [item.key]) }}</span></label>
+          <label :for="item.key"><span class="dp-inline-block" style="width:70px;">{{ $t("ingredient." + [item.key]) }}</span></label>
           <input type="number" :id="item.key" v-model="item.volume" min="1" class="intext margin-bottom-10" style="width:70%;" />
           <span v-if="item.ingredientId !== 1"> g</span>
           <span v-else> ml</span>
@@ -610,30 +610,30 @@ export default {
       const allParams = this.makeParams();
 
       // Insert new recipe
-      // const resContents = await this.$api(
-      //   `${this.$API_SERVER}/api/Recipe/write`,
-      //   "post",
-      //   "",
-      //   allParams
-      // );
-      // if (resContents.status == this.HTTP_OK) {
-      //   const contentsId = resContents.data.contentsId;
-      //   const recipeId = resContents.data.recipeId;
+      const resContents = await this.$api(
+        `${this.$API_SERVER}/api/Recipe/write`,
+        "post",
+        "",
+        allParams
+      );
+      if (resContents.status == this.HTTP_OK) {
+        const contentsId = resContents.data.contentsId;
+        const recipeId = resContents.data.recipeId;
 
-      //   // upload files
-      //   const resFiles = await this.$api(
-      //     `${this.$API_SERVER}/file/upload`,
-      //     "post",
-      //     { contentsId: contentsId },
-      //     formData,
-      //     { "Content-Type": "multipart/form-data" }
-      //   );
-      //   if (resFiles.status == this.HTTP_OK) {
-      //     this.releaseAndRemoveExtraData();
-      //     this.$router.push("/recipedetail/" + recipeId);
-      //     this.initWriteRecipeProcess();
-      //   }
-      // }
+        // upload files
+        const resFiles = await this.$api(
+          `${this.$API_SERVER}/file/upload`,
+          "post",
+          { contentsId: contentsId },
+          formData,
+          { "Content-Type": "multipart/form-data" }
+        );
+        if (resFiles.status == this.HTTP_OK) {
+          this.releaseAndRemoveExtraData();
+          this.$router.push("/recipedetail/" + recipeId);
+          this.initWriteRecipeProcess();
+        }
+      }
     },
   },
 };
