@@ -18,7 +18,7 @@
                                 <span class="padding-right-5" @click="callEditBox(box.id)">수정</span><!--callEditBoxName(box.id); reload();-->
                             </div>
                             <div class="btn btn-default disabled margin-left-5 fr" v-if="box.isDefault==true">
-                                <span class="padding-right-5" @click="callDeleteBox(box.id)">{{$t("button.delete")}}</span>
+                                <span class="padding-right-5">{{$t("button.delete")}}</span>
                             </div>
                             <div class="btn btn-default margin-left-5 fr" v-if="box.isDefault==false">
                                 <span class="padding-right-5" @click="callDeleteBox(box.id)">{{$t("button.delete")}}</span>
