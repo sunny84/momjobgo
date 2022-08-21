@@ -25,14 +25,19 @@ export default {
 
     methods:{        
       rediectPage(flag) {
-        console.log(flag, this.recipeId)
-        if(flag == 1)
-          this.$router.push('/myrecipe')
-        else if(flag == 2)
-          this.$router.push('/recipeboxlist/' + this.recipeId)
-        else if(flag == 3)
+        if(flag == 1) {
+          if(this.$route.path.includes('/myrecipe')===false)
+            this.$router.push('/myrecipe')
+        } else if(flag == 2) {
+          if(this.$route.path.includes('/recipebox')===false)
+            this.$router.push('/recipeboxlist/' + this.recipeId)
+        } else if(flag == 3) {
+          if(this.$route.path.includes('/todaySawRecipe')===false){
             console.log('not implemented!')
-            //this.$router.push('/todaySawRecipe')
+            // this.$router.push('/todaySawRecipe/')
+          }
+        }
+        console.log(flag, this.$route.path)
       }
     }
 }

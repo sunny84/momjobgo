@@ -435,7 +435,6 @@ export default {
                 this.step = 4
             } else{
                 this.getRecipeBoxById(this.boxId)
-                // this.getRecipeRecipeBoxList(this.boxId)
             }
         },
         makeRecipeList(){
@@ -729,7 +728,8 @@ export default {
                     console.log(response.data);
                 }
             });
-            this.getRecipeRecipeBoxList(this.boxId);
+            // this.getRecipeRecipeBoxList(this.boxId);
+            this.initialize();
         },
         callEdit() {
             console.log("Edit");
@@ -837,7 +837,8 @@ export default {
             this.step = 1
             this.moveStep = 0
             this.cntBoxes = 3;
-            this.$router.push('/recipebox/'+this.boxId)
+            if(this.$route.path.includes('/recipebox')===false)
+                this.$router.push('/recipebox/'+this.boxId)
         },
         bindBoxes() {
             console.log(this.recipeBoxes.length)
