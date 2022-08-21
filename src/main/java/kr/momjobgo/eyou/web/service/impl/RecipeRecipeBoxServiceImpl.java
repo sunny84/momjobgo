@@ -66,9 +66,8 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
 
     @Override
     public List<Map<String, Object>> findByRecipeContents(Long boxId, Pageable pageable) {
-        Long userId = UserManager.getUser().getId();
         List recipes = new ArrayList<>();
-        List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, userId, pageable);
+        List<RecipeRecipeBoxEntity> recipeRecipeBoxEntity = recipeRecipeBoxRepository.findByRecipeBoxIdAndUserId(boxId, UserManager.getUser().getId(), pageable);
         if(!recipeRecipeBoxEntity.isEmpty()){
             recipeRecipeBoxEntity.forEach(rrb -> {
                 Map<String, Object> recipe = new HashMap<>();
@@ -77,7 +76,7 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                     recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
                     recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
                     recipe.put("new", recipeEntity.get().getContentsEntity().getCreatedAt().after(this.getDateTime.yesterday())); // 어제 이후 시간이면 true
-                    Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeIdAndUserId(recipeEntity.get().getId(),userId);
+                    Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipeEntity.get().getId());
                     if(scoreEntity.isPresent()){
                         recipe.put("score", scoreEntity.get().getScore());
                     }
@@ -120,28 +119,31 @@ public class RecipeRecipeBoxServiceImpl implements RecipeRecipeBoxService {
                     List recipes = new ArrayList<>();
                     rbe.getRecipeEntities().forEach(r -> {
                         Map<String, Object> recipe = new HashMap<>();
-                        recipe.put("title", r.getContentsEntity().getTitle());
-                        recipe.put("subTitle", r.getContentsEntity().getSubTitle());
-                        recipe.put("new", r.getContentsEntity().getCreatedAt().after(this.getDateTime.yesterday())); // 어제 이후 시간이면 true
-                        Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeIdAndUserId(r.getId(), userId);
-                        if (scoreEntity.isPresent()) {
-                            recipe.put("score", scoreEntity.get().getScore());
-                        }
-                        Optional<TimeTakenEntity> timeTakenEntity = timeTakenRepository.findById(r.getTimeTakenId());
-                        if (timeTakenEntity.isPresent()) {
-                            recipe.put("timeTaken", timeTakenEntity.get().getTime());
-                        }
-                        recipe.put("period", r.getPeriod());
-                        recipe.put("recipeId", r.getId());
-                        Long contentsId = r.getContentsId();
-                        recipe.put("contentsId", contentsId);
-                        recipe.put("open", r.getOpen());
-                        List<FileEntity> fileEntity = fileRepository.findByContentsId(contentsId);
-                        fileEntity.forEach(file -> {
-                            if (file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
-                                recipe.put("mainImgId", file.getId());
+                        Optional<RecipeEntity> recipeEntity = recipeRepository.findById(r.getId());
+                        if (recipeEntity.isPresent()) {
+                            recipe.put("title", recipeEntity.get().getContentsEntity().getTitle());
+                            recipe.put("subTitle", recipeEntity.get().getContentsEntity().getSubTitle());
+                            recipe.put("new", recipeEntity.get().getContentsEntity().getCreatedAt().after(this.getDateTime.yesterday())); // 어제 이후 시간이면 true
+                            Optional<ScoreEntity> scoreEntity = scoreRepository.findByRecipeId(recipeEntity.get().getId());
+                            if (scoreEntity.isPresent()) {
+                                recipe.put("score", scoreEntity.get().getScore());
                             }
-                        });
+                            Optional<TimeTakenEntity> timeTakenEntity = timeTakenRepository.findById(recipeEntity.get().getTimeTakenId());
+                            if (timeTakenEntity.isPresent()) {
+                                recipe.put("timeTaken", timeTakenEntity.get().getTime());
+                            }
+                            recipe.put("period", recipeEntity.get().getPeriod());
+                            recipe.put("recipeId", recipeEntity.get().getId());
+                            Long contentsId = recipeEntity.get().getContentsId();
+                            recipe.put("contentsId", contentsId);
+                            recipe.put("open", recipeEntity.get().getOpen());
+                            List<FileEntity> fileEntity = fileRepository.findByContentsId(contentsId);
+                            fileEntity.forEach(file -> {
+                                if (file.getFileRealName().startsWith("M")) { // M 으로 시작하는 파일 가져오기
+                                    recipe.put("mainImgId", file.getId());
+                                }
+                            });
+                        }
                         recipes.add(recipe);
                     });
                     box.put("recipe", recipes);
