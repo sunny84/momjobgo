@@ -150,6 +150,7 @@ public class RecipeServiceImpl implements RecipeService {
             user.put("snsId", userEntity.getSnsId());
             user.put("email", userEntity.getEmail());
             user.put("nickname", userEntity.getNickname());
+            user.put("profileImg", userEntity.getProfile_img());
 
             // recipe count written by writer
             Long category = Long.valueOf(1);  // 1 is the number of content category for recipe
