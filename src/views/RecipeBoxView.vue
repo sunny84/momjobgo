@@ -64,7 +64,8 @@ d<template>
                 <!-- TODO: 편집step==3부분도 변경 --> 
                 <div class="wrap_recipes" v-if="box.recipe.length > 0">
                     <div class="alltitle">{{ box.name }}</div>
-                    <div class="wrap_in" v-for="(recipe, $index) in box.recipe" :key="$index">
+                    <div v-for="(recipe, $index) in box.recipe" :key="$index">
+                    <div class="wrap_in" v-if="recipe.open===true">
                     <router-link :to="'/recipedetail/'+recipe.recipeId">
                         <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
                         <div class="wrap_text fl">
@@ -82,6 +83,7 @@ d<template>
                             <div class="text">{{ recipe.subTitle }}</div>
                         </div>
                     </router-link>
+                    </div>
                     </div>
                     <!-- ////<infinite-loading @infinite="getRecipeRecipeBoxList(boxId)">
                         <div slot="no-more"><br/></div>
@@ -113,7 +115,8 @@ d<template>
             </div>
             <div class="wrap_recipes" v-if="recipeList.length > 0">
                 <div class="alltitle">{{ selectedRecipeBox.name }}</div>
-                <div class="wrap_in" v-for="(recipe, index) in recipes" :key="index">
+                <div v-for="(recipe, index) in recipes" :key="index">
+                <div class="wrap_in" v-if="recipe.open===true">
                 <router-link :to="'/recipedetail/'+recipe.recipeId">
                     <span hidden>{{recipe.mainImgId}} {{recipeList.length}} {{ recipes.length}}</span>
                     <div class="photo fl"><img :src="getImgURL(recipe.mainImgId)"/></div>
@@ -132,6 +135,7 @@ d<template>
                         <div class="text">{{ recipe.subTitle }}</div>
                     </div>
                 </router-link>
+                </div>
                 </div>
                 <!-- ////<infinite-loading @infinite="getRecipeRecipeBoxList(boxId)">
                     <div slot="no-more"><br/></div>
@@ -165,32 +169,33 @@ d<template>
             </div>
             <div class="wrap_recipes">
                 <div class="alltitle hidden">{{ selectedRecipeBox.name }}</div>
-                <!-- <div class="wrap_in" v-for="(recipe, index) in recipeList.slice(0,5)" :key="index"> -->
-                    <div class="wrap_in" v-for="(recipe, $index) in recipes" :key="$index">
-                    <div class="photo fl">
-                        <img :src="getImgURL(recipe.mainImgId)"/>
-                    </div>
-                    <div class="wrap_text fl">
-                        <div class="wrap_bullet">
-                            <span v-for="(period, idx) in $t('option.period')" :key="idx">
-                            <div class="squre4 fl" v-if="recipe.period == idx">{{ period[0] }}</div>
-                            </span>
-                            <div class="new2 fl" v-if="recipe.new"></div>
+                    <div v-for="(recipe, $index) in recipes" :key="$index">
+                        <div class="wrap_in" v-if="recipe.open===true">
+                            <div class="photo fl">
+                                <img :src="getImgURL(recipe.mainImgId)"/>
+                            </div>
+                            <div class="wrap_text fl">
+                                <div class="wrap_bullet">
+                                    <span v-for="(period, idx) in $t('option.period')" :key="idx">
+                                    <div class="squre4 fl" v-if="recipe.period == idx">{{ period[0] }}</div>
+                                    </span>
+                                    <div class="new2 fl" v-if="recipe.new"></div>
+                                </div>
+                                <div class="fr">
+                                    <span class="select dp-inline-block fl margin-right-5"
+                                        :class="{on : selectedRecipeIds.includes(recipe.recipeId)}" 
+                                        @click="setSelectedRecipe(recipe.recipeId)"
+                                    />
+                                </div>
+                                <div class="title">
+                                    <div class="fl padding-right-10">{{ recipe.title }}</div>
+                                    <span class="icon_reply fl"></span>
+                                </div>
+                                <div class="text">{{ recipe.subTitle }}</div>
+                            </div>
                         </div>
-                        <div class="fr">
-                            <span class="select dp-inline-block fl margin-right-5"
-                                :class="{on : selectedRecipeIds.includes(recipe.recipeId)}" 
-                                @click="setSelectedRecipe(recipe.recipeId)"
-                            />
-                        </div>
-                        <div class="title">
-                            <div class="fl padding-right-10">{{ recipe.title }}</div>
-                            <span class="icon_reply fl"></span>
-                        </div>
-                        <div class="text">{{ recipe.subTitle }}</div>
                     </div>
                 </div>
-            </div>
             <div>
                 <span hidden>체크한 이름: {{ selectedRecipeIds }}</span>
             </div>
@@ -441,6 +446,7 @@ export default {
                             title: recipe.title,
                             subTitle: recipe.subTitle,
                             new: recipe.new,
+                            open: recipe.open,
                             score: recipe.score,
                             timeTaken: recipe.timeTaken,
                             period: recipe.period,
@@ -494,7 +500,7 @@ export default {
                     'recipeBoxes': this.recipeBoxes
                 });
                 this.bindBoxes()
-                console.log(this.allBoxInfo)
+                console.log("getRecipeBoxAll:",this.allBoxInfo)
             }
         },
         // selectedRecipeBox
@@ -523,6 +529,7 @@ export default {
                         title: obj.title,
                         subTitle: obj.subTitle,
                         new: obj.new,
+                        open: obj.open,
                         score: obj.score,
                         timeTaken: obj.timeTaken,
                         period: obj.period,
@@ -574,6 +581,7 @@ export default {
                         title: obj.title,
                         subTitle: obj.subTitle,
                         new: obj.new,
+                        open: obj.open,
                         score: obj.score,
                         timeTaken: obj.timeTaken,
                         period: obj.period,
@@ -896,6 +904,7 @@ export default {
                         this.cntRecipes = i
                     }
                 }
+                console.log("appendRecipes:",data)
                 this.recipes = data
             }else{
                 this.dataRcpFull = true
