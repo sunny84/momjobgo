@@ -91,8 +91,9 @@
       </div>
       <ModalView v-if="isModalViewed" @close-modal="isModalViewed=false">
         <slot slot="body">
-          <h1 class="fl">담은 레시피 그룹 편집</h1>
-          <div class="btn btn-default fl margin-left-30 margin-bottom-40" @click="isModalViewed=false">{{$t("button.cancel")}}</div>
+          <h1 class="fl">담은 레시피 그룹 편집
+            <div class="btn btn-default" @click="isModalViewed=false"><img src="@/assets/images/btn_close.png"/></div>
+          </h1>
           <BoxListEdit></BoxListEdit>
         </slot>
       </ModalView>

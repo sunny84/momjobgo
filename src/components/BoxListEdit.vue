@@ -15,7 +15,7 @@
                         </div>
                         <div class="wrap_buttonmargin-top-5 margin-bottom-5 margin-right-5">
                             <div class="btn btn-default margin-left-5 fr">
-                                <span class="padding-right-5" @click="callEditBox(box.id)">수정</span><!--callEditBoxName(box.id); reload();-->
+                                <span class="padding-right-5" @click="callEditBox(box.id)">수정</span>
                             </div>
                             <div class="btn btn-default disabled margin-left-5 fr" v-if="box.isDefault==true">
                                 <span class="padding-right-5">{{$t("button.delete")}}</span>
