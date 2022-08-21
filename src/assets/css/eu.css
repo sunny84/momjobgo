@@ -87,7 +87,6 @@ main .wrap_list .contents1 .text .wrap_info .chat   { background: url(../images/
 main .wrap_list .contents1 .squre3   {width: 30px; height: 26px; display: inline-block; background-color: rgba( 2, 136, 112, 0.2 );letter-spacing: -1px; border-radius: 5px;padding-top: 4px;margin:0 10px 40px 0; font-size: 14px;text-align: center; font-weight: 500; color: #028870;}
 main .wrap_list .contents1 .bookmark1 {width: 30px; height: 26px; display: inline-block; background:url(../images/bul_bookmark.png) center 50% no-repeat;text-indent: -999999px; border-radius: 5px;}
 main .wrap_list .contents1 .bookmark2 {width: 30px; height: 26px; display: inline-block; background:url(../images/bul_bookmark2.png) center 50% no-repeat;text-indent: -999999px; border-radius: 5px;}
-
 main .wrap_filter {position:relative; clear: both; margin: 10px auto; font-size: 14px; overflow: hidden; padding:0 5px;}
 main .wrap_filter .wrap_filter_menu             {overflow: hidden; margin: 10px auto;}
 main .wrap_filter .wrap_filter_menu .title      { color: #B7B7B7;display: inline-block; overflow: hidden; background:url(../images/bul_filter.png) no-repeat; padding-left:25px; padding-bottom: 2px; margin-right: 5px;}
@@ -106,6 +105,7 @@ main .wrap_filter .wrap_contents { clear: both; overflow: hidden;}
 main .squre                 {position: absolute;left:8px; top:5px;  width: 30px; height: 26px; background-color: rgba( 255, 255, 255, 0.5 );letter-spacing: -1px; border-radius: 5px;padding-top: 4px; font-size: 12px; font-weight: 700; color: #028870;}
 main .squre2                {position: absolute;right:8px; top:40px;width: 30px; height: 26px; background-color: rgba( 255, 255, 255, 0.5 );letter-spacing: -1px; border-radius: 5px;padding-top: 4px; font-size: 12px; font-weight: 700; color: #028870;}
 main .bookmark              {position: absolute;right:8px; top:5px; width: 30px; height: 26px;background-color: rgba(255, 255, 255, 0.5 ); border-radius: 5px;}
+main .bookmark:hover {cursor:pointer;}
 main .wrap_faces            {position: absolute;left:8px; top:5px;}       
 main .wrap_faces .good      {background: url(../images/baby-good.png) no-repeat;}
 main .wrap_faces .bad       {background: url(../images/baby-bad.png) no-repeat;}
