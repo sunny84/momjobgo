@@ -262,7 +262,7 @@ d<template>
                 <span class="num" v-for="(box, $index) in allBoxInfo" :key="$index">{{ box.recipeCnt }}</span>
             </div>
             <div class="btn btn-default edit disabled fr">
-                <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
+                <span class="padding-right-5">{{$t("button.edit")}}</span>
             </div>
             <!-- TODO: 이부분을 갱신해서 가져오도록 수정 -->
             <div class="wrap_recipes">
