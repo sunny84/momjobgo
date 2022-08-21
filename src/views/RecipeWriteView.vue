@@ -146,7 +146,7 @@
         <div class="margin-bottom-10" style="position:relative;" v-for="(tip, idx) in Tips" :key="`t-${idx}`">
             <div class="circleNum">{{ idx+1 }}</div>
             <input type="text" class="intext" style="width:89%;" :value="tip.text" @input="updateTip(idx, $event)" :placeholder="$t('content_description.tip')">
-            <button class="btn_noRadius fr addTip" @click="addTip" type="button">+</button>
+            <button v-if="idx===0" class="btn_noRadius fr addTip" @click="addTip" type="button">+</button>
         </div>
 
         <!-- Clip moive link -->
