@@ -3,7 +3,7 @@
     <!-- 공개여부(open) 값에 따라서 미리보기(false)/상세보기(true)로 구분 -->
     <div class="row">
       <h1 class="fl" v-if="recipe_data.open === true">
-        <img src="@/assets/images/icon_back.png" alt="돌아가기" title="돌아가기" style="cursor: pointer;" @click="$router.back">
+        <img src="@/assets/images/icon_back.png" alt="돌아가기" title="돌아가기" style="cursor: pointer;" @click="$router.go(-1)">
         <span class="color-orange padding-left-15">{{ $t("title.viewRecipe") }}</span>
       </h1>
       <h1 class="fl" v-else>
@@ -15,9 +15,9 @@
 
     <!-- 작성자 정보 -->
     <div class="ph_st_wrap margin-top-10">
-      <!-- TODO : profile_img 구현된 후 적용할 것 -->
-      <!--<div class="fl"><img :src="recipe_data.writer.profile_img" @error="setDefaultProfileImg" class="sphoto"></div>-->
-      <div class="fl">
+      <div class="fl" :class="[recipe_data.writer.profileImg !='' ? 'dp-inline-block' : 'dp-none']">
+        <img :src="recipe_data.writer.profileImg" class="sphoto"></div>
+      <div class="fl" :class="[recipe_data.writer.profileImg !='' ? 'dp-none' : 'dp-inline-block']">
         <img src="@/assets/images/photo_empty.png" class="sphoto" />
       </div>
       <div class="fl name">{{ recipe_data.writer.nickname !== null ? recipe_data.writer.nickname : recipe_data.writer.snsId.substr(0, 5) + "..."}}
@@ -36,7 +36,7 @@
               <div class="title fl">{{ recipe_data.title }}</div>
               <div class="longtext">{{ recipe_data.subTitle }}</div>
             </div>
-            <div class="fr right" style="width:30%;">
+            <div  v-if="recipe_data.open === true" class="fr right" style="width:30%;">
               <span class="bookmark2" @click="callRecipeBox(recipeId)"></span>
               <span class="share"></span>
             </div>
