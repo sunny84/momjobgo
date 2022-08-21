@@ -38,7 +38,7 @@
             </div>
             <!-- 로그인 되어 있으면 1. 구독여부 표시하고 2. 구독누르면 작동 -->
             <div  v-if="recipe_data.open === true" class="fr right" style="width:30%;">
-              <span class="bookmark2" @click="callRecipeBox(recipeId)"></span>
+              <span :class="[ recipe_data.isBookmarked ? 'bookmark1' : 'bookmark2']" @click="callRecipeBox(recipeId)"></span>
               <span class="share"></span>
             </div>
           </div>
