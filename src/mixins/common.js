@@ -9,7 +9,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters("user", ["hasToken"]),
+    ...mapGetters("user", ["id","hasToken"]),
   },
 
   methods: {
@@ -34,7 +34,10 @@ export default {
         data: body,
         params: params,
       }).catch((e) => {
-        if (
+        const _this = this;
+        if( typeof _this.id === "undefined" ){
+          console.log("first login check");
+        } else if (
           e.response.status === this.HTTP_UNAUTHORIZED &&
           e.response?.data?.error &&
           e.response.data.error === "Invalid token"
