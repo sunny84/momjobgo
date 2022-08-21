@@ -179,7 +179,7 @@ public class RecipeServiceImpl implements RecipeService {
                 // find this recipe is in list or not
                 result.put("isBookmarked", bookmarkId.indexOf(id)>=0);
             } else {
-                result.put("isBookmarked", "false");
+                result.put("isBookmarked", false);
             }
 
             /** ingredients with key and volume **/
