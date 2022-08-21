@@ -5,7 +5,7 @@
         <div class="contents1">
           <div class="squre2">{{ $t(`option.period_s[${recipe.period}]`)[0] }}</div>
           <div v-if="recipe.subscribe!=null" class="bookmark"><img src="@/assets/images/bul_bookmark.png"></div>
-          <div v-else class="bookmark"><img src="@/assets/images/bul_bookmark2.png"></div>
+          <div v-else class="bookmark" @click="callRecipeBox(recipe.id)"><img src="@/assets/images/bul_bookmark2.png"></div>
           <ul class="wrap_faces">
             <div class="good facebg"></div>
             <div class="number">60</div>
@@ -42,7 +42,7 @@
             <div class="title fl">{{recipe.title}}</div>
             <div class="longtext fl">{{recipe.sub_title}}</div>
             <div v-if="recipe.subscribe!=null" class="bookmark1 fr"></div>
-            <div v-else class="bookmark2 fr"></div>
+            <div v-else class="bookmark2 fr" @click="callRecipeBox(recipe.id)"></div>
             <div class="wrap_info fr">
               <span class="bullet clock">{{$t(`option.timeTaken_s[${recipe.time_taken_id}]`)}}</span>
               <span class="bullet star">{{(recipe.score == null ? 0 : recipe.score).toFixed(1)}}</span>
@@ -70,10 +70,15 @@ export default {
   data: ()=>({
     page : 0,
     recipeList : [],
+    defaultRecipeBox: [],
   }),
 
   computed : {  
     ...mapGetters('filter', ['period', 'timeTaken', 'ingredientIds', 'sort', 'listView'])
+  },
+  
+  created() {
+    this.getDefaultBoxId();
   },
 
   components: {
@@ -90,6 +95,39 @@ export default {
 
     setEmptyImg(e) {
       e.target.src = emptyImg;
+    },
+
+    async getDefaultBoxId() {
+      const response = await this.$api(
+      `${this.$API_SERVER}/api/recipebox/default`,
+      "get"
+      );
+      if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+          this.defaultRecipeBox = response.data;
+      }
+      if(response.data.isNaN){
+        // create Default Box
+        const response = await this.$api(
+        `${this.$API_SERVER}/api/recipebox/defaudlt`,
+        "post",
+        {}
+        );
+        if (response.status === this.HTTP_OK || response.status === this.HTTP_CREATED) {
+            this.defaultRecipeBox = response.data;
+        }
+      }
+    },
+
+    async callRecipeBox(id) {
+      console.log("callRecipeBox : "+id);
+      const response = await this.$api(
+      `${this.$API_SERVER}/api/reciperecipebox?box=${this.defaultRecipeBox.id}&recipe=${id}`,
+      "post"
+      );
+      if (response.status === this.HTTP_CREATED) {
+        console.log("기본박스에 저장 성공")
+      }
+      location.href=`/recipeboxlist/${id}`;
     },
 
     async infiniteHandler($state){
