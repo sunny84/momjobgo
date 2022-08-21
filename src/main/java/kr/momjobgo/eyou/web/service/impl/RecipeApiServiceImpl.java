@@ -1,5 +1,6 @@
 package kr.momjobgo.eyou.web.service.impl;
 
+import kr.momjobgo.eyou.config.security.UserManager;
 import kr.momjobgo.eyou.web.dto.RecipeRequest;
 import kr.momjobgo.eyou.web.jpa.entity.ContentsEntity;
 import kr.momjobgo.eyou.web.jpa.entity.RecipeEntity;
@@ -44,6 +45,7 @@ public class RecipeApiServiceImpl implements RecipeApiService {
     @CrossOrigin
     public Map<String, Object> write(HttpServletRequest req, @RequestBody RecipeRequest request) {
 
+        request.getContentsEntity().setWriter(UserManager.getUser().getId());
         ContentsEntity entity = contentsRepository.save(request.getContentsEntity());
 
         System.out.println("entity: "+ entity);
