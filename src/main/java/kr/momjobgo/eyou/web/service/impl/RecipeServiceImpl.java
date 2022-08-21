@@ -20,11 +20,12 @@ public class RecipeServiceImpl implements RecipeService {
     private final ScoreRepository scoreRepository;
     private final TimeTakenRepository timeTakenRepository;
     private final UserRepository userRepository;
+    private final RecipeRecipeBoxRepository recipeRecipeBoxRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository, ContentsRepository contentsRepository,
                              FileRepository fileRepository, IngredientRepository ingredientRepository,
                              ScoreRepository scoreRepository, TimeTakenRepository timeTakenRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository, RecipeRecipeBoxRepository recipeRecipeBoxRepository) {
         this.recipeRepository = recipeRepository;
         this.contentsRepository = contentsRepository;
         this.fileRepository = fileRepository;
@@ -32,6 +33,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.scoreRepository = scoreRepository;
         this.timeTakenRepository = timeTakenRepository;
         this.userRepository = userRepository;
+        this.recipeRecipeBoxRepository = recipeRecipeBoxRepository;
      }
 
     @Override
@@ -165,6 +167,20 @@ public class RecipeServiceImpl implements RecipeService {
             user.put("recipeCount", recipeCount);
             result.put("writer", user);
 
+            /** User bookmarked this recipe or not **/
+            List<RecipeRecipeBoxEntity> recipeRecipeBoxEntities = recipeRecipeBoxRepository.findByUserId(UserManager.getUser().getId());
+            System.out.println(recipeRecipeBoxEntities.size());
+            if (!recipeRecipeBoxEntities.isEmpty()) {
+                // make subscribed(=bookmarked) recipe id array
+                ArrayList<Long> bookmarkId = new ArrayList<>();
+                for(int i=0; i<recipeRecipeBoxEntities.size();i++) {
+                    bookmarkId.add(recipeRecipeBoxEntities.get(i).getRecipe().getId());
+                }
+                // find this recipe is in list or not
+                result.put("isBookmarked", bookmarkId.indexOf(id)>=0);
+            } else {
+                result.put("isBookmarked", "false");
+            }
 
             /** ingredients with key and volume **/
             List<RecipeIngredientMapEntity> recipeIngredientMapEntities = recipe.getRecipeIngredientMapEntities();
