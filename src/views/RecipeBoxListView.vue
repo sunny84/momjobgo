@@ -89,6 +89,13 @@
               </div>
           </div>
       </div>
+      <ModalView v-if="isModalViewed" @close-modal="isModalViewed=false">
+        <slot slot="body">
+          <h1 class="fl">담은 레시피 그룹 편집</h1>
+          <div class="btn btn-default fl margin-left-30 margin-bottom-40" @click="isModalViewed=false">{{$t("button.cancel")}}</div>
+          <BoxListEdit></BoxListEdit>
+        </slot>
+      </ModalView>
       <!-- <div>
         <infinite-loading @infinite="infiniteHandler">
             <div slot="no-more"><br/></div>
@@ -103,27 +110,34 @@
 import emptyImg from '@/assets/emptyImg.png'
 import ConfirmInput from 'vue-confirm-input'
 import InfiniteLoading from 'vue-infinite-loading';
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import BoxListMenu from "../components/BoxListMenu.vue";
+import BoxListEdit from '@/components/BoxListEdit.vue';
+import ModalView from '@/components/ModalView.vue';
 
 export default {
   name : "RecipeBoxListView",
   data: ()=>({
     page : 0,
-    boxList : [],       // 화면에 보여줄 담은 레시피 목록
+    // boxList : [],       // 화면에 보여줄 담은 레시피 목록
     recipeBoxes : [],   // 서버로 부터 얻어온 담은 레시피 목록
     allBoxInfo : [],    // 모아 보기
     boxName: '기본박스',
     recipeId: 0,
+    isModalViewed: false,
+    boxes : [],
   }),
 
   components: {
     ConfirmInput,
     InfiniteLoading,
-    BoxListMenu
-  },
+    BoxListMenu,
+    ModalView,
+    BoxListEdit
+},
 
   computed: {
+    ...mapGetters('box',['boxList']),
     reversedMesage: {
       get() {
         return this.boxName.split('').reverse().join('')
@@ -148,7 +162,7 @@ export default {
   }, 
 
   methods: {
-    ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setRecipeId']),
+    ...mapActions('box', ['setStep','setBoxId', 'setAllBox', 'setRecipeId', 'setBoxList']),
 
     initialize() {
       this.setRecipeId(this.recipeId)
@@ -171,9 +185,11 @@ export default {
         this.recipeBoxes.forEach(box => {
           if(box.recipe){
               box.recipe.forEach(recipe => {
-              recipeCnt = recipeCnt + 1
-              if(recipe.mainImgId) thumbnails.push({"mainImgId": recipe.mainImgId})
-              if(recipe.new) newFlag = true
+              if(recipe.open === true){
+                recipeCnt = recipeCnt + 1
+                if(recipe.mainImgId) thumbnails.push({"mainImgId": recipe.mainImgId})
+                if(recipe.new) newFlag = true
+              }
             });
           }
         });
@@ -184,9 +200,10 @@ export default {
           'new': newFlag,
           'recipeBoxes': this.recipeBoxes
           });
-        this.boxList = this.recipeBoxes
+        // this.boxList = this.recipeBoxes
         // console.log(this.allBoxInfo)
         this.setAllBox(this.allBoxInfo)
+        this.setBoxList(this.recipeBoxes)
       }
     },
 
@@ -219,6 +236,7 @@ export default {
     callEdit() {
       console.log("Edit");
       // TODO : 폴더 편집 - 폴더명 변경, 삭제, 폴더 새로 만들기 기능
+      this.isModalViewed = true
     },
 
     async addNewBox(name) {
