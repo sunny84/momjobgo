@@ -55,6 +55,7 @@ main .wrap_contents .contents1 .wrap_info .chat   { background: url(../images/bu
 main .wrap_contents .contents1 .squre3   {width: 30px; height: 26px; display: inline-block; background-color: rgba( 2, 136, 112, 0.2 );letter-spacing: -1px; border-radius: 5px;padding-top: 4px;margin:0 10px 10px 0; font-size: 14px;text-align: center; font-weight: 500; color: #028870;}
 main .wrap_contents .contents1 .bookmark1 {width: 30px; height: 26px; display: inline-block; background:url(../images/bul_bookmark.png) center 50% no-repeat;text-indent: -999999px; border-radius: 5px;}
 main .wrap_contents .contents1 .bookmark2 {width: 30px; height: 26px; display: inline-block; background:url(../images/bul_bookmark2.png) center 50% no-repeat;text-indent: -999999px; border-radius: 5px;}
+main .wrap_contents .contents1 .bookmark2:hover {cursor:pointer;}
 main .wrap_contents .contents1 .share {width: 30px; height: 26px; display: inline-block; background:url(../images/bul_share.png) center 50% no-repeat;text-indent: -999999px; border-radius: 5px;}
 
 main .wrap_contents .contents2 { margin: 0 auto; width: 48%; display:inline-block ; margin-right: 10px; padding-bottom: 30px; position: relative;}
