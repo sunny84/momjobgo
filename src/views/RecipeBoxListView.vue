@@ -25,33 +25,33 @@
                             <div>
                               <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(0,1)" :key="$i+'1'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
-                                <img v-if="img.mainImgId == null" class="pic" src="@/assets/emptyImg.png">
+                                <img v-if="img.mainImgId == null" class="pic" style="padding-top:70%;">
                               </div>
                               <div class="fl" style="width:50%; height:50%;" v-if="box.thumbnails.slice(0,1)==''">
-                                <img class="pic" src="@/assets/emptyImg.png">                    
+                                <img class="pic" style="padding-top:70%;">                    
                               </div>
                               <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(1,2)" :key="$i+'2'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
-                                <img v-if="img.mainImgId == 0" class="pic" src="@/assets/emptyImg.png">
+                                <img v-if="img.mainImgId == 0" class="pic" style="padding-top:70%;">
                               </div>
                             </div>
                               <div class="fl" style="width:50%; height:50%;" v-if="box.thumbnails.slice(1,2)==''">
-                                <img class="pic" src="@/assets/emptyImg.png">                    
+                                <img class="pic" style="padding-top:70%;">                    
                               </div>
                             <div>
                               <div class="clear-both fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(2,3)" :key="$i+'3'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
-                                <img v-if="img.mainImgId == null" class="pic" src="@/assets/emptyImg.png">
+                                <img v-if="img.mainImgId == null" class="pic" style="padding-top:70%;">
                               </div>
                               <div class="clear-both fl" style="width:50%; height:50%;" v-if="box.thumbnails.slice(2,3)==''">
-                                <img class="pic" src="@/assets/emptyImg.png">                    
+                                <img class="pic" style="padding-top:70%;">                    
                               </div>
                               <div class="fl" style="width:50%; height:50%;" v-for="(img, $i) in box.thumbnails.slice(3,4)" :key="$i+'4'">
                                 <img v-if="img.mainImgId != null" class="pic" :src="getImgURL(img.mainImgId)" @error="setEmptyImg">
-                                <img v-if="img.mainImgId == null" class="pic" src="@/assets/emptyImg.png">                                
+                                <img v-if="img.mainImgId == null" class="pic" style="padding-top:70%;">                                
                               </div>
                               <div class="fl" style="width:50%; height:50%;" v-if="box.thumbnails.slice(3,4)==''">
-                                <img class="pic" src="@/assets/emptyImg.png">                    
+                                <img class="pic" style="padding-top:70%;">                    
                               </div>
                             </div>
                           </div>
@@ -60,18 +60,18 @@
                           <div class="photo" style="display:inline-block;">
                             <div>
                               <div class="fl" style="width:50%; height:50%;">
-                                <img class="pic" src="@/assets/emptyImg.png">
+                                <img class="pic" style="padding-top:70%;">
                               </div>
                               <div class="fl" style="width:50%; height:50%;">
-                                <img class="pic" src="@/assets/emptyImg.png">
+                                <img class="pic" style="padding-top:70%;">
                               </div>
                             </div>
                             <div>
                               <div class="clear-both fl" style="width:50%; height:50%;">
-                                <img class="pic" src="@/assets/emptyImg.png">
+                                <img class="pic" style="padding-top:70%;">
                               </div>
                               <div class="fl" style="width:50%; height:50%;">
-                                <img class="pic" src="@/assets/emptyImg.png">                                
+                                <img class="pic" style="padding-top:70%;">                                
                               </div>
                             </div>
                           </div>
@@ -93,7 +93,7 @@
                       <div v-if="box.recipe">
                           <div class="photo" v-for="(r, $i) in box.recipe.slice(0,1)" :key="$i">
                               <img v-if="r.mainImgId != null" class="pic" :src="getImgURL(r.mainImgId)" @error="setEmptyImg">
-                              <img v-if="r.mainImgId == null" class="pic" src="@/assets/emptyImg.png">
+                              <img v-if="r.mainImgId == null" class="pic" style="padding-top:70%;">
                           </div>
                       </div>
                   </div>
@@ -105,7 +105,7 @@
                           <button hidden v-on:click="callDeleteBox(box.id)">X</button>
                       </div>
                       <div class="photo">
-                        <img class="pic" src="@/assets/emptyImg.png">
+                        <img class="pic" style="padding-top:70%;">
                       </div>
                   </div>
                   </div>
