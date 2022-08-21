@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ScoreRepository extends JpaRepository<ScoreEntity, Long> {
     Optional<ScoreEntity> findByRecipeId(Long recipeId);
+
+    Optional<ScoreEntity> findByRecipeIdAndUserId(Long id, Long userId);
 }
