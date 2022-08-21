@@ -97,7 +97,7 @@
                           </div>
                       </div>
                   </div>
-                  <div v-if="box.recipe">
+                  <div v-if="box.recipe.length == 0">
                       <div class="wrap_row">
                           <div class="circleNum">{{ box.recipe?box.recipe.length:0 }}</div>
                           <div class="title">{{ box.name }}</div>

@@ -1,4 +1,4 @@
-d<template>
+<template>
   <div>
     <main class="recipebox">
         <BoxListMenu :key="recipeId"></BoxListMenu>
