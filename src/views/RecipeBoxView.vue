@@ -15,7 +15,6 @@ d<template>
                     </swiper-slide>
                     <swiper-slide role="tab" 
                         v-for="(box, $index) in recipeBoxes"
-                        v-if="box.isDefault === false"
                         :key="$index" class="wrap_in">
                         <div
                             class="keywords" 
@@ -219,7 +218,6 @@ d<template>
                 <div class="wrap_select" id="more_list">
                     <ul v-for="(box, index) in boxes" :key="index">
                         <li class="menu fl"
-                            v-if="box.isDefault === false"
                             :class="{on : tempBoxId == box.id}"
                             @click="callMoveRecipeBox(box.id)">
                             {{ box.name }}
@@ -263,14 +261,14 @@ d<template>
                 <span class="dp-inline-block fl">{{$t("content.all")}} </span>
                 <span class="num" v-for="(box, $index) in allBoxInfo" :key="$index">{{ box.recipeCnt }}</span>
             </div>
-            <div class="btn btn-default edit fr">
+            <div class="btn btn-default edit disabled fr">
                 <span class="padding-right-5" @click="callEdit">{{$t("button.edit")}}</span>
             </div>
             <!-- TODO: 이부분을 갱신해서 가져오도록 수정 -->
             <div class="wrap_recipes">
                 <div v-for="(box, $index) in recipeBoxes" :key="$index">
                 <div class="alltitle" v-if="box.isDefault===false && box.recipe && box.recipe.length > 0">{{ box.name }}</div>
-                <div v-else-if="box.isDefault===true"><br/></div><!-- 기본 박스 -->
+                <div v-else-if="box.isDefault===true"><br/></div>
                 <div v-else-if="box.recipe?false:true"></div><!-- 빈 폴더(박스) 비활성화 -->
                 <div v-else></div>
                 <div class="wrap_in" v-for="recipe in box.recipe" :key="recipe.id">
@@ -282,7 +280,6 @@ d<template>
                             <div class="squre4 fl" v-if="recipe.period == idx">{{ period[0] }}</div>
                             </span>
                             <div class="new2 fl" v-if="recipe.new"></div>
-                            <!-- <div class="alltitle fl" v-if="box.isDefault===false">{{ box.name }}</div> -->
                         </div>
                         <div class="fr"></div>
                         <div class="title">
