@@ -36,6 +36,9 @@
       selectedRBox(state){
         return state.selectedRBox;
       },
+      boxList(state){
+        return state.boxList;
+      },
       // selectedRecipeBoxIds(state){
       //   return state.selectedRecipeBoxIds;
       // },
@@ -64,6 +67,9 @@
       setSelectedRBox(state, selectedRBox){
         state.selectedRBox = selectedRBox;
       },
+      setBoxList(state, boxList){
+        state.boxList = boxList;
+      },
       // setselectedRecipeBoxIds(state, selectedRecipeBoxIds){
       //   state.selectedRecipeBoxIds = selectedRecipeBoxIds;
       // },
@@ -90,6 +96,9 @@
       },
       setSelectedRBox({commit}, selectedRBox){
         commit('setSelectedRBox', selectedRBox);
+      },
+      setBoxList({commit}, boxList){
+        commit('setBoxList', boxList);
       },
       // setselectedRecipeBoxIds({commit}, selectedRecipeBoxIds){
       //   commit('setselectedRecipeBoxIds', selectedRecipeBoxIds);

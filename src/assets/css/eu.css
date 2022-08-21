@@ -163,7 +163,7 @@ main.recipebox .wrap_recipes .row0 {overflow: hidden;margin: 0 auto 15px;}
 
 main.recipebox .wrap_recipes .column1 {width: 50%;}
 main.recipebox .wrap_recipes .column1 .wrap_row {height:24px;}
-main.recipebox .wrap_recipes .column1 .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px;background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1 .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 9; border-radius: 10px;width:20px;background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
 main.recipebox .wrap_recipes .column1 .wrap_row .title     {float: left; z-index: -1;border: 1px #CBCBCB solid; border-radius: 10px 10px 0 0; padding:0 10px 1px 10px; margin-left:13px;background-color:#fff; color:#333;text-align: center;}
 main.recipebox .wrap_recipes .column1 .wrap_row .new       {float: left;margin-top:5px; background: url(../images/bul-new.png)50% 50% no-repeat;width:35px;height: 16px;display:block;}
 main.recipebox .wrap_recipes .column1 .photo     {padding: 0;margin: 0 10px 0 0; display:block; border: 2px #CBCBCB solid; border-radius: 5px; box-shadow: 2px 2px 2px 0 #ccc;}
@@ -174,7 +174,7 @@ main.recipebox .wrap_recipes .column1.on .wrap_row {height:24px;}
 main.recipebox .wrap_recipes .column1:hover .wrap_row .circleNum,
 main.recipebox .wrap_recipes .column1.full:hover .wrap_row .circleNum,
 main.recipebox .wrap_recipes .column1.new:hover .wrap_row .circleNum,
-main.recipebox .wrap_recipes .column1.on .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px;background-color:#FF9519; color: #fff;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1.on .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 9; border-radius: 10px;width:20px;background-color:#FF9519; color: #fff;text-align: center; font-weight: 600;}
 main.recipebox .wrap_recipes .column1:hover .wrap_row .title,
 main.recipebox .wrap_recipes .column1.full:hover .wrap_row .title,
 main.recipebox .wrap_recipes .column1.new:hover .wrap_row .title,
@@ -193,7 +193,7 @@ main.recipebox .wrap_recipes .column1 .wrap_row .del{float: right;margin-top:5px
 
 main.recipebox .wrap_recipes .column1.off {width: 50%;}
 main.recipebox .wrap_recipes .column1.off .wrap_row {height:24px;}
-main.recipebox .wrap_recipes .column1.off .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px;background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1.off .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 9; border-radius: 10px;width:20px;background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
 main.recipebox .wrap_recipes .column1.off .wrap_row .title     {float: left; z-index: -1;border: 1px #CBCBCB solid; border-radius: 10px 10px 0 0; padding:0 10px 1px 10px; margin-left:13px;background-color:#fff; color:#333;text-align: center;}
 main.recipebox .wrap_recipes .column1.off .wrap_row .new       {float: left;margin-top:5px; background: url(../images/bul-new.png)50% 50% no-repeat;width:35px;height: 16px;display:block;}
 main.recipebox .wrap_recipes .column1.off .photo     {padding: 0;margin: 0 10px 0 0; display:block; border: 2px #CBCBCB solid; border-radius: 5px; box-shadow: 2px 2px 2px 0 #ccc;}
@@ -201,7 +201,7 @@ main.recipebox .wrap_recipes .column1.off .photo img {width: 100%; height: 100%;
 
 main.recipebox .wrap_recipes .column1.full {width: 50%;}
 main.recipebox .wrap_recipes .column1.full .wrap_row {height:24px;}
-main.recipebox .wrap_recipes .column1.full .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px; background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1.full .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 9; border-radius: 10px;width:20px; background-color:#666666; color: #fff;text-align: center; font-weight: 600;}
 main.recipebox .wrap_recipes .column1.full .wrap_row .title     {float: left; z-index: -1;border: 1px #CBCBCB solid; border-radius: 10px 10px 0 0; padding:0 10px 1px 10px; margin-left:13px;background-color:#CBCBCB; color:#fff;text-align: center;}
 main.recipebox .wrap_recipes .column1.full .wrap_row .new       {float: left;margin-top:5px; background: url(../images/bul-new.png)50% 50% no-repeat;width:35px;height: 16px;display:block;}
 main.recipebox .wrap_recipes .column1.full .photo     {padding: 0;margin: 0 10px 0 0; display:block; border: 2px #CBCBCB solid; border-radius: 5px; box-shadow: 2px 2px 2px 0 #ccc;}
@@ -209,7 +209,7 @@ main.recipebox .wrap_recipes .column1.full .photo img {width: 100%; height: 100%
 
 main.recipebox .wrap_recipes .column1.new {width: 50%;margin-bottom: 20px;}
 main.recipebox .wrap_recipes .column1.new .wrap_row {height:24px;}
-main.recipebox .wrap_recipes .column1.new .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 99999; border-radius: 10px;width:20px; background-color:#ffffff; color:#028870;text-align: center; font-weight: 600;}
+main.recipebox .wrap_recipes .column1.new .wrap_row .circleNum {position: absolute; margin-top:-7px; z-index: 9; border-radius: 10px;width:20px; background-color:#ffffff; color:#028870;text-align: center; font-weight: 600;}
 main.recipebox .wrap_recipes .column1.new .wrap_row .title     {float: left; z-index: -1;border: 1px #028870 solid; border-radius: 10px 10px 0 0; padding:0 10px 1px 10px; margin-left:13px;background-color:#fff; color:#028870;text-align: center;}
 main.recipebox .wrap_recipes .column1.new .wrap_row .new       {float: left;margin-top:5px; background: url(../images/bul-new.png)50% 50% no-repeat;width:35px;height: 16px;display:block;}
 main.recipebox .wrap_recipes .column1.new .photo     {text-align: center; padding:60px 0;margin: 0 10px 0 0; display:block; border: 2px #028870 dashed; border-radius: 5px; box-shadow: 2px 2px 2px 0 #ccc;}
@@ -239,6 +239,13 @@ main.recipebox .wrap_recipes .wrap_in .wrap_text .title{ color:#3a3a3a; font-wei
 .icon_reply     {background:url(../images/icon_reply-off.png)no-repeat; width: 20px;height: 20px; display: inline-block;}
 .icon_reply.on  {background:url(../images/icon_reply-on.png)no-repeat;}
 main.recipebox .wrap_recipes .wrap_in .wrap_text .text{ color:#666; line-height: 1.3em;}
+
+main.recipebox .wrap_edit .alltitle  {background:url(../images/icon_box_s.png)left 3px no-repeat;display: inline-block; padding-left: 25px; padding-bottom: 5px; color: #FF9519;font-weight: 600;}
+main.recipebox .wrap_edit .alltitle.hidden  {background:none left 3px no-repeat;display: inline-block; padding-left: 25px; padding-bottom: 5px; color: #fff;font-weight: 600;}
+main.recipebox .wrap_edit .wrap_in {width:93%;display: inline-block; padding: 2px;border: 1px #D9D9D9 solid; border-radius:10px;box-shadow: 0px 3px 3px 1px #ccc;}
+main.recipebox .wrap_edit .wrap_in .wrap_text {margin: 0;width: 70%;}
+main.recipebox .wrap_edit .wrap_in .wrap_text .title{ color:#3a3a3a; font-weight: 600; height: 10px; background-image: none; }
+main.recipebox .wrap_edit .wrap_in .wrap_button{margin: 0;width: 30%;}
 
 main.recipebox .select_done {min-width:306px;width:calc(100% - 54px); position:fixed;left: 0;bottom: 0;background: rgba(225, 250, 245, 0.9);border-radius: 20px 20px 0px 0px;text-align: center; padding:27px;z-index: 9999; font-weight: 600;}
 main.recipebox .select_done ul { clear: both; overflow: hidden;padding:10px 0 0 0;margin: 0 auto; text-align: center; display: inline-block;}
