@@ -42,8 +42,7 @@ export default new Vuex.Store({
             },
         },
     modules: {
-        auth: auth,
-        recipe: recipe
+        auth: auth
     },
 //   plugins : [createPersistedState({
 //     paths : ["user"],
