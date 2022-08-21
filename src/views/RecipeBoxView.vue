@@ -18,7 +18,7 @@ d<template>
                         :key="$index" class="wrap_in">
                         <div
                             class="keywords" 
-                            :class="{on : step == 0 || step == 1 && boxId == box.id}" 
+                            :class="{on : (step == 0 || step == 1) && boxId == box.id}" 
                             @click="setSelectedRecipeBox(box.id)">
                             <span>
                                 {{box.name}}
@@ -865,7 +865,7 @@ export default {
                 this.boxes = data
             }else{
                 this.dataFull = true
-                alert('List items are fully loaded!')
+                console.log('List items are fully loaded!')
             }
             console.log("appendBoxes:", this.totBoxes, this.boxes)
         },
