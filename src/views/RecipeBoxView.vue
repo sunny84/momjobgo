@@ -251,7 +251,7 @@ d<template>
                     <input class="width90" type="text" v-model="newBox" maxlength="10" placeholder="박스 명(최대 13자)">
                 <div>
                     <label id="result-label" hidden for="result"></label><br/>
-                    <div class="btn btn-default fl margin-left-30 margin-bottom-40" @click="isModalViewed=false">{{$t("button.cancel")}}</div>
+                    <div class="btn btn-default fl margin-left-30 margin-bottom-40" @click="isModalViewed=false; setSelectedRecipeBox(selectedRecipeBox.id);">{{$t("button.cancel")}}</div>
                     <div class="btn btn-default fl margin-left-10"><button style="none">저장</button></div>
                 </div>
                 </form>
