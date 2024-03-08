@@ -1,0 +1,144 @@
+{
+    "app" : {
+        "name": "EYOU"
+    },
+    
+    "footermenu" : {
+        "home" : "Home",
+        "search" : "Search",
+        "recipebox" : "Recipe Box",
+        "my" : "My"
+    },
+
+    "title" : {
+        "writeRecipe" : "Write Recipe",
+        "previewRecipe" : "Preview Recipe",
+        "viewRecipe" : "View Recipe",
+        "recipeBox" : "Recipe Box",
+        "RecipeFilter" : "Filter",
+        "subscribeRecipe" : "Subscribe Recipe",
+        "myBaby" : "For my baby",
+        "whatRecipe" : "What kind of food would you like to cook?"
+    },
+
+    "description" : {
+        "writeRecipe" : "Start to write recipe?",
+        "ingredient" : "Which indigredient do you choose?",
+        "almostDone" : "You are almost done! Hang in there!",
+        "finishAndSave" : "Completion! Save this recipe?",
+        "publishRecipe" : "Publish the recipe?",
+        "moveToMyRecipe" : "Move to MY recipe immediately if slide",
+        "autoSave" : "It'll be saved automatically if you move on next."
+    },
+
+    "menu" : {
+        "myRecipe": "My Recipe",
+        "savedRecipe" : "Saved Recipe",
+        "historyRecipe" : "History Recipe",
+        "allList" : "All"
+    },
+
+    "orderBy" : {
+        "newest" : "Newest",
+        "topRated" : "Top rated",
+        "mostRated" : "Most rated",
+        "ingredients" : "Ingredients"
+    },
+
+    "content" : {
+        "step" : "Step",
+        "quantity" : "Qunatity",
+        "total" : "Total",
+        "times" : "meals",
+        "timeTaken" : "Required time",
+        "choiceOfIngredient" : "Ingredient Choice",
+        "title" : "Title",
+        "mainPicture" : "Presentative Picture",
+        "listOfIngredient" : "Ingredients",
+        "measuringUnit" : "measure unit",
+        "cookingOrder" : "Cooking order",
+        "tip" : "Tip",
+        "movieClipUrl" : "Movie clip link",
+        "movieClipView" : "View movie cilp",
+        "youtubeUrl" : "Youtube Full link",
+        "youtubeView" : "View Youtube",
+        "all" : "All",
+        "moveBox" : "Go to Box",
+        "myRecipe" : "My Recipe",
+        "selectAll" : "Select All",
+        "select" : "Select",
+        "newBox" : "New Box"
+    },
+    
+    "content_description" : {
+        "title" : "Enter title with chosen ingredient",
+        "subTitle" : "A word for this special recipe! ex) The delicious reason!",
+        "measuringUnit" : "measure unit",
+        "cookingOrder" : "Fill in according to cooking order",
+        "option" : "Optional",
+        "tip" : "Add Tips",
+        "movieClipUrl" : "Enter url",
+        "youtubeUrl" : "Enter url"
+    },
+
+    "option" : {
+        "period" : [["begining", "thin rice gruel"], ["middle", "Porridge"], ["latter", "soft boiled rice"]],
+        "period_s" : [["begining","thin rice gruel"], ["middle","Porridge"], ["latter","soft boiled rice"]],
+        "timeTaken" : ["~15M", "15M", "30M", "60M", "60M+"],
+        "timeTaken_s" : ["15M-", "15M", "30M", "60M", "60M+"]
+    },
+
+    "ing_category" : {
+        "none" : ["select ingredient", ""],
+        "rootAndTuberCrops" : ["root and tuber crops", ""],
+        "blockIronAbsorption" : ["block iron absorption", "recommend after 6 months"],
+        "fruits" : ["fruits", ""],
+        "animalProtein" : ["animal protein", ""],
+        "essential" : ["essential", ""]
+    },
+
+    "ingredient" : {
+        "WATER" : "Water",
+        "GLUTINOUS_RICE" : "Glutinous rice",
+        "PEA" : "Pea",
+        "CORN" : "Corn",
+        "BROCCOLI" : "Broccoli",
+        "CHINESE_CABBAGE" : "Chinese cabbage",
+        "WHITE_RADISH" : "White radish",
+        "PAPRIKA" : "Paprika",
+        "GREEN_PUMPKIN" : "Green pumpkin",
+        "LEAF_BEET" : "Leaf beet",
+        "CURLED_MALLOW" : "Curled mallow",
+        "MUSHROOM" : "Mushroom",
+        "EGGPLANT" : "Eggplant",
+        "CUCUMBER" : "Cucumber",
+        "PAK_CHOI" : "Pak choi",
+        "SWEET_PUMPKIN" : "Sweet pumpkin",
+        "POTATO" : "Potato",
+        "SWEET_POTATO" : "Sweet potato",
+        "SPINACH" : "Spinach",
+        "CARROT" : "Carrot",
+        "APPLE" : "Apple",
+        "PEAR" : "Pear",
+        "BANANA" : "Banana",
+        "BEEF" : "Beef",
+        "CHICKEN" : "Chicken",
+        "WHITE_FISH" : "White fish",
+        "YOLK" : "Yolk",
+        "TOFU" : "Tofu"
+    },
+
+    "button" : {
+        "next" : "Next",
+        "back" : "Previous",
+        "saveAndPreview" : "Save and preview",
+        "slideAndPublish" : "Publish to slide",
+        "edit" : "Edit",
+        "move" : "Move",
+        "delete" : "Delete",
+        "cancel" : "Cancel",
+        "done" : "Done",
+        "addNewBox" : "New Box",
+        "write" : "Write"
+    }
+}

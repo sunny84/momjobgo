@@ -1,0 +1,144 @@
+{
+    "app" : {
+        "name": "이유"
+    },
+
+    "footermenu" : {
+        "home" : "홈",
+        "search" : "검색",
+        "recipebox" : "레시피박스",
+        "my" : "마이"
+    },
+
+    "title" : {
+        "writeRecipe" : "레시피 작성하기",
+        "previewRecipe" : "레시피 미리보기",
+        "viewRecipe" : "레시피 상세보기",
+        "recipeBox" : "레시피 박스",
+        "RecipeFilter" : "필터",
+        "subscribeRecipe" : "구독레시피",
+        "myBaby" : "우리 아기",
+        "whatRecipe" : "어떤 요리가 좋을까요?"
+    },
+
+    "description" : {
+        "writeRecipe" : "레시피 작성을 시작해 볼까요?",
+        "ingredient" : "어떤 식재료가 좋을까요?",
+        "almostDone" : "거의 다 왔어요! 힘내요!",
+        "finishAndSave" : "완성! 레시피를 저장할까요?",
+        "publishRecipe" : "레시피를 공개할까요?",
+        "moveToMyRecipe" : "미는 즉시 MY 레시피 화면으로 이동합니다",
+        "autoSave" : "다음으로 넘어가면 자동으로 저장됩니다."
+    },
+    
+    "menu" : {
+        "myRecipe": "My 레시피",
+        "savedRecipe" : "담은 레시피",
+        "historyRecipe" : "오늘 본 레시피",
+        "allList" : "전체보기"
+    },
+
+    "orderBy" : {
+        "newest" : "최신순",
+        "topRated" : "별점순",
+        "mostRated" : "후기순",
+        "ingredients" : "재료명순"
+    },
+
+    "content" : {
+        "step" : "단계",
+        "quantity" : "분량",
+        "total" : "총",
+        "times" : "회분",
+        "timeTaken" : "소요시간",
+        "choiceOfIngredient" : "식재료 선택",
+        "title" : "제목",
+        "mainPicture" : "대표사진",
+        "listOfIngredient" : "재료소개",
+        "measuringUnit" : "계량단위",
+        "cookingOrder" : "조리순서",
+        "tip" : "Tip",
+        "movieClipUrl" : "클립 영상 링크",
+        "movieClipView" : "클립 영상 확인하기",
+        "youtubeUrl" : "유투브 Full영상 링크",
+        "youtubeView" : "Youtube Full 영상 보기",
+        "all" : "전체",
+        "moveBox" : "박스 이동",
+        "myRecipe" : "나의 레시피",
+        "selectAll" : "전체선택", 
+        "select" : "선택",
+        "newBox" : "새로운 박스"
+    },
+
+    "content_description" : {
+        "title" : "들어가는 식재료명으로 입력하세요.",
+        "subTitle" : "특별한 레시피를 설명하는 한마디! ex) 맛있는 이유!",
+        "measuringUnit" : "계량단위",
+        "cookingOrder" : "조리순서에 맞게 내용을 입력하세요.",
+        "option" : "선택사항",
+        "tip" : "Tip을 입력하세요.",
+        "movieClipUrl" : "url을 입력하세요.",
+        "youtubeUrl" : "url을 입력하세요."
+    },
+
+    "option" : {
+        "period" : [["초기", "미음"], ["중기", "죽"], ["후기", "진밥"]],
+        "period_s" : [["초기","만 4개월 ~ 5개월"], ["중기","만 7개월 ~ 11개월"],["후기","만 11개월 ~ 13개월"]],
+        "timeTaken" : ["~15분", "15분", "30분", "60분", "60분+"],
+        "timeTaken_s" : ["15분-", "15분", "30분", "60분", "60분+"]
+    },
+
+    "ing_category" : {
+        "none" : ["식재료 선택", ""],
+        "rootAndTuberCrops" : ["서류", "구황작물"],
+        "blockIronAbsorption" : ["철분흡수 방해", "중기6개월~부터 권장"],
+        "fruits" : ["과일류", ""],
+        "animalProtein" : ["동물성 단백질", ""], 
+        "essential" : ["필수",""]
+    },
+
+    "ingredient" : {
+        "WATER" : "물",
+        "GLUTINOUS_RICE" : "찹쌀",
+        "PEA" : "완두콩",
+        "CORN" : "옥수수",
+        "BROCCOLI" : "브로콜리",
+        "CHINESE_CABBAGE" : "배추",
+        "WHITE_RADISH" : "무",
+        "PAPRIKA" : "파프리카",
+        "GREEN_PUMPKIN" : "애호박",
+        "LEAF_BEET" : "근대",
+        "CURLED_MALLOW" : "아욱",
+        "MUSHROOM" : "버섯",
+        "EGGPLANT" : "가지",
+        "CUCUMBER" : "오이",
+        "PAK_CHOI" : "청경채",
+        "SWEET_PUMPKIN" : "단호박",
+        "POTATO" : "감자",
+        "SWEET_POTATO" : "고구마",
+        "SPINACH" : "시금치",
+        "CARROT" : "당근",
+        "APPLE" : "사과",
+        "PEAR" : "배",
+        "BANANA" : "바나나",
+        "BEEF" : "쇠고기",
+        "CHICKEN" : "닭살",
+        "WHITE_FISH" : "흰살생선",
+        "YOLK" : "달걀노른자",
+        "TOFU" : "두부"
+    },
+
+    "button" : {
+        "next" : "다음",
+        "back" : "이전",
+        "saveAndPreview" : "저장 및 미리보기",
+        "slideAndPublish" : "밀어서 공개하기",
+        "edit" : "편집",
+        "move" : "이동",
+        "delete" : "삭제",
+        "cancel" : "취소",
+        "done" : "완료",
+        "addNewBox" : "새 박스",
+        "write" : "작성하기"
+    }
+}
